@@ -1,0 +1,24 @@
+{
+  "name": "go-seven.com",
+  "version": "0.0.0",
+  "private": true,
+  "description": "URL shortener",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/go-seven/go-seven.com.git"
+  },
+  "keywords": [
+    "go7"
+  ],
+  "author": "Gianluca Casati (http://g14n.info)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/go-seven/go-seven.com/issues"
+  },
+  "homepage": "https://go7.li",
+  "dependencies": {},
+  "devDependencies": {}
+}
