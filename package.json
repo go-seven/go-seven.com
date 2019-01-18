@@ -4,6 +4,7 @@
   "private": true,
   "description": "URL shortener",
   "scripts": {
+    "budo": "budo src/index.ts --live --pushstate --dir public --serve bundle.js --open -- -p tsify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +20,11 @@
     "url": "https://github.com/go-seven/go-seven.com/issues"
   },
   "homepage": "https://go7.li",
-  "dependencies": {},
+  "dependencies": {
+    "budo": "^11.6.0",
+    "dot-editorconfig": "^1.1.1",
+    "tsify": "^4.0.1",
+    "typescript": "^3.2.4"
+  },
   "devDependencies": {}
 }

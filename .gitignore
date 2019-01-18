@@ -1,0 +1,9 @@
+# build
+public/bundle.js
+
+# miscellaneus trash
+node_modules
+.DS_Store
+npm-debug.log
+*.swp
+*.log
