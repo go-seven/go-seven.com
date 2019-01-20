@@ -4,9 +4,15 @@
   "private": true,
   "description": "URL shortener",
   "scripts": {
-    "budo": "budo src/index.ts --live --pushstate --dir public --serve bundle.js --open -- -p tsify",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "budo": "budo src/index.tsx --live --pushstate --dir public --serve bundle.js --open -- -p tsify",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc--noemit": "tsc --declaration --project . --noemit",
+    "tslint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'"
   },
+  "pre-commit": [
+    "tsc--noemit",
+    "tslint"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/go-seven/go-seven.com.git"
@@ -21,9 +27,18 @@
   },
   "homepage": "https://go7.li",
   "dependencies": {
+    "@types/react": "^16.7.20",
+    "@types/react-dom": "^16.0.11",
     "budo": "^11.6.0",
     "dot-editorconfig": "^1.1.1",
+    "pre-commit": "^1.2.2",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-router-dom": "^4.3.1",
+    "trunx": "^0.17.0",
     "tsify": "^4.0.1",
+    "tslint": "^5.12.1",
+    "tslint-react": "^3.6.0",
     "typescript": "^3.2.4"
   },
   "devDependencies": {}

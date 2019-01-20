@@ -1,0 +1,12 @@
+{
+  "extends": ["tslint:latest", "tslint-react"],
+  "rules": {
+    "jsx-boolean-value": false,
+    "jsx-wrap-multiline": false,
+    "member-access": [true, "no-public"],
+    "no-implicit-dependencies": [true, "dev"],
+    "no-empty-interface": false,
+    "semicolon": [true, "never"],
+    "trailing-comma": false
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "charset": "utf8",
+    "importHelpers": true,
+    "jsx": "react",
+    "lib": [
+      "dom",
+      "es2015"
+    ],
+    "module": "commonjs",
+    "noImplicitUseStrict": true,
+    "outDir": "public",
+    "removeComments": true,
+    "sourceMap": false,
+    "strictNullChecks": true,
+    "target": "es5"
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}
