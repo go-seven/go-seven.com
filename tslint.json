@@ -2,10 +2,11 @@
   "extends": ["tslint:latest", "tslint-react"],
   "rules": {
     "jsx-boolean-value": false,
-    "jsx-wrap-multiline": false,
+    "jsx-no-multiline-js": false,
     "member-access": [true, "no-public"],
     "no-implicit-dependencies": [true, "dev"],
     "no-empty-interface": false,
+    "no-submodule-imports": [true, "fa-svg-icon"],
     "semicolon": [true, "never"],
     "trailing-comma": false
   }
