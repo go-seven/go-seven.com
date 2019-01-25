@@ -1,5 +1,5 @@
 import { ticTacToe } from "i-am-not-a-robot"
-import pdsp from "pdsp"
+import * as pdsp from "pdsp"
 import * as React from "react"
 import {
   Box,
@@ -13,6 +13,7 @@ import {
   Media,
   Message,
   Modal,
+  Section,
   Title,
 } from "trunx"
 
@@ -26,14 +27,16 @@ interface IProps {
 }
 
 interface IState {
-  isHuman: boolean
+  clientAgrees: boolean
+  clientIsRobot: boolean
 }
 
 export default class CreateAccount extends React.Component<IProps, IState> {
   static path = "/create-account"
 
   state = {
-    isHuman: false
+    clientAgrees: false,
+    clientIsRobot: true,
   }
 
   private antispamRef = React.createRef<HTMLInputElement>()
@@ -46,7 +49,13 @@ export default class CreateAccount extends React.Component<IProps, IState> {
 
   loadAntiSpam() {
     ticTacToe(this.antispamRef.current, () => {
-      this.setState({ isHuman: true })
+      this.setState({ clientIsRobot: false })
+    })
+  }
+
+  onChangeCheckbox = (event) => {
+    this.setState({
+      clientAgrees: event.target.checked
     })
   }
 
@@ -56,7 +65,8 @@ export default class CreateAccount extends React.Component<IProps, IState> {
 
   render() {
     const {
-      isHuman
+      clientAgrees,
+      clientIsRobot
     } = this.state
 
     return (
@@ -78,48 +88,58 @@ export default class CreateAccount extends React.Component<IProps, IState> {
                 </Media.Content>
               </Media>
 
-              <form
-                onSubmit={this.onSubmit}
+              <Section
+                isSrOnly={clientIsRobot && clientAgrees}
               >
-                <EmailField
-                  inputRef={this.emailRef}
-                />
+                <form>
+                  <EmailField
+                    inputRef={this.emailRef}
+                  />
 
-                <PasswordField
-                  inputRef={this.passwordRef}
-                />
+                  <PasswordField
+                    inputRef={this.passwordRef}
+                  />
 
-                <Field>
-                  <Control>
-                    <Checkbox>
-                      I agree to the <a href={PrivacyPolicy.path} target="_blank">Privacy Policy</a>
-                      and to the <a href={TermsOfService.path} target="_blank">Terms of Service</a>.
-                    </Checkbox>
-                  </Control>
-                </Field>
+                  <Field>
+                    <Control>
+                      <Checkbox
+                        onChange={this.onChangeCheckbox}
+                      >
+                        I agree to the <a href={PrivacyPolicy.path} target="_blank">Privacy Policy</a> and to the <a href={TermsOfService.path} target="_blank">Terms of Service</a>.
+                      </Checkbox>
+                    </Control>
+                  </Field>
 
-                <Field>
-                  <Control>
-                    <Button
-                      isSuccess
-                      isSrOnly={!isHuman}
-                      type="submit"
-                      value="Create an account"
-                    />
-                  </Control>
-                </Field>
-              </form>
+                  <Field>
+                    <Control>
+                      <Button
+                        disabled={!clientAgrees}
+                        isSuccess
+                        isSrOnly={clientIsRobot}
+                        onClick={this.onSubmit}
+                      >
+                        Create an account
+                      </Button>
+                    </Control>
+                  </Field>
+                </form>
+              </Section>
 
-              {!isHuman && (
-                <Message>
-                  <Message.Header>
-                    <p>Are you a robot? Play tic tac toe!</p>
-                  </Message.Header>
+              {clientIsRobot && (
+                <Section
+                  isSrOnly={!clientAgrees}
+                  isPaddingLess={!clientAgrees}
+                >
+                    <Message>
+                      <Message.Header>
+                        <p>Are you a robot? Play tic tac toe!</p>
+                      </Message.Header>
 
-                  <Message.Body>
-                    <div ref={this.antispamRef} />
-                  </Message.Body>
-                </Message>
+                      <Message.Body>
+                        <div ref={this.antispamRef} />
+                      </Message.Body>
+                    </Message>
+                </Section>
               )}
             </Box>
           </Column>

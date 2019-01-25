@@ -1,5 +1,5 @@
 /* Import custom variables first. */
-@import "colors";
+@import "custom-variables";
 
 /* Import bulma modules. */
 @import "bulma/sass/utilities/_all";
@@ -8,8 +8,13 @@
 @import "bulma/sass/elements/box";
 @import "bulma/sass/elements/button";
 @import "bulma/sass/elements/container";
+@import "bulma/sass/elements/form";
+@import "bulma/sass/elements/icon";
 @import "bulma/sass/elements/tag";
 @import "bulma/sass/elements/title";
+@import "bulma/sass/components/media";
+@import "bulma/sass/components/message";
+@import "bulma/sass/components/modal";
 @import "bulma/sass/components/navbar";
 @import "bulma/sass/grid/columns";
 @import "bulma/sass/grid/tiles";
