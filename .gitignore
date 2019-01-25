@@ -1,5 +1,6 @@
 # build
 public/bundle.js
+public/style.css
 
 # miscellaneus trash
 node_modules

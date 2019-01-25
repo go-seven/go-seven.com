@@ -128,17 +128,14 @@ export default class CreateAccount extends React.Component<IProps, IState> {
               {clientIsRobot && (
                 <Section
                   isSrOnly={!clientAgrees}
-                  isPaddingLess={!clientAgrees}
                 >
-                    <Message>
-                      <Message.Header>
-                        <p>Are you a robot? Play tic tac toe!</p>
-                      </Message.Header>
+                  <Message>
+                    <Message.Body>
+                      <p>Are you a robot? Play tic tac toe!</p>
+                    </Message.Body>
+                  </Message>
 
-                      <Message.Body>
-                        <div ref={this.antispamRef} />
-                      </Message.Body>
-                    </Message>
+                  <div ref={this.antispamRef} />
                 </Section>
               )}
             </Box>
