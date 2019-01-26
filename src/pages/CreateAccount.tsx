@@ -1,3 +1,4 @@
+import * as classnames from "classnames"
 import { ticTacToe } from "i-am-not-a-robot"
 import * as pdsp from "pdsp"
 import * as React from "react"
@@ -15,6 +16,7 @@ import {
   Modal,
   Section,
   Title,
+  alignementPropsToClassenames,
 } from "trunx"
 
 import EmailField from "../components/EmailField"
@@ -129,13 +131,21 @@ export default class CreateAccount extends React.Component<IProps, IState> {
                 <Section
                   isSrOnly={!clientAgrees}
                 >
-                  <Message>
+                  <Message isMedium>
+                    <Message.Header>
+                      <p>
+                        Are you a <strong>robot</strong>?
+                      </p>
+                    </Message.Header>
+
                     <Message.Body>
-                      <p>Are you a robot? Play tic tac toe!</p>
+                      <p className="has-text-centered">
+                        Play <em>tic tac toe</em> !
+                      </p>
+
+                      <div ref={this.antispamRef} />
                     </Message.Body>
                   </Message>
-
-                  <div ref={this.antispamRef} />
                 </Section>
               )}
             </Box>
