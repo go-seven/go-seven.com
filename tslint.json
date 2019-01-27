@@ -5,9 +5,16 @@
     "jsx-no-multiline-js": false,
     "max-line-length": false,
     "member-access": [true, "no-public"],
-    "no-implicit-dependencies": [true, "dev"],
+    "no-implicit-dependencies": false,
     "no-empty-interface": false,
     "no-submodule-imports": [true, "fa-svg-icon"],
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "lowercase-first",
+        "named-imports-order": "lowercase-first"
+      }
+    ],
     "semicolon": [true, "never"],
     "trailing-comma": false
   }

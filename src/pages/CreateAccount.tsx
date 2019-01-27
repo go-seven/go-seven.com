@@ -3,6 +3,7 @@ import { ticTacToe } from "i-am-not-a-robot"
 import * as pdsp from "pdsp"
 import * as React from "react"
 import {
+  alignementPropsToClassenames,
   Box,
   Button,
   Checkbox,
@@ -16,7 +17,6 @@ import {
   Modal,
   Section,
   Title,
-  alignementPropsToClassenames,
 } from "trunx"
 
 import EmailField from "../components/EmailField"

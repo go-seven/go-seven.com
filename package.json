@@ -4,8 +4,12 @@
   "private": true,
   "description": "URL shortener",
   "scripts": {
+    "aws_s3_sync": "aws s3 sync public s3://go-seven.com --profile GoSeven",
+    "browserify": "cross-env NODE_ENV=production browserify src/index.tsx -p tsify -g [ envify --NODE_ENV production ] -g uglifyify | uglifyjs --compress --mangle > public/bundle.js",
     "budo": "budo src/index.tsx --live --pushstate --dir public --serve bundle.js --open -- -p tsify",
     "node-sass": "node-sass --include-path node_modules src/sass/style.scss --output-style compressed --output public/",
+    "preaws_s3_sync": "npm run browserify; npm run node-sass",
+    "postaws_s3_sync": "rm public/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc--noemit": "tsc --declaration --project . --noemit",
     "tslint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'"
@@ -32,7 +36,9 @@
     "@types/react-dom": "^16.0.11",
     "budo": "^11.6.0",
     "bulma": "^0.7.2",
+    "cross-env": "^5.2.0",
     "dot-editorconfig": "^1.1.1",
+    "envify": "^4.1.0",
     "fa-svg-icon": "^0.3.0",
     "i-am-not-a-robot": "^0.6.0",
     "node-sass": "^4.11.0",
@@ -45,7 +51,9 @@
     "tsify": "^4.0.1",
     "tslint": "^5.12.1",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.2.4"
+    "typescript": "^3.2.4",
+    "uglify-es": "^3.3.9",
+    "uglifyify": "^5.0.1"
   },
   "devDependencies": {}
 }
