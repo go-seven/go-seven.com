@@ -47,7 +47,7 @@
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-router-dom": "^4.3.1",
-    "trunx": "^0.18.1",
+    "trunx": "^0.18.2",
     "tsify": "^4.0.1",
     "tslint": "^5.12.1",
     "tslint-react": "^3.6.0",
