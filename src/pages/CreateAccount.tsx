@@ -1,9 +1,7 @@
-import * as classnames from "classnames"
 import { ticTacToe } from "i-am-not-a-robot"
 import * as pdsp from "pdsp"
 import * as React from "react"
 import {
-  alignementPropsToClassenames,
   Box,
   Button,
   Checkbox,

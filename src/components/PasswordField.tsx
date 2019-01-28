@@ -21,7 +21,7 @@ interface IState {
 }
 
 export default class PasswordField extends React.Component<IProps, IState> {
-  state = {
+  state: IState = {
     passwordIsVisible: false
   }
 

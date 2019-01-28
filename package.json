@@ -34,6 +34,7 @@
   "dependencies": {
     "@types/react": "^16.7.20",
     "@types/react-dom": "^16.0.11",
+    "@types/react-router-dom": "^4.3.1",
     "budo": "^11.6.0",
     "bulma": "^0.7.2",
     "cross-env": "^5.2.0",
