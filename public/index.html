@@ -1,4 +1,4 @@
-<!DOCTYPE>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -32,7 +32,8 @@
     <meta name="apple-mobile-web-app-title" content="Go Seven">
     <meta name="application-name" content="Go Seven">
 
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="preload" as="style" onload="this.rel='stylesheet'" href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700"></noscript>
 
     <style>
       body {
@@ -83,6 +84,6 @@
 
     <div id="root"></div>
 
-    <script onload="document.querySelector('.splashscreen').style.display='none'" src="bundle.js"></script>
+    <script onload="document.querySelector('.splashscreen').style.display='none'" src="bundle.js" defer></script>
   </body>
 </html>
