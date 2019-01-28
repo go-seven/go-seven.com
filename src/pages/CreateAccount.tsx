@@ -1,6 +1,7 @@
 import { ticTacToe } from "i-am-not-a-robot"
 import * as pdsp from "pdsp"
 import * as React from "react"
+import { connect } from "react-redux"
 import {
   Box,
   Button,
@@ -20,10 +21,16 @@ import {
 import EmailField from "../components/EmailField"
 import PasswordField from "../components/PasswordField"
 
+import {
+  createAccount,
+  ICredentials,
+} from "../reducers/authentication"
+
 import PrivacyPolicy from "./PrivacyPolicy"
 import TermsOfService from "./TermsOfService"
 
 interface IProps {
+  createAccount: (ICredentials) => void
 }
 
 interface IState {
@@ -31,10 +38,10 @@ interface IState {
   clientIsRobot: boolean
 }
 
-export default class CreateAccount extends React.Component<IProps, IState> {
+class CreateAccount extends React.Component<IProps, IState> {
   static path = "/create-account"
 
-  state = {
+  state: IState = {
     clientAgrees: false,
     clientIsRobot: true,
   }
@@ -61,12 +68,24 @@ export default class CreateAccount extends React.Component<IProps, IState> {
 
   onSubmit = (event) => {
     pdsp(event)
+
+    const email = this.emailRef && this.emailRef.current && this.emailRef.current.value
+    const password = this.passwordRef.current && this.passwordRef.current.value
+
+    const emailIsEmpty = email !== ""
+    const passwordIsEmpty = password !== ""
+
+    if (emailIsEmpty || passwordIsEmpty) {
+      return
+    }
+
+    this.props.createAccount({ email, password })
   }
 
   render() {
     const {
       clientAgrees,
-      clientIsRobot
+      clientIsRobot,
     } = this.state
 
     return (
@@ -91,12 +110,16 @@ export default class CreateAccount extends React.Component<IProps, IState> {
               <Section
                 isSrOnly={clientIsRobot && clientAgrees}
               >
-                <form>
+                <form
+                  autoComplete="off"
+                  onSubmit={this.onSubmit}
+                >
                   <EmailField
                     inputRef={this.emailRef}
                   />
 
                   <PasswordField
+                    autoComplete="new-password"
                     inputRef={this.passwordRef}
                   />
 
@@ -116,10 +139,9 @@ export default class CreateAccount extends React.Component<IProps, IState> {
                         disabled={!clientAgrees}
                         isSuccess
                         isSrOnly={clientIsRobot}
-                        onClick={this.onSubmit}
-                      >
-                        Create an account
-                      </Button>
+                        type="submit"
+                        value="Create an account"
+                      />
                     </Control>
                   </Field>
                 </form>
@@ -153,3 +175,11 @@ export default class CreateAccount extends React.Component<IProps, IState> {
     )
   }
 }
+
+const mapStateToProps = (state) => (state)
+
+const mapDispatchToProps = (dispatch) => ({
+  createAccount: (credentials) => dispatch(createAccount(credentials))
+})
+
+export default connect(mapStateToProps)(CreateAccount)

@@ -25,6 +25,7 @@ export default class EmailField extends React.Component<IProps> {
         <Control hasIconsLeft>
           <Input
             inputRef={inputRef}
+            required
             type="email"
           />
 
