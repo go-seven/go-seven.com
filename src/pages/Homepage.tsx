@@ -1,4 +1,10 @@
 import * as React from "react"
+import {
+  Container,
+  Hero,
+  Subtitle,
+  Title,
+} from "trunx"
 
 import Features from "../components/Features"
 import Footer from "../components/Footer"
@@ -12,6 +18,15 @@ export default class Homepage extends React.Component {
     return (
       <React.Fragment>
         <Navbar />
+
+        <Hero isPrimary>
+          <Hero.Body>
+            <Container>
+              <Title>GoSeven</Title>
+              <Subtitle>Url shortener</Subtitle>
+            </Container>
+          </Hero.Body>
+        </Hero>
 
         <Features />
 
