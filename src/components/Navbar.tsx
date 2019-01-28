@@ -1,7 +1,8 @@
 import * as React from "react"
 
 import {
-  Navbar
+  Image,
+  Navbar,
 } from "trunx"
 
 export default class Nav extends React.Component {
@@ -15,9 +16,9 @@ export default class Nav extends React.Component {
       >
         <Navbar.Brand>
           <Navbar.Item>
-            <img
-              alt="Logo"
-              src="/media/logo-60x60.png"
+            <Image
+              alt="GoSeven Logo"
+              src="/media/logo-48x48.png"
             />
           </Navbar.Item>
         </Navbar.Brand>
