@@ -10,6 +10,7 @@ import {
   Icon,
   Input,
   Label,
+  Span,
 } from "trunx"
 
 interface IProps {
@@ -30,6 +31,8 @@ interface IState {
 }
 
 export default class PasswordField extends React.Component<IProps, IState> {
+  static minLenght = 8
+
   state: IState = {
     passwordCheck: {
       hasLowercase: false,
@@ -46,7 +49,7 @@ export default class PasswordField extends React.Component<IProps, IState> {
     const hasLowercase = /[a-z]/.test(password)
     const hasNumber = /[0-9]/.test(password)
     const hasUppercase = /[A-Z]/.test(password)
-    const isLongEnough = password.length >= 8
+    const isLongEnough = password.length >= PasswordField.minLenght
 
     return {
       hasLowercase,
@@ -54,6 +57,12 @@ export default class PasswordField extends React.Component<IProps, IState> {
       hasUppercase,
       isLongEnough,
     }
+  }
+
+  onChange = (event) => {
+    const passwordCheck = this.checkPasswordPolicy()
+
+    this.setState({ passwordCheck })
   }
 
   togglePasswordVisibility = (event) => {
@@ -75,25 +84,23 @@ export default class PasswordField extends React.Component<IProps, IState> {
       passwordIsVisible,
     } = this.state
 
+    const {
+      hasLowercase,
+      hasNumber,
+      hasUppercase,
+      isLongEnough,
+    } = passwordCheck
+
     return (
       <Field>
         <Label>Password</Label>
 
         <Control hasIconsLeft hasIconsRight>
-          <Help>
-            <span>8 chars</span>
-            <span>&nbsp;&bull;&nbsp;</span>
-            <span>number</span>
-            <span>&nbsp;&bull;&nbsp;</span>
-            <span>uppercase</span>
-            <span>&nbsp;&bull;&nbsp;</span>
-            <span>lowercase</span>
-          </Help>
-
           <Input
             autoComplete={autoComplete}
             inputRef={inputRef}
             isDanger={passwordIsVisible}
+            onChange={this.onChange}
             required
             type={passwordIsVisible ? "text" : "password"}
           />
@@ -112,6 +119,17 @@ export default class PasswordField extends React.Component<IProps, IState> {
           >
             <Icon.Svg icon={passwordIsVisible ? eyeSlash : eye} />
           </Icon>
+
+          <Help>
+            <Span hasTextSuccess={isLongEnough}>{PasswordField.minLenght} chars</Span>
+            <Span hasTextSuccess={isLongEnough && hasNumber}>&nbsp;&bull;&nbsp;</Span>
+            <Span hasTextSuccess={hasNumber}>number</Span>
+            <Span hasTextSuccess={hasNumber && hasUppercase}>&nbsp;&bull;&nbsp;</Span>
+            <Span hasTextSuccess={hasUppercase}>uppercase</Span>
+            <Span hasTextSuccess={hasUppercase && hasLowercase}>&nbsp;&bull;&nbsp;</Span>
+            <Span hasTextSuccess={hasLowercase}>lowercase</Span>
+          </Help>
+
         </Control>
       </Field>
     )

@@ -38,7 +38,7 @@ export function createAccount(credentials: ICredentials) {
   return (dispatch, getState) => {
     dispatch({ type: CREATE_ACCOUNT_REQUEST })
 
-    fetch(`${basePath}/create-account`, {
+    fetch(`${basePath}/account`, {
       body: JSON.stringify(credentials),
       headers: headersForJson,
       method: "POST",

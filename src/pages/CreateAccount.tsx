@@ -69,15 +69,8 @@ class CreateAccount extends React.Component<IProps, IState> {
   onSubmit = (event) => {
     pdsp(event)
 
-    const email = this.emailRef && this.emailRef.current && this.emailRef.current.value
+    const email = this.emailRef.current && this.emailRef.current.value
     const password = this.passwordRef.current && this.passwordRef.current.value
-
-    const emailIsEmpty = email !== ""
-    const passwordIsEmpty = password !== ""
-
-    if (emailIsEmpty || passwordIsEmpty) {
-      return
-    }
 
     this.props.createAccount({ email, password })
   }
@@ -182,4 +175,4 @@ const mapDispatchToProps = (dispatch) => ({
   createAccount: (credentials) => dispatch(createAccount(credentials))
 })
 
-export default connect(mapStateToProps)(CreateAccount)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateAccount)
