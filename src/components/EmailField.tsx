@@ -29,7 +29,7 @@ export default class EmailField extends React.Component<IProps> {
             type="email"
           />
 
-          <Icon isLeft>
+          <Icon hasTextGrey isLeft>
             <Icon.Svg icon={envelope} />
           </Icon>
         </Control>

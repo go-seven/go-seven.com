@@ -9,6 +9,7 @@ import {
 } from "trunx"
 
 import CreateAccount from "../pages/CreateAccount"
+import Enter from "../pages/Enter"
 
 interface IProps {
 }
@@ -32,6 +33,12 @@ export default class Nav extends React.Component<IProps, IState> {
   onClickCreateAccount = (event) => {
     this.setState({
       redirect: CreateAccount.path
+    })
+  }
+
+  onClickEnter = (event) => {
+    this.setState({
+      redirect: Enter.path
     })
   }
 
@@ -72,6 +79,14 @@ export default class Nav extends React.Component<IProps, IState> {
           <Navbar.End>
             <Navbar.Item>
               <Field isGrouped>
+                <Control>
+                  <Button
+                    onClick={this.onClickEnter}
+                  >
+                    Enter
+                  </Button>
+                </Control>
+
                 <Control>
                   <Button
                     onClick={this.onClickCreateAccount}

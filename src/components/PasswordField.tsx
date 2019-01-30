@@ -16,6 +16,7 @@ import {
 interface IProps {
   autoComplete?: string
   inputRef: React.RefObject<HTMLInputElement>
+  showPasswordPolicy?: boolean
 }
 
 interface IPasswordPolicyChecks {
@@ -77,6 +78,7 @@ export default class PasswordField extends React.Component<IProps, IState> {
     const {
       autoComplete,
       inputRef,
+      showPasswordPolicy,
     } = this.props
 
     const {
@@ -105,7 +107,7 @@ export default class PasswordField extends React.Component<IProps, IState> {
             type={passwordIsVisible ? "text" : "password"}
           />
 
-          <Icon isLeft>
+          <Icon hasTextGrey isLeft>
             <Icon.Svg icon={lock} />
           </Icon>
 
@@ -120,16 +122,17 @@ export default class PasswordField extends React.Component<IProps, IState> {
             <Icon.Svg icon={passwordIsVisible ? eyeSlash : eye} />
           </Icon>
 
-          <Help>
-            <Span hasTextSuccess={isLongEnough}>{PasswordField.minLenght} chars</Span>
-            <Span hasTextSuccess={isLongEnough && hasNumber}>&nbsp;&bull;&nbsp;</Span>
-            <Span hasTextSuccess={hasNumber}>number</Span>
-            <Span hasTextSuccess={hasNumber && hasUppercase}>&nbsp;&bull;&nbsp;</Span>
-            <Span hasTextSuccess={hasUppercase}>uppercase</Span>
-            <Span hasTextSuccess={hasUppercase && hasLowercase}>&nbsp;&bull;&nbsp;</Span>
-            <Span hasTextSuccess={hasLowercase}>lowercase</Span>
-          </Help>
-
+          {showPasswordPolicy && (
+            <Help>
+              <Span hasTextSuccess={isLongEnough}>{PasswordField.minLenght} chars</Span>
+              <Span hasTextSuccess={isLongEnough && hasNumber}>&nbsp;&bull;&nbsp;</Span>
+              <Span hasTextSuccess={hasNumber}>number</Span>
+              <Span hasTextSuccess={hasNumber && hasUppercase}>&nbsp;&bull;&nbsp;</Span>
+              <Span hasTextSuccess={hasUppercase}>uppercase</Span>
+              <Span hasTextSuccess={hasUppercase && hasLowercase}>&nbsp;&bull;&nbsp;</Span>
+              <Span hasTextSuccess={hasLowercase}>lowercase</Span>
+            </Help>
+          )}
         </Control>
       </Field>
     )

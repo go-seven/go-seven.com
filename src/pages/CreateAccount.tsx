@@ -95,7 +95,7 @@ class CreateAccount extends React.Component<IProps, IState> {
 
                 <Media.Content>
                   <Content>
-                    <Title is4 hasTextGrey>Create a Go7 account</Title>
+                    <Title is4 hasTextGrey>Create a GoSeven account</Title>
                   </Content>
                 </Media.Content>
               </Media>
@@ -114,6 +114,7 @@ class CreateAccount extends React.Component<IProps, IState> {
                   <PasswordField
                     autoComplete="new-password"
                     inputRef={this.passwordRef}
+                    showPasswordPolicy
                   />
 
                   <Field>

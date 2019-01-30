@@ -50,6 +50,21 @@ export function createAccount(credentials: ICredentials) {
 
 }
 
+export function enter(credentials: ICredentials) {
+  return (dispatch, getState) => {
+    dispatch({ type: AUTHENTICATION_REQUEST })
+
+    fetch(`${basePath}/account`, {
+      body: JSON.stringify(credentials),
+      headers: headersForJson,
+      method: "POST",
+    })
+      .then(checkResponse)
+      .then(() => { dispatch({ type: AUTHENTICATION_SUCCESS }) })
+      .catch((error) => { dispatch({ type: AUTHENTICATION_FAILURE, error }) })
+  }
+
+}
 export function exit() { return { type: EXIT } }
 
 const initialState: IState = { isValid: false }
