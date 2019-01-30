@@ -6,9 +6,10 @@
   "scripts": {
     "aws_s3_sync": "aws s3 sync public s3://go-seven.com --profile GoSeven",
     "browserify": "cross-env NODE_ENV=production browserify src/index.tsx -p tsify -g [ envify --NODE_ENV production ] -g uglifyify | uglifyjs --compress --mangle > public/bundle.js",
+    "build": "npm run browserify; npm run node-sass",
     "budo": "budo src/index.tsx --live --pushstate --dir public --serve bundle.js --open -- -p tsify",
+    "deploy": "npm run build; npm run aws_s3_sync",
     "node-sass": "node-sass --include-path node_modules src/sass/style.scss --output-style compressed --output public/",
-    "preaws_s3_sync": "npm run browserify; npm run node-sass",
     "postaws_s3_sync": "rm public/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc--noemit": "tsc --declaration --project . --noemit",
