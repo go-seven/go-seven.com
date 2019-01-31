@@ -90,11 +90,11 @@ class CreateAccount extends React.Component<IProps, IState> {
             <Box>
               <Media>
                 <Media.Left>
-                  <Image is32x32 src="media/logo-32x32.png" />
+                  <Image width="28" height="28" src="media/logo.svg" />
                 </Media.Left>
 
                 <Media.Content>
-                  <Content>
+                  <Content hasTextCentered>
                     <Title is4 hasTextGrey>Create a GoSeven account</Title>
                   </Content>
                 </Media.Content>
