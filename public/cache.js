@@ -24,43 +24,68 @@ const REQUIRED_FILES = [
   '/media/logo-180x180.png',
   '/media/logo-192x192.png',
   '/media/logo-256x256.png',
-  '/media/logo-384x384.png',
   '/media/logo-512x512.png',
   '/media/logo.svg',
   '/style.css'
 ]
 
-const showError = error => {
-  console.error(error)
-}
+let cache = null
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(
-      cache => cache.addAll(REQUIRED_FILES)
-    ).catch(showError)
+    caches.open(CACHE_NAME).then(currentCache => {
+      // Store a reference to current cache, to be used on fetch event handler.
+      cache = currentCache
+
+      cache.addAll(REQUIRED_FILES)
+    }).catch(error => {
+      console.error('cache install', error)
+    })
   )
 })
 
-function cached (request) {
-  return caches.open(CACHE_NAME).then(cache => {
-    return cache.match(request).then(matching => {
-      return matching || Promise.reject(new Error(`no match for ${request.url}`))
-    }).catch(showError)
-  }).catch(showError)
-}
-
-function updated (request) {
-  return caches.open(CACHE_NAME).then(cache => {
-    return fetch(request).then(response => {
-      return cache.put(request, response)
-    }).catch(showError)
-  }).catch(showError)
-}
-
 // Cache and update.
 self.addEventListener('fetch', event => {
-  event.respondWith(cached(event.request))
+  const { request } = event
 
-  event.waitUntil(updated(event.request))
+  return cache.match(request).then(matching => {
+    if (matching) {
+      event.respondWith(() => matching)
+
+      event.waitUntil(() => {
+        return fetch(request).then(response => {
+          return cache.put(request, response)
+        }).catch(error => {
+          console.error('cache update', error)
+        })
+      })
+    } else {
+      event.waitUntil(() => {
+        return fetch(request).then(response => {
+          return cache.put(request, response)
+        }).catch(error => {
+          console.error(error)
+        })
+      })
+    }
+  }).catch(ignore => {})
+})
+
+// Clean up caches other than current.
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.filter(cacheName => {
+          const deleteThisCache = cacheName !== CACHE_NAME
+
+          return deleteThisCache
+        }).map(cacheName => {
+          console.log(`deleted cache: ${cacheName}`)
+
+          caches.delete(cacheName)
+        })
+      )
+    })
+  )
 })
