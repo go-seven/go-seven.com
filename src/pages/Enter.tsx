@@ -1,6 +1,7 @@
 import * as pdsp from "pdsp"
 import * as React from "react"
 import { connect } from "react-redux"
+import { Redirect } from "react-router-dom"
 import {
   Box,
   Button,
@@ -22,18 +23,35 @@ import PasswordField from "../components/PasswordField"
 
 import {
   enter,
+  IAuthenticationState,
   ICredentials,
 } from "../reducers/authentication"
 
+import Dashboard from "./Dashboard"
+import Homepage from "./Homepage"
+
 interface IProps {
+  authentication: IAuthenticationState
   enter: (ICredentials) => void
 }
 
-class Enter extends React.Component<IProps> {
+interface IState {
+  redirect?: string
+}
+
+class Enter extends React.Component<IProps, IState> {
   static path = "/enter"
+
+  state: IState = {}
 
   private emailRef = React.createRef<HTMLInputElement>()
   private passwordRef = React.createRef<HTMLInputElement>()
+
+  onClickLogo = (event) => {
+    this.setState({
+      redirect: Homepage.path
+    })
+  }
 
   onSubmit = (event) => {
     pdsp(event)
@@ -45,6 +63,26 @@ class Enter extends React.Component<IProps> {
   }
 
   render() {
+    const {
+      authentication,
+    } = this.props
+
+    const {
+      redirect,
+    } = this.state
+
+    if (redirect) {
+      return (
+        <Redirect push to={redirect} />
+      )
+    }
+
+    if (authentication.isValid) {
+      return (
+        <Redirect push to={Dashboard.path} />
+      )
+    }
+
     return (
       <Modal isActive>
         <Modal.Background />
@@ -54,7 +92,7 @@ class Enter extends React.Component<IProps> {
             <Box>
               <Media>
                 <Media.Left>
-                  <Image width="28" height="28" src="media/logo.svg" />
+                  <Image onClick={this.onClickLogo} width="28" height="28" src="media/logo.svg" />
                 </Media.Left>
 
                 <Media.Content>
@@ -79,6 +117,7 @@ class Enter extends React.Component<IProps> {
                 <Field>
                   <Control>
                     <Button
+                      isLoading={authentication.isWaiting}
                       isSuccess
                       type="submit"
                       value="Enter"

@@ -2,6 +2,7 @@ import { ticTacToe } from "i-am-not-a-robot"
 import * as pdsp from "pdsp"
 import * as React from "react"
 import { connect } from "react-redux"
+import { Redirect } from "react-router-dom"
 import {
   Box,
   Button,
@@ -23,19 +24,23 @@ import PasswordField from "../components/PasswordField"
 
 import {
   createAccount,
+  IAuthenticationState,
   ICredentials,
 } from "../reducers/authentication"
 
+import Homepage from "./Homepage"
 import PrivacyPolicy from "./PrivacyPolicy"
 import TermsOfService from "./TermsOfService"
 
 interface IProps {
+  authentication: IAuthenticationState
   createAccount: (ICredentials) => void
 }
 
 interface IState {
   clientAgrees: boolean
   clientIsRobot: boolean
+  redirect?: string
 }
 
 class CreateAccount extends React.Component<IProps, IState> {
@@ -66,6 +71,12 @@ class CreateAccount extends React.Component<IProps, IState> {
     })
   }
 
+  onClickLogo = (event) => {
+    this.setState({
+      redirect: Homepage.path
+    })
+  }
+
   onSubmit = (event) => {
     pdsp(event)
 
@@ -77,9 +88,20 @@ class CreateAccount extends React.Component<IProps, IState> {
 
   render() {
     const {
+      authentication,
+    } = this.props
+
+    const {
       clientAgrees,
       clientIsRobot,
+      redirect,
     } = this.state
+
+    if (redirect) {
+      return (
+        <Redirect push to={redirect} />
+      )
+    }
 
     return (
       <Modal isActive>
@@ -90,7 +112,7 @@ class CreateAccount extends React.Component<IProps, IState> {
             <Box>
               <Media>
                 <Media.Left>
-                  <Image width="28" height="28" src="media/logo.svg" />
+                  <Image onClick={this.onClickLogo} width="28" height="28" src="media/logo.svg" />
                 </Media.Left>
 
                 <Media.Content>
@@ -170,7 +192,9 @@ class CreateAccount extends React.Component<IProps, IState> {
   }
 }
 
-const mapStateToProps = (state) => (state)
+const mapStateToProps = (state) => ({
+  authentication: state.authentication
+})
 
 const mapDispatchToProps = (dispatch) => ({
   createAccount: (credentials) => dispatch(createAccount(credentials))

@@ -1,21 +1,19 @@
 import * as React from "react"
 import { render } from "react-dom"
-import { Provider } from "react-redux"
 
 import configureStore from "./store/configureStore"
 import Root from "./Root"
 
-const initialState = {}
+import { initialState as authentication } from "./reducers/authentication"
+
+const initialState = {
+  authentication
+}
 
 window.addEventListener("load", () => {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("cache.js", { scope: "/" })
   }
 
-  render(
-    <Provider store={configureStore(initialState)}>
-      <Root />
-    </Provider>,
-    document.getElementById("root")
-  )
+  render(<Root store={configureStore(initialState)} />, document.getElementById("root"))
 })

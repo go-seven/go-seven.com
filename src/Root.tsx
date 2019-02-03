@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Provider } from "react-redux"
 import {
   BrowserRouter,
   Redirect,
@@ -7,17 +8,20 @@ import {
 } from "react-router-dom"
 
 import CreateAccount from "./pages/CreateAccount"
+import Dashboard from "./pages/Dashboard"
 import Enter from "./pages/Enter"
 import Homepage from "./pages/Homepage"
 import PrivacyPolicy from "./pages/PrivacyPolicy"
 import TermsOfService from "./pages/TermsOfService"
 
-export default class Root extends React.Component {
-  render() {
-    return (
+export default function Root({ store }) {
+  return (
+    <Provider store={store}>
       <BrowserRouter>
         <Switch>
           <Route component={CreateAccount} exact path={CreateAccount.path} />
+
+          <Route component={Dashboard} exact path={Dashboard.path} />
 
           <Route component={Enter} exact path={Enter.path} />
 
@@ -28,6 +32,6 @@ export default class Root extends React.Component {
           <Route component={TermsOfService} exact path={TermsOfService.path} />
         </Switch>
       </BrowserRouter>
-    )
-  }
+    </Provider>
+  )
 }

@@ -3,9 +3,9 @@ $family-sans-serif: "Roboto", BlinkMacSystemFont, -apple-system, "Helvetica", "A
 /* Colors */
 $azure: hsl(180, 100%, 97%);
 $limegreen: hsl(120, 60%, 50%);
-$orangered: hsl(16, 100%, 50%);
 $skyblue: hsl(197, 71%, 73%);
 $steelblue: hsl(207, 44%, 49%);
+$tomato: hsl(9, 100%, 64%);
 
 $body-background-color: $azure;
 
@@ -14,7 +14,7 @@ $primary: $skyblue;
 $info: $steelblue;
 $success: $limegreen;
 $warning: hsl(48, 89%, 60%);
-$danger: $orangered;
+$danger: $tomato;
 
 /* Modal */
 $modal-background-background-color: rgba($body-background-color, 0.71);

@@ -12,10 +12,11 @@ export interface ICredentials {
   password: string
 }
 
-interface IState {
+export interface IAuthenticationState {
   expiresAt?: string
   hasExpired?: boolean
   isValid: boolean
+  isWaiting: boolean
   token?: string
 }
 
@@ -67,12 +68,55 @@ export function enter(credentials: ICredentials) {
 }
 export function exit() { return { type: EXIT } }
 
-const initialState: IState = { isValid: false }
+export const initialState: IAuthenticationState = {
+  isValid: false,
+  isWaiting: false,
+}
 
 export default function(state = initialState, action) {
   switch (action.type) {
+    case AUTHENTICATION_FAILURE:
+      return {
+        ...state,
+        isWaiting: false,
+      }
+
+    case AUTHENTICATION_REQUEST:
+      return {
+        ...state,
+        isWaiting: true,
+      }
+
+    case AUTHENTICATION_SUCCESS:
+      return {
+        ...state,
+        isValid: true,
+        isWaiting: false,
+      }
+
+    case CREATE_ACCOUNT_FAILURE:
+      return {
+        ...state,
+        isWaiting: false,
+      }
+
+    case CREATE_ACCOUNT_REQUEST:
+      return {
+        ...state,
+        isWaiting: true,
+      }
+
+    case CREATE_ACCOUNT_SUCCESS:
+      return {
+        ...state,
+        isWaiting: false,
+      }
+
     case EXIT:
-      return { ...state, token: null }
+      return {
+        ...state,
+        token: null
+      }
 
     default: return state
   }
