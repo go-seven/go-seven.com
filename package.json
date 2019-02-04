@@ -5,7 +5,7 @@
   "description": "URL shortener",
   "scripts": {
     "aws_s3_sync": "aws s3 sync public s3://go-seven.com --profile GoSeven",
-    "browserify": "cross-env NODE_ENV=production browserify src/index.tsx -p tsify -g [ envify --NODE_ENV production ] -g uglifyify | uglifyjs --compress --mangle > public/bundle.js",
+    "browserify": "cross-env NODE_ENV=production browserify src/index.tsx -p tsify -g [ envify --NODE_ENV production ] > public/bundle.js",
     "build": "npm run browserify; npm run node-sass",
     "budo": "budo src/index.tsx --live --pushstate --dir public --serve bundle.js --open -- -p tsify",
     "deploy": "npm run build; npm run aws_s3_sync",
@@ -55,9 +55,7 @@
     "tsify": "^4.0.1",
     "tslint": "^5.12.1",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.2.4",
-    "uglify-es": "^3.3.9",
-    "uglifyify": "^5.0.1"
+    "typescript": "^3.2.4"
   },
   "devDependencies": {}
 }
