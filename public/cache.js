@@ -1,5 +1,5 @@
 /* global self, caches, fetch */
-const CACHE_NAME = 'go7-cache-v1.0'
+const CACHE_NAME = 'go-seven-cache-v0.0.0'
 
 const REQUIRED_FILES = [
   '/',
@@ -35,14 +35,9 @@ const REQUIRED_FILES = [
   '/style.css'
 ]
 
-let cache = null
-
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(currentCache => {
-      // Store a reference to current cache, to be used on fetch event handler.
-      cache = currentCache
-
+    caches.open(CACHE_NAME).then(cache => {
       cache.addAll(REQUIRED_FILES)
     }).catch(error => {
       console.error('cache install', error)
@@ -54,27 +49,33 @@ self.addEventListener('install', event => {
 self.addEventListener('fetch', event => {
   const { request } = event
 
-  return cache.match(request).then(matching => {
-    if (matching) {
-      event.respondWith(() => matching)
+  return caches.open(CACHE_NAME).then(cache => {
+    return cache.match(request).then(matching => {
+      if (matching) {
+        event.respondWith(() => matching)
 
-      event.waitUntil(() => {
-        return fetch(request).then(response => {
-          return cache.put(request, response)
-        }).catch(error => {
-          console.error('cache update', error)
+        event.waitUntil(() => {
+          return fetch(request).then(response => {
+            return cache.put(request, response)
+          }).catch(error => {
+            console.error('cache update', error)
+          })
         })
-      })
-    } else {
-      event.waitUntil(() => {
-        return fetch(request).then(response => {
-          return cache.put(request, response)
-        }).catch(error => {
-          console.error(error)
+      } else {
+        event.waitUntil(() => {
+          return fetch(request).then(response => {
+            return cache.put(request, response)
+          }).catch(error => {
+            console.error(error)
+          })
         })
-      })
-    }
-  }).catch(ignore => {})
+      }
+    }).catch(error => {
+      console.error('cache match', error)
+    })
+  }).catch(error => {
+    console.error('cache open', error)
+  })
 })
 
 // Clean up caches other than current.
