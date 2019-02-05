@@ -1,13 +1,38 @@
 import * as React from "react"
+import { connect } from "react-redux"
 
 import Navbar from "../components/Navbar"
+import UrlCreator from "../components/UrlCreator"
 
-export default class Dashboard extends React.Component {
+import {
+  exit,
+} from "../reducers/authentication"
+
+import {
+  createUrl,
+} from "../reducers/storage"
+
+class Dashboard extends React.Component {
   static path = "/dashboard"
 
   render() {
     return (
-      <Navbar />
+      <React.Fragment>
+        <Navbar />
+
+        <UrlCreator />
+      </React.Fragment>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  authentication: state.authentication
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  exit: () => dispatch(exit()),
+  createUrl: () => dispatch(createUrl()),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
