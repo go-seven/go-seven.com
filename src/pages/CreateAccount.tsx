@@ -20,6 +20,7 @@ import {
 } from "trunx"
 
 import EmailField from "../components/EmailField"
+import Logo from "../components/Logo"
 import PasswordField from "../components/PasswordField"
 
 import {

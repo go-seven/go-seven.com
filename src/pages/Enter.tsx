@@ -19,6 +19,7 @@ import {
 } from "trunx"
 
 import EmailField from "../components/EmailField"
+import Logo from "../components/Logo"
 import PasswordField from "../components/PasswordField"
 
 import {
@@ -47,12 +48,6 @@ class Enter extends React.Component<IProps, IState> {
   private emailRef = React.createRef<HTMLInputElement>()
   private passwordRef = React.createRef<HTMLInputElement>()
 
-  onClickLogo = (event) => {
-    this.setState({
-      redirect: Homepage.path
-    })
-  }
-
   onSubmit = (event) => {
     pdsp(event)
 
@@ -66,16 +61,6 @@ class Enter extends React.Component<IProps, IState> {
     const {
       authentication,
     } = this.props
-
-    const {
-      redirect,
-    } = this.state
-
-    if (redirect) {
-      return (
-        <Redirect push to={redirect} />
-      )
-    }
 
     if (authentication.isValid) {
       return (
@@ -92,7 +77,7 @@ class Enter extends React.Component<IProps, IState> {
             <Box>
               <Media>
                 <Media.Left>
-                  <Image onClick={this.onClickLogo} width="28" height="28" src="media/logo.svg" />
+                  <Logo />
                 </Media.Left>
 
                 <Media.Content>

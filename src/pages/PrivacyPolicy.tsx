@@ -15,7 +15,7 @@ export default class PrivacyPolicy extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Navbar />
+        <Navbar noMenu />
 
         <Section>
           <Container>

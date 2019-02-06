@@ -8,10 +8,15 @@ import {
   Navbar,
 } from "trunx"
 
+import Logo from "./Logo"
+
 import CreateAccount from "../pages/CreateAccount"
 import Enter from "../pages/Enter"
+import Homepage from "../pages/Homepage"
 
 interface IProps {
+  authenticationIsValid?: boolean
+  noMenu?: boolean
 }
 
 interface IState {
@@ -44,6 +49,11 @@ export default class Nav extends React.Component<IProps, IState> {
 
   render() {
     const {
+      authenticationIsValid,
+      noMenu,
+    } = this.props
+
+    const {
       expanded,
       redirect,
     } = this.state
@@ -63,41 +73,53 @@ export default class Nav extends React.Component<IProps, IState> {
       >
         <Navbar.Brand>
           <Navbar.Item>
-            <Image
-              alt="GoSeven Logo"
-              src="/media/logo-48x48.png"
-            />
+            <Logo />
           </Navbar.Item>
 
-          <Navbar.Burger
-            isActive={expanded}
-            onClick={this.onClickBurger}
-          />
+          {noMenu || (
+            <Navbar.Burger
+              isActive={expanded}
+              onClick={this.onClickBurger}
+            />
+          )}
         </Navbar.Brand>
 
-        <Navbar.Menu isActive={expanded}>
-          <Navbar.End>
-            <Navbar.Item>
-              <Field isGrouped>
-                <Control>
-                  <Button
-                    onClick={this.onClickEnter}
-                  >
-                    Enter
-                  </Button>
-                </Control>
+        {noMenu || (
+          <Navbar.Menu isActive={expanded}>
+            <Navbar.End>
+              <Navbar.Item>
+                {authenticationIsValid ? (
+                  <Field>
+                    <Control>
+                      <Button
+                      >
+                        Exit
+                      </Button>
+                    </Control>
+                  </Field>
+                ) : (
+                  <Field isGrouped>
+                    <Control>
+                      <Button
+                        onClick={this.onClickEnter}
+                      >
+                        Enter
+                      </Button>
+                    </Control>
 
-                <Control>
-                  <Button
-                    onClick={this.onClickCreateAccount}
-                  >
-                    Create Account
-                  </Button>
-                </Control>
-              </Field>
-            </Navbar.Item>
-          </Navbar.End>
-        </Navbar.Menu>
+                    <Control>
+                      <Button
+                        onClick={this.onClickCreateAccount}
+                      >
+                        Create Account
+                      </Button>
+                    </Control>
+                  </Field>
+                )}
+              </Navbar.Item>
+            </Navbar.End>
+          </Navbar.Menu>
+        )}
       </Navbar>
 
     )

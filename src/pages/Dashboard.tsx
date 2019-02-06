@@ -6,19 +6,30 @@ import UrlCreator from "../components/UrlCreator"
 
 import {
   exit,
+  IAuthenticationState,
 } from "../reducers/authentication"
 
 import {
   createUrl,
 } from "../reducers/storage"
 
-class Dashboard extends React.Component {
+interface IProps {
+  authentication: IAuthenticationState
+}
+
+class Dashboard extends React.Component<IProps> {
   static path = "/dashboard"
 
   render() {
+    const {
+      authentication,
+    } = this.props
+
     return (
       <React.Fragment>
-        <Navbar />
+        <Navbar
+          authenticationIsValid={authentication.isValid}
+        />
 
         <UrlCreator />
       </React.Fragment>

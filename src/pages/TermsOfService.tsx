@@ -14,7 +14,7 @@ export default class Homepage extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Navbar />
+        <Navbar noMenu />
 
         <Section>
           <Container>

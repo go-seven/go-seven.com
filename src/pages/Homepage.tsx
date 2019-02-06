@@ -1,4 +1,5 @@
 import * as React from "react"
+import { connect } from "react-redux"
 import {
   Container,
   Hero,
@@ -11,13 +12,28 @@ import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 import Pricing from "../components/Pricing"
 
-export default class Homepage extends React.Component {
+import {
+  exit,
+  IAuthenticationState,
+} from "../reducers/authentication"
+
+interface IProps {
+  authentication: IAuthenticationState
+}
+
+class Homepage extends React.Component<IProps> {
   static path = "/"
 
   render() {
+    const {
+      authentication,
+    } = this.props
+
     return (
       <React.Fragment>
-        <Navbar />
+        <Navbar
+          authenticationIsValid={authentication.isValid}
+        />
 
         <Hero isPrimary>
           <Hero.Body>
@@ -37,3 +53,13 @@ export default class Homepage extends React.Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  authentication: state.authentication
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  exit: () => dispatch(exit()),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Homepage)

@@ -19,16 +19,16 @@ export default class UrlCreator extends React.Component {
                 type="text"
               />
             </Control>
+          </Field>
 
-            <Field>
-              <Control>
-                <Button
-                  disabled
-                >
-                  Save
-                </Button>
-              </Control>
-            </Field>
+          <Field>
+            <Control>
+              <Button
+                disabled
+              >
+                Save
+              </Button>
+            </Control>
           </Field>
         </Hero.Body>
       </Hero>
