@@ -6,6 +6,7 @@ import {
   Route,
   Switch
 } from "react-router-dom"
+import { Store } from "redux"
 
 import CreateAccount from "./pages/CreateAccount"
 import Dashboard from "./pages/Dashboard"
@@ -14,24 +15,42 @@ import Homepage from "./pages/Homepage"
 import PrivacyPolicy from "./pages/PrivacyPolicy"
 import TermsOfService from "./pages/TermsOfService"
 
-export default function Root({ store }) {
-  return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <Switch>
-          <Route component={CreateAccount} exact path={CreateAccount.path} />
+import {
+  CHECK_AUTHENTICATION,
+} from "./reducers/authentication"
 
-          <Route component={Dashboard} exact path={Dashboard.path} />
+interface IProps {
+  store: Store
+}
 
-          <Route component={Enter} exact path={Enter.path} />
+export default class Root extends React.Component<IProps> {
+  componentDidMount() {
+    this.props.store.dispatch({ type: CHECK_AUTHENTICATION })
+  }
 
-          <Route component={Homepage} exact path={Homepage.path} />
+  render() {
+    const {
+      store,
+    } = this.props
 
-          <Route component={PrivacyPolicy} exact path={PrivacyPolicy.path} />
+    return (
+      <Provider store={store}>
+        <BrowserRouter>
+          <Switch>
+            <Route component={CreateAccount} exact path={CreateAccount.path} />
 
-          <Route component={TermsOfService} exact path={TermsOfService.path} />
-        </Switch>
-      </BrowserRouter>
-    </Provider>
-  )
+            <Route component={Dashboard} exact path={Dashboard.path} />
+
+            <Route component={Enter} exact path={Enter.path} />
+
+            <Route component={Homepage} exact path={Homepage.path} />
+
+            <Route component={PrivacyPolicy} exact path={PrivacyPolicy.path} />
+
+            <Route component={TermsOfService} exact path={TermsOfService.path} />
+          </Switch>
+        </BrowserRouter>
+      </Provider>
+    )
+  }
 }

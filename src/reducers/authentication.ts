@@ -59,7 +59,7 @@ export function enter(credentials: ICredentials) {
     dispatch({ type: AUTHENTICATION_REQUEST })
 
     client.post("/enter", credentials)
-      .then(() => { dispatch({ type: AUTHENTICATION_SUCCESS }) })
+      .then((data) => { dispatch({ type: AUTHENTICATION_SUCCESS, data }) })
       .catch((error) => { dispatch({ type: AUTHENTICATION_FAILURE, error }) })
   }
 
@@ -90,9 +90,13 @@ export default function(state = initialState, action) {
     case AUTHENTICATION_SUCCESS:
       return {
         ...state,
+        ...action.data,
         isValid: true,
         isWaiting: false,
       }
+
+    case CHECK_AUTHENTICATION:
+      return action.data
 
     case CREATE_ACCOUNT_FAILURE:
       return {

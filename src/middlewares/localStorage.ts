@@ -10,15 +10,10 @@ export default function localStorageMiddleware(store) {
      switch (action.type) {
        case AUTHENTICATION_SUCCESS:
          try {
-           localStorage.setItem("authentication", JSON.stringify({
-             expiresAt: action.authentication.expiresAt,
-             token: action.authentication.token
-           }))
+           localStorage.setItem("authentication", JSON.stringify(action.data))
          } catch (ignore) {
            return next(action)
          }
-
-         break
 
        case CHECK_AUTHENTICATION:
          try {
@@ -47,7 +42,7 @@ export default function localStorageMiddleware(store) {
 
                return next({
                  ...action,
-                 authentication: {
+                 data: {
                    expiresAt,
                    hasExpired,
                    isValid: true,
@@ -58,9 +53,9 @@ export default function localStorageMiddleware(store) {
                // If there is no `expiresAt` attribute, assume it is expired.
                return next({
                  ...action,
-                 authentication: {
+                 data: {
                    hasExpired: true,
-                   isValid: false
+                   isValid: false,
                  }
                })
              }
@@ -68,18 +63,14 @@ export default function localStorageMiddleware(store) {
          } catch (ignore) {
            return next({
              ...action,
-             authentication: {
-               isValid: false
+             data: {
+               isValid: false,
              }
            })
          }
 
-         break
-
        case EXIT:
          localStorage.removeItem("authentication")
-
-         break
 
        default: return next(action)
      }
