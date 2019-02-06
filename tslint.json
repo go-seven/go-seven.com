@@ -7,6 +7,7 @@
     "member-access": [true, "no-public"],
     "no-implicit-dependencies": false,
     "no-empty-interface": false,
+    "no-shadowed-variable": false,
     "no-submodule-imports": [true, "fa-svg-icon"],
     "ordered-imports": [
       true,

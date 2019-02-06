@@ -1,8 +1,8 @@
 import * as client from "../client"
 
-const CREATE_URL_FAILURE = 'CREATE_URL_FAILURE'
-const CREATE_URL_REQUEST = 'CREATE_URL_REQUEST'
-const CREATE_URL_SUCCESS = 'CREATE_URL_SUCCESS'
+const CREATE_URL_FAILURE = "CREATE_URL_FAILURE"
+const CREATE_URL_REQUEST = "CREATE_URL_REQUEST"
+const CREATE_URL_SUCCESS = "CREATE_URL_SUCCESS"
 
 interface IUrl {
   href: string
@@ -17,15 +17,13 @@ export function createUrl(url: IUrl) {
   return (dispatch, getState) => {
     const { authentication } = getState()
 
-    console.log(authentication)
-
     dispatch({
       type: CREATE_URL_REQUEST
     })
 
     client.post("/url", url, authentication)
-      .then(url => { dispatch({ type: CREATE_URL_SUCCESS, url }) })
-      .catch(error => { dispatch({ type: CREATE_URL_FAILURE, error }) })
+      .then((url) => { dispatch({ type: CREATE_URL_SUCCESS, url }) })
+      .catch((error) => { dispatch({ type: CREATE_URL_FAILURE, error }) })
   }
 }
 

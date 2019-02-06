@@ -8,14 +8,28 @@ const headersForJson = {
 
 const headersWithAuthentication = (token) => ({
   ...headersForJson,
-  'Authorization': `BEARER ${token}`,
+  Authorization: `BEARER ${token}`,
 })
+
+class GoSevenApiError extends Error {
+  constructor({ message }) {
+    super(message)
+  }
+
+  toJSON() {
+    return {
+      message: this.message
+    }
+  }
+}
 
 const checkResponse = (response) => {
   if (response.ok) {
     return response.json()
   } else {
-    throw new Error(response.statusText)
+    return response.json().then(({ error }) => {
+      throw new GoSevenApiError(error)
+    })
   }
 }
 

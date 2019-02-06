@@ -14,8 +14,14 @@ export interface ICredentials {
   password: string
 }
 
+interface IError {
+  code: string
+  message: string
+}
+
 export interface IAuthenticationState {
   expiresAt?: string
+  error?: IError
   hasExpired?: boolean
   isValid: boolean
   isWaiting: boolean
@@ -70,12 +76,14 @@ export default function(state = initialState, action) {
     case AUTHENTICATION_FAILURE:
       return {
         ...state,
+        error: action.error,
         isWaiting: false,
       }
 
     case AUTHENTICATION_REQUEST:
       return {
         ...state,
+        error: null,
         isWaiting: true,
       }
 
@@ -89,12 +97,14 @@ export default function(state = initialState, action) {
     case CREATE_ACCOUNT_FAILURE:
       return {
         ...state,
+        error: action.error,
         isWaiting: false,
       }
 
     case CREATE_ACCOUNT_REQUEST:
       return {
         ...state,
+        error: null,
         isWaiting: true,
       }
 

@@ -54,7 +54,7 @@
     "react-redux": "^6.0.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "trunx": "^0.18.2",
+    "trunx": "^0.18.4",
     "tsify": "^4.0.1",
     "tslint": "^5.12.1",
     "tslint-react": "^3.6.0",

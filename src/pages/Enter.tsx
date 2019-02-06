@@ -111,6 +111,7 @@ class Enter extends React.Component<IProps, IState> {
                 />
 
                 <PasswordField
+                  errorMessage={authentication.error && authentication.error.message}
                   inputRef={this.passwordRef}
                 />
 

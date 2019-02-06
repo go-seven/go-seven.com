@@ -15,6 +15,8 @@ import {
 
 interface IProps {
   autoComplete?: string
+  canShowPassword?: boolean
+  errorMessage?: string,
   inputRef: React.RefObject<HTMLInputElement>
   showPasswordPolicy?: boolean
 }
@@ -77,6 +79,8 @@ export default class PasswordField extends React.Component<IProps, IState> {
   render() {
     const {
       autoComplete,
+      canShowPassword,
+      errorMessage,
       inputRef,
       showPasswordPolicy,
     } = this.props
@@ -97,11 +101,12 @@ export default class PasswordField extends React.Component<IProps, IState> {
       <Field>
         <Label>Password</Label>
 
-        <Control hasIconsLeft hasIconsRight>
+        <Control hasIconsLeft hasIconsRight={canShowPassword}>
           <Input
             autoComplete={autoComplete}
             inputRef={inputRef}
-            isDanger={passwordIsVisible}
+            isDanger={!!errorMessage}
+            isWarning={passwordIsVisible}
             onChange={this.onChange}
             required
             type={passwordIsVisible ? "text" : "password"}
@@ -111,16 +116,24 @@ export default class PasswordField extends React.Component<IProps, IState> {
             <Icon.Svg icon={lock} />
           </Icon>
 
-          <Icon
-            hasBackgroundWhiteTer={!passwordIsVisible}
-            hasBackgroundDanger={passwordIsVisible}
-            hasTextLight={passwordIsVisible}
-            hasTextGrey={!passwordIsVisible}
-            isRight
-            onClick={this.togglePasswordVisibility}
-          >
-            <Icon.Svg icon={passwordIsVisible ? eyeSlash : eye} />
-          </Icon>
+          {canShowPassword && (
+            <Icon
+              hasBackgroundWhiteTer={!passwordIsVisible}
+              hasBackgroundWarning={passwordIsVisible}
+              hasTextLight={passwordIsVisible}
+              hasTextGrey={!passwordIsVisible}
+              isRight
+              onClick={this.togglePasswordVisibility}
+            >
+              <Icon.Svg icon={passwordIsVisible ? eyeSlash : eye} />
+            </Icon>
+          )}
+
+          {errorMessage && (
+            <Help>
+              <Span hasTextDanger>{errorMessage}</Span>
+            </Help>
+          )}
 
           {showPasswordPolicy && (
             <Help>

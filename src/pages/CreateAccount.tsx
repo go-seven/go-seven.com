@@ -135,6 +135,8 @@ class CreateAccount extends React.Component<IProps, IState> {
 
                   <PasswordField
                     autoComplete="new-password"
+                    canShowPassword
+                    errorMessage={authentication.error && authentication.error.message}
                     inputRef={this.passwordRef}
                     showPasswordPolicy
                   />
