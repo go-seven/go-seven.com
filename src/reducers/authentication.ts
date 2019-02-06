@@ -1,3 +1,5 @@
+import * as client from "../client"
+
 const AUTHENTICATION_FAILURE = "AUTHENTICATION_FAILURE"
 const AUTHENTICATION_REQUEST = "AUTHENTICATION_REQUEST"
 export const AUTHENTICATION_SUCCESS = "AUTHENTICATION_SUCCESS"
@@ -39,12 +41,7 @@ export function createAccount(credentials: ICredentials) {
   return (dispatch, getState) => {
     dispatch({ type: CREATE_ACCOUNT_REQUEST })
 
-    fetch(`${basePath}/account`, {
-      body: JSON.stringify(credentials),
-      headers: headersForJson,
-      method: "POST",
-    })
-      .then(checkResponse)
+    client.post("/account", credentials)
       .then(() => { dispatch({ type: CREATE_ACCOUNT_SUCCESS }) })
       .catch((error) => { dispatch({ type: CREATE_ACCOUNT_FAILURE, error }) })
   }
@@ -55,12 +52,7 @@ export function enter(credentials: ICredentials) {
   return (dispatch, getState) => {
     dispatch({ type: AUTHENTICATION_REQUEST })
 
-    fetch(`${basePath}/account`, {
-      body: JSON.stringify(credentials),
-      headers: headersForJson,
-      method: "POST",
-    })
-      .then(checkResponse)
+    client.post("/enter", credentials)
       .then(() => { dispatch({ type: AUTHENTICATION_SUCCESS }) })
       .catch((error) => { dispatch({ type: AUTHENTICATION_FAILURE, error }) })
   }

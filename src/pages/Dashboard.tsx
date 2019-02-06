@@ -32,7 +32,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   exit: () => dispatch(exit()),
-  createUrl: () => dispatch(createUrl()),
+  createUrl: (url) => dispatch(createUrl(url)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
