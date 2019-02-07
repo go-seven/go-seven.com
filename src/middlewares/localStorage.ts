@@ -59,6 +59,13 @@ export default function localStorageMiddleware(store) {
                  }
                })
              }
+           } else {
+            return next({
+              ...action,
+              data: {
+                isValid: false,
+              }
+            })
            }
          } catch (ignore) {
            return next({
