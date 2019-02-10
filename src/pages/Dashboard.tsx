@@ -2,7 +2,7 @@ import * as React from "react"
 import { connect } from "react-redux"
 
 import Navbar from "../components/Navbar"
-import UrlCollections from "../components/UrlCollections"
+import UrlCollection from "../components/UrlCollection"
 import UrlCreator from "../components/UrlCreator"
 
 import {
@@ -12,10 +12,12 @@ import {
 import {
   createUrl,
   fetchCollectionIfNeeded,
+  ICollection,
 } from "../reducers/collections"
 
 interface IProps {
   authentication: IAuthentication
+  currentCollection: ICollection
   fetchCollection: () => void
   exit: () => void
 }
@@ -26,6 +28,7 @@ class Dashboard extends React.Component<IProps> {
   render() {
     const {
       authentication,
+      currentCollection,
       exit,
       fetchCollection,
     } = this.props
@@ -43,7 +46,8 @@ class Dashboard extends React.Component<IProps> {
 
         <UrlCreator />
 
-        <UrlCollections
+        <UrlCollection
+          collection={currentCollection}
           fetchCollection={fetchCollection}
         />
       </React.Fragment>
@@ -52,7 +56,8 @@ class Dashboard extends React.Component<IProps> {
 }
 
 const mapStateToProps = (state) => ({
-  authentication: state.account.authentication
+  authentication: state.account.authentication,
+  currentCollection: state.collections.current,
 })
 
 const mapDispatchToProps = (dispatch) => ({

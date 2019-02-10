@@ -16,7 +16,7 @@ interface IUrl {
   title?: string
 }
 
-interface ICollection {
+export interface ICollection {
   id: string
   name: string
   urls: IUrl[]
