@@ -1,5 +1,5 @@
 /* global self, caches, fetch */
-const CACHE_NAME = 'go-seven-cache-v0.0.0'
+const CACHE_NAME = 'go-seven-cache-v0.1.0'
 
 const REQUIRED_FILES = [
   '/',
@@ -36,63 +36,46 @@ const REQUIRED_FILES = [
 ]
 
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      cache.addAll(REQUIRED_FILES)
-    }).catch(error => {
-      console.error('cache install', error)
-    })
-  )
+  event.waitUntil(async function () {
+    const cache = await caches.open(CACHE_NAME)
+
+    await cache.addAll(REQUIRED_FILES)
+  }())
 })
 
-// Cache and update.
+// Cache and update with stale-while-revalidate policy.
 self.addEventListener('fetch', event => {
-  const { request } = event
+  event.respondWith(async function () {
+    const cache = await caches.open(CACHE_NAME)
 
-  return caches.open(CACHE_NAME).then(cache => {
-    return cache.match(request).then(matching => {
-      if (matching) {
-        event.respondWith(() => matching)
+    const cachedResponsePromise = await cache.match(event.request)
+    const networkResponsePromise = fetch(event.request)
 
-        event.waitUntil(() => {
-          return fetch(request).then(response => {
-            return cache.put(request, response)
-          }).catch(error => {
-            console.error('cache update', error)
-          })
-        })
-      } else {
-        event.waitUntil(() => {
-          return fetch(request).then(response => {
-            return cache.put(request, response)
-          }).catch(error => {
-            console.error(error)
-          })
-        })
-      }
-    }).catch(error => {
-      console.error('cache match', error)
-    })
-  }).catch(error => {
-    console.error('cache open', error)
-  })
+    event.waitUntil(async function () {
+      const networkResponse = await networkResponsePromise
+
+      await cache.put(event.request, networkResponse.clone())
+    }())
+
+    if (event.request.url.startsWith(self.location.origin)) {
+      return cachedResponsePromise || networkResponsePromise
+    } else {
+      return networkResponsePromise
+    }
+  }())
 })
 
 // Clean up caches other than current.
 self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.filter(cacheName => {
-          const deleteThisCache = cacheName !== CACHE_NAME
+  event.waitUntil(async function() {
+    const cacheNames = await caches.keys()
 
-          return deleteThisCache
-        }).map(cacheName => {
-          console.log(`deleted cache: ${cacheName}`)
+    await Promise.all(
+      cacheNames.filter((cacheName) => {
+        const deleteThisCache = cacheName !== CACHE_NAME
 
-          caches.delete(cacheName)
-        })
-      )
-    })
-  )
+        return deleteThisCache
+      }).map(cacheName => caches.delete(cacheName))
+    )
+  }())
 })
