@@ -19,7 +19,7 @@ interface IError {
   message: string
 }
 
-export interface IAuthenticationState {
+export interface IAuthentication {
   expiresAt?: string
   error?: IError
   hasExpired?: boolean
@@ -28,19 +28,8 @@ export interface IAuthenticationState {
   token?: string
 }
 
-const basePath = "https://api.go-seven.com/v1"
-
-const headersForJson = {
-  "Accept": "application/json",
-  "Content-Type": "application/json",
-}
-
-const checkResponse = (response) => {
-  if (response.ok) {
-    return response.json()
-  } else {
-    throw new Error(response.statusText)
-  }
+export interface IAccountState {
+  authentication: IAuthentication | null
 }
 
 export function createAccount(credentials: ICredentials) {
@@ -66,9 +55,8 @@ export function enter(credentials: ICredentials) {
 }
 export function exit() { return { type: EXIT } }
 
-export const initialState: IAuthenticationState = {
-  isValid: false,
-  isWaiting: false,
+export const initialState: IAccountState = {
+  authentication: null
 }
 
 export default function(state = initialState, action) {
@@ -76,46 +64,69 @@ export default function(state = initialState, action) {
     case AUTHENTICATION_FAILURE:
       return {
         ...state,
-        error: action.error,
-        isWaiting: false,
+        authentication: {
+          ...state.authentication,
+          error: action.error,
+          isWaiting: false,
+        }
       }
 
     case AUTHENTICATION_REQUEST:
       return {
         ...state,
-        error: null,
-        isWaiting: true,
+        authentication: {
+          ...state.authentication,
+          error: null,
+          isWaiting: true,
+        }
       }
 
     case AUTHENTICATION_SUCCESS:
       return {
         ...state,
-        ...action.data,
-        isValid: true,
-        isWaiting: false,
+        authentication: {
+          ...action.data,
+          isValid: true,
+          isWaiting: false,
+        }
       }
 
     case CHECK_AUTHENTICATION:
-      return action.data
+      return {
+        ...state,
+        authentication: {
+          ...action.data
+        }
+      }
 
     case CREATE_ACCOUNT_FAILURE:
       return {
         ...state,
-        error: action.error,
-        isWaiting: false,
+        authentication: {
+          error: action.error,
+          isValid: false,
+          isWaiting: false,
+        }
       }
 
     case CREATE_ACCOUNT_REQUEST:
       return {
         ...state,
-        error: null,
-        isWaiting: true,
+        authentication: {
+          error: null,
+          isValid: false,
+          isWaiting: true,
+        }
       }
 
     case CREATE_ACCOUNT_SUCCESS:
       return {
         ...state,
-        isWaiting: false,
+        authentication: {
+          error: null,
+          isValid: false,
+          isWaiting: false,
+        }
       }
 
     case EXIT:

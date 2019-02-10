@@ -4,10 +4,12 @@ import { render } from "react-dom"
 import configureStore from "./store/configureStore"
 import Root from "./Root"
 
-import { initialState as authentication } from "./reducers/authentication"
+import { initialState as account } from "./reducers/account"
+import { initialState as collections } from "./reducers/collections"
 
 const initialState = {
-  authentication
+  account,
+  collections,
 }
 
 window.addEventListener("load", () => {

@@ -17,7 +17,7 @@ import TermsOfService from "./pages/TermsOfService"
 
 import {
   CHECK_AUTHENTICATION,
-} from "./reducers/authentication"
+} from "./reducers/account"
 
 interface IProps {
   store: Store

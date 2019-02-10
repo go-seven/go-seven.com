@@ -3,7 +3,7 @@ import {
   AUTHENTICATION_SUCCESS,
   CHECK_AUTHENTICATION,
   EXIT
-} from "../reducers/authentication"
+} from "../reducers/account"
 
 export default function localStorageMiddleware(store) {
    return (next) => (action) => {

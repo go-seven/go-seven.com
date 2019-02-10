@@ -25,16 +25,16 @@ import PasswordField from "../components/PasswordField"
 
 import {
   createAccount,
-  IAuthenticationState,
+  IAuthentication,
   ICredentials,
-} from "../reducers/authentication"
+} from "../reducers/account"
 
 import Homepage from "./Homepage"
 import PrivacyPolicy from "./PrivacyPolicy"
 import TermsOfService from "./TermsOfService"
 
 interface IProps {
-  authentication: IAuthenticationState
+  authentication: IAuthentication
   createAccount: (ICredentials) => void
 }
 
@@ -97,6 +97,10 @@ class CreateAccount extends React.Component<IProps, IState> {
       clientIsRobot,
       redirect,
     } = this.state
+
+    if (authentication === null) {
+      return null
+    }
 
     if (redirect) {
       return (
@@ -196,7 +200,7 @@ class CreateAccount extends React.Component<IProps, IState> {
 }
 
 const mapStateToProps = (state) => ({
-  authentication: state.authentication
+  authentication: state.account.authentication
 })
 
 const mapDispatchToProps = (dispatch) => ({

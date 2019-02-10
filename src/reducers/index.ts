@@ -1,15 +1,9 @@
 import { combineReducers } from "redux"
 
-import authentication from "./authentication"
+import account from "./account"
 import collections from "./collections"
-import preferences from "./preferences"
-import statistics from "./statistics"
-import storage from "./storage"
 
 export default combineReducers({
-  authentication,
+  account,
   collections,
-  preferences,
-  statistics,
-  storage,
 })

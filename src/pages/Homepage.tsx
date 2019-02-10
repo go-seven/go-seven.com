@@ -14,11 +14,10 @@ import Pricing from "../components/Pricing"
 
 import {
   exit,
-  IAuthenticationState,
-} from "../reducers/authentication"
+} from "../reducers/account"
 
 interface IProps {
-  authentication: IAuthenticationState
+  authenticationIsValid: boolean
   exit: () => void
 }
 
@@ -27,14 +26,14 @@ class Homepage extends React.Component<IProps> {
 
   render() {
     const {
-      authentication,
+      authenticationIsValid,
       exit,
     } = this.props
 
     return (
       <React.Fragment>
         <Navbar
-          authenticationIsValid={authentication.isValid}
+          authenticationIsValid={authenticationIsValid}
           exit={exit}
         />
 
@@ -57,9 +56,21 @@ class Homepage extends React.Component<IProps> {
   }
 }
 
-const mapStateToProps = (state) => ({
-  authentication: state.authentication
-})
+const mapStateToProps = (state) => {
+  const {
+    account,
+  } = state
+
+  const {
+    authentication,
+  } = account
+
+  const authenticationIsValid = authentication === null ? false : authentication.isValid
+
+  return {
+    authenticationIsValid,
+  }
+}
 
 const mapDispatchToProps = (dispatch) => ({
   exit: () => dispatch(exit()),

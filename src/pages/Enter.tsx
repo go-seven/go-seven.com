@@ -24,15 +24,15 @@ import PasswordField from "../components/PasswordField"
 
 import {
   enter,
-  IAuthenticationState,
+  IAuthentication,
   ICredentials,
-} from "../reducers/authentication"
+} from "../reducers/account"
 
 import Dashboard from "./Dashboard"
 import Homepage from "./Homepage"
 
 interface IProps {
-  authentication: IAuthenticationState
+  authentication: IAuthentication
   enter: (ICredentials) => void
 }
 
@@ -61,6 +61,10 @@ class Enter extends React.Component<IProps, IState> {
     const {
       authentication,
     } = this.props
+
+    if (authentication === null) {
+      return null
+    }
 
     if (authentication.isValid) {
       return (
@@ -119,7 +123,9 @@ class Enter extends React.Component<IProps, IState> {
   }
 }
 
-const mapStateToProps = (state) => (state)
+const mapStateToProps = (state) => ({
+  authentication: state.account.authentication,
+})
 
 const mapDispatchToProps = (dispatch) => ({
   enter: (credentials) => dispatch(enter(credentials))
