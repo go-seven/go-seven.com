@@ -15,6 +15,7 @@ import {
 
 interface IProps {
   authentication: IAuthenticationState
+  exit: () => void
 }
 
 class Dashboard extends React.Component<IProps> {
@@ -23,12 +24,14 @@ class Dashboard extends React.Component<IProps> {
   render() {
     const {
       authentication,
+      exit,
     } = this.props
 
     return (
       <React.Fragment>
         <Navbar
           authenticationIsValid={authentication.isValid}
+          exit={exit}
         />
 
         <UrlCreator />

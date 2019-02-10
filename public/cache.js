@@ -51,17 +51,15 @@ self.addEventListener('fetch', event => {
     const cachedResponsePromise = await cache.match(event.request)
     const networkResponsePromise = fetch(event.request)
 
-    event.waitUntil(async function () {
-      const networkResponse = await networkResponsePromise
-
-      await cache.put(event.request, networkResponse.clone())
-    }())
-
     if (event.request.url.startsWith(self.location.origin)) {
-      return cachedResponsePromise || networkResponsePromise
-    } else {
-      return networkResponsePromise
+      event.waitUntil(async function () {
+        const networkResponse = await networkResponsePromise
+
+        await cache.put(event.request, networkResponse.clone())
+      }())
     }
+
+    return cachedResponsePromise || networkResponsePromise
   }())
 })
 

@@ -119,10 +119,7 @@ export default function(state = initialState, action) {
       }
 
     case EXIT:
-      return {
-        ...state,
-        token: null
-      }
+      return initialState
 
     default: return state
   }

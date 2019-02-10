@@ -16,6 +16,7 @@ import Homepage from "../pages/Homepage"
 
 interface IProps {
   authenticationIsValid?: boolean
+  exit: () => void
   noMenu?: boolean
 }
 
@@ -25,6 +26,10 @@ interface IState {
 }
 
 export default class Nav extends React.Component<IProps, IState> {
+  static defaultProps = {
+    exit: Function.prototype
+  }
+
   state: IState = {
     expanded: false
   }
@@ -44,6 +49,14 @@ export default class Nav extends React.Component<IProps, IState> {
   onClickEnter = (event) => {
     this.setState({
       redirect: Enter.path
+    })
+  }
+
+  onClickExit = (event) => {
+    this.setState({
+      redirect: Homepage.path
+    }, () => {
+      this.props.exit()
     })
   }
 
@@ -92,6 +105,7 @@ export default class Nav extends React.Component<IProps, IState> {
                   <Field>
                     <Control>
                       <Button
+                        onClick={this.onClickExit}
                       >
                         Exit
                       </Button>
@@ -121,7 +135,6 @@ export default class Nav extends React.Component<IProps, IState> {
           </Navbar.Menu>
         )}
       </Navbar>
-
     )
   }
 }
