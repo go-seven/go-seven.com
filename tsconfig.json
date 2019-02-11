@@ -12,6 +12,7 @@
     "noImplicitUseStrict": true,
     "outDir": "public",
     "removeComments": true,
+    "resolveJsonModule": true,
     "sourceMap": false,
     "strictNullChecks": true,
     "target": "es5"

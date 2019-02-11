@@ -1,21 +1,22 @@
 /* global self, caches, fetch */
-const CACHE_NAME = 'go-seven-cache-v0.1.0'
+const { version } = require('../package.json')
+const CACHE_NAME = `go-seven-cache-v${version}`
 
 const REQUIRED_FILES = [
   '/',
-  '/bundle.js',
-  '/cache.js',
+  `/js/bundle.v${version}.js`,
+  `/js/cache.v${version}.js`,
   '/favicon.ico',
   '/fonts/roboto-v18.css',
   '/fonts/KFOkCnqEu92Fr1Mu51xIIzI.woff2',
   '/fonts/KFOlCnqEu92Fr1MmWUlfBBc4.woff2',
+  '/fonts/KFOmCnqEu92Fr1Mu4mxK.woff2',
   '/libs/react.js',
-  '/libs/react.v16.7.0.min.js',
+  '/libs/react.v16.8.0.min.js',
   '/libs/react-dom.js',
-  '/libs/react-dom.v16.7.0.min.js',
+  '/libs/react-dom.v16.8.0.min.js',
   '/libs/react-router-dom.js',
   '/libs/react-router-dom.v4.3.1.min.js',
-  '/fonts/KFOmCnqEu92Fr1Mu4mxK.woff2',
   '/manifest.json',
   '/media/logo-16x16.png',
   '/media/logo-32x32.png',
