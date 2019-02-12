@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Redirect } from "react-router-dom"
+import { Link, Redirect } from "react-router-dom"
 import {
   Button,
   Control,
@@ -10,6 +10,7 @@ import {
 
 import Logo from "./Logo"
 
+import Create from "../pages/Create"
 import CreateAccount from "../pages/CreateAccount"
 import Enter from "../pages/Enter"
 import Homepage from "../pages/Homepage"
@@ -99,6 +100,14 @@ export default class Nav extends React.Component<IProps, IState> {
 
         {noMenu || (
           <Navbar.Menu isActive={expanded}>
+            {authenticationIsValid && (
+              <Navbar.Start>
+                <Navbar.Item>
+                  Create
+                </Navbar.Item>
+              </Navbar.Start>
+            )}
+
             <Navbar.End>
               <Navbar.Item>
                 {authenticationIsValid ? (

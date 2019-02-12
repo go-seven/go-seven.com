@@ -11,12 +11,12 @@ import {
   ICollection,
 } from "../reducers/collections"
 
-interface IProps {
+export interface IUrlCollectionProps {
   fetchCollection: () => void
   collection: ICollection | null
 }
 
-export default class UrlCollection extends React.Component<IProps> {
+export default class UrlCollection extends React.Component<IUrlCollectionProps> {
   componentDidMount() {
     this.props.fetchCollection()
   }

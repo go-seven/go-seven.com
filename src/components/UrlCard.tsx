@@ -20,6 +20,7 @@ export default class UrlCard extends React.Component<IProps> {
           <Card.Header.Title>
             <Tag
               href={url.href}
+              isLink
               target="_blank"
             >
               {url.id}

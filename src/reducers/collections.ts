@@ -9,8 +9,9 @@ const CREATE_URL_SUCCESS = "CREATE_URL_SUCCESS"
 const FETCH_COLLECTION_FAILURE = "FETCH_COLLECTION_FAILURE"
 const FETCH_COLLECTION_REQUEST = "FETCH_COLLECTION_REQUEST"
 const FETCH_COLLECTION_SUCCESS = "FETCH_COLLECTION_SUCCESS"
+const SET_WANTED_URL = "SET_WANTED_URL"
 
-interface IUrl {
+export interface IUrl {
   href: string
   id?: string
   title?: string
@@ -22,14 +23,18 @@ export interface ICollection {
   urls: IUrl[]
 }
 
-interface ICollectionsState {
+export interface ICollectionsState {
   current: ICollection | null
   selected: string
+  itIsCreatingUrl: boolean
+  wantedUrl: IUrl | null
 }
 
 export const initialState: ICollectionsState = {
   current: null,
+  itIsCreatingUrl: false,
   selected: "default",
+  wantedUrl: null,
 }
 
 export function createUrl(url: IUrl) {
@@ -101,16 +106,19 @@ export default function(state = initialState, action) {
     case CREATE_URL_FAILURE:
       return {
         ...state,
+        itIsCreatingUrl: false,
       }
 
     case CREATE_URL_REQUEST:
       return {
         ...state,
+        itIsCreatingUrl: true,
       }
 
     case CREATE_URL_SUCCESS:
       return {
         ...state,
+        itIsCreatingUrl: false,
       }
 
     case FETCH_COLLECTION_FAILURE:
@@ -127,6 +135,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         current: action.data
+      }
+
+    case SET_WANTED_URL:
+      return {
+        ...state,
       }
 
     default: return state
