@@ -55,8 +55,8 @@ export function createUrl(url: IUrl) {
     })
 
     client.post("/url", { collectionId, url }, token)
-      .then((data) => { dispatch({ type: CREATE_URL_SUCCESS, data }) })
-      .catch((error) => { dispatch({ type: CREATE_URL_FAILURE, error }) })
+      .then((data) => { dispatch({ data, type: CREATE_URL_SUCCESS }) })
+      .catch((error) => { dispatch({ error, type: CREATE_URL_FAILURE }) })
   }
 }
 
@@ -65,8 +65,8 @@ function fetchCollection(token, id) {
     dispatch({ type: FETCH_COLLECTION_REQUEST, id })
 
     client.get(`/url-collection/${id}`, token)
-      .then((data) => { dispatch({ type: FETCH_COLLECTION_SUCCESS, data }) })
-      .catch((error) => { dispatch({ type: FETCH_COLLECTION_FAILURE, error }) })
+      .then((data) => { dispatch({ data, type: FETCH_COLLECTION_SUCCESS }) })
+      .catch((error) => { dispatch({ error, type: FETCH_COLLECTION_FAILURE }) })
   }
 
 }
@@ -90,6 +90,13 @@ export function fetchCollectionIfNeeded() {
     if (shouldFetchCollection({ current, selected })) {
       return dispatch(fetchCollection(token, selected))
     }
+  }
+}
+
+export function setWantedUrl(url: IUrl) {
+  return {
+    data: url,
+    type: SET_WANTED_URL,
   }
 }
 
@@ -140,6 +147,7 @@ export default function(state = initialState, action) {
     case SET_WANTED_URL:
       return {
         ...state,
+        wantedUrl: action.data
       }
 
     default: return state

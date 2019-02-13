@@ -28,7 +28,7 @@ import {
   ICredentials,
 } from "../reducers/account"
 
-import Create from "./Create"
+import CreateUrl from "./CreateUrl"
 import Homepage from "./Homepage"
 
 interface IProps {
@@ -68,7 +68,7 @@ class Enter extends React.Component<IProps, IState> {
 
     if (authentication.isValid) {
       return (
-        <Redirect push to={Create.path} />
+        <Redirect push to={CreateUrl.path} />
       )
     }
 

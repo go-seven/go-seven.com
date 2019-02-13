@@ -10,7 +10,6 @@ import {
 
 import Logo from "./Logo"
 
-import Create from "../pages/Create"
 import CreateAccount from "../pages/CreateAccount"
 import Enter from "../pages/Enter"
 import Homepage from "../pages/Homepage"

@@ -12,6 +12,7 @@ import {
 import {
   createUrl,
   fetchCollectionIfNeeded,
+  setWantedUrl,
   ICollectionsState,
 } from "../reducers/collections"
 
@@ -22,12 +23,12 @@ interface IProps {
   fetchCollection: IUrlCollectionProps["fetchCollection"]
   exit: () => void
   itIsCreatingUrl: ICollectionsState["itIsCreatingUrl"]
-  setWantedUrl: (IUrl) => void
+  setWantedUrl: IUrlCreatorProps["setWantedUrl"]
   wantedUrl: ICollectionsState["wantedUrl"]
 }
 
-class Create extends React.Component<IProps> {
-  static path = "/create"
+class CreateUrl extends React.Component<IProps> {
+  static path = "/create-url"
 
   render() {
     const {
@@ -55,8 +56,8 @@ class Create extends React.Component<IProps> {
         <UrlCreator
           createUrl={createUrl}
           itIsCreating={itIsCreatingUrl}
-          setUrl={setWantedUrl}
-          url={wantedUrl}
+          setWantedUrl={setWantedUrl}
+          wantedUrl={wantedUrl}
         />
       </React.Fragment>
     )
@@ -73,7 +74,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   createUrl: (url) => dispatch(createUrl(url)),
   exit: () => dispatch(exit()),
-  fetchCollection: () => dispatch(fetchCollectionIfNeeded())
+  fetchCollection: () => dispatch(fetchCollectionIfNeeded()),
+  setWantedUrl: (url) => dispatch(setWantedUrl(url)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Create)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateUrl)

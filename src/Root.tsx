@@ -8,8 +8,8 @@ import {
 } from "react-router-dom"
 import { Store } from "redux"
 
-import Create from "./pages/Create"
 import CreateAccount from "./pages/CreateAccount"
+import CreateUrl from "./pages/CreateUrl"
 import Enter from "./pages/Enter"
 import Homepage from "./pages/Homepage"
 import PrivacyPolicy from "./pages/PrivacyPolicy"
@@ -39,7 +39,7 @@ export default class Root extends React.Component<IProps> {
           <Switch>
             <Route component={CreateAccount} exact path={CreateAccount.path} />
 
-            <Route component={Create} exact path={Create.path} />
+            <Route component={CreateUrl} exact path={CreateUrl.path} />
 
             <Route component={Enter} exact path={Enter.path} />
 

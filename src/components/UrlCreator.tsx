@@ -1,4 +1,4 @@
-import pdsp from "pdsp"
+import * as pdsp from "pdsp"
 import * as React from "react"
 import urlRegex from "regex-weburl"
 import {
@@ -17,8 +17,8 @@ import {
 export interface IUrlCreatorProps {
   createUrl: (IUrl) => void
   itIsCreating: boolean
-  setUrl: (IUrl) => void
-  url: IUrl | null
+  setWantedUrl: (IUrl) => void
+  wantedUrl: IUrl | null
 }
 
 export default class UrlCreator extends React.Component<IUrlCreatorProps> {
@@ -27,14 +27,24 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps> {
 
     const {
       itIsCreating,
-      setUrl,
+      setWantedUrl,
     } = this.props
 
     if (itIsCreating) {
       return
     }
 
-    setUrl(event.target.value)
+    let href = event.target.value.trim()
+
+    if (href.toLowerCase() === "https") {
+      href = "https://"
+    }
+
+    if (href.toLowerCase() === "http:") {
+      href = "http://"
+    }
+
+    setWantedUrl({ href })
   }
 
   onPasteUrl = (event) => {
@@ -43,7 +53,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps> {
     const {
       createUrl,
       itIsCreating,
-      url,
+      wantedUrl,
     } = this.props
 
     if (itIsCreating) {
@@ -53,7 +63,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps> {
     const href = event.clipboardData.getData("Text")
 
     const isValid = urlRegex.test(href)
-    const urlIsEmpty = url === null || url.href === ""
+    const urlIsEmpty = wantedUrl === null || wantedUrl.href === ""
 
     // If a valid target URL is pasted in empty input text,
     // create a shortened URL on the fly. If input text is not
@@ -67,7 +77,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps> {
   render() {
     const {
       itIsCreating,
-      url,
+      wantedUrl,
     } = this.props
 
     return (
@@ -75,7 +85,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps> {
         <Hero.Body>
           <Field>
             <Label>
-              Your URL
+              Your long URL
             </Label>
 
             <Control>
@@ -85,7 +95,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps> {
                 placeholder="Paste or write your URL here"
                 readOnly={itIsCreating}
                 type="text"
-                value={url && url.href || ""}
+                value={wantedUrl && wantedUrl.href || ""}
               />
             </Control>
           </Field>
@@ -107,11 +117,11 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps> {
   saveUrl = () => {
     const {
       createUrl,
-      url,
+      wantedUrl,
     } = this.props
 
     // Since the Save button is enabled only if url isValid
     // there is no No need to check for URL validity here.
-    createUrl(url)
+    createUrl(wantedUrl)
   }
 }
