@@ -3,13 +3,16 @@
 // If no collection is selected there is always a "default" collection which includes all URLs.
 import * as client from "../client"
 
-const CREATE_URL_FAILURE = "CREATE_URL_FAILURE"
-const CREATE_URL_REQUEST = "CREATE_URL_REQUEST"
-const CREATE_URL_SUCCESS = "CREATE_URL_SUCCESS"
-const FETCH_COLLECTION_FAILURE = "FETCH_COLLECTION_FAILURE"
-const FETCH_COLLECTION_REQUEST = "FETCH_COLLECTION_REQUEST"
-const FETCH_COLLECTION_SUCCESS = "FETCH_COLLECTION_SUCCESS"
+const asyncActions = (NAME) => ({
+  FAILURE: `${NAME}_FAILURE`,
+  REQUEST: `${NAME}_REQUEST`,
+  SUCCESS: `${NAME}_SUCCESS`,
+})
+
+const CREATE_URL = asyncActions("CREATE_URL")
+const FETCH_COLLECTION = asyncActions("FETCH_COLLECTION")
 const SET_WANTED_URL = "SET_WANTED_URL"
+const URL_ID_EXISTS = asyncActions("URL_ID_EXISTS")
 
 export interface IUrl {
   href: string
@@ -26,12 +29,14 @@ export interface ICollection {
 export interface ICollectionsState {
   current: ICollection | null
   selected: string
+  itIsCheckingIfUrlIdExists: boolean
   itIsCreatingUrl: boolean
   wantedUrl: IUrl | null
 }
 
 export const initialState: ICollectionsState = {
   current: null,
+  itIsCheckingIfUrlIdExists: false,
   itIsCreatingUrl: false,
   selected: "default",
   wantedUrl: null,
@@ -51,22 +56,22 @@ export function createUrl(url: IUrl) {
     const collectionId = collections.selected
 
     dispatch({
-      type: CREATE_URL_REQUEST
+      type: CREATE_URL.REQUEST
     })
 
     client.post("/url", { collectionId, url }, token)
-      .then((data) => { dispatch({ data, type: CREATE_URL_SUCCESS }) })
-      .catch((error) => { dispatch({ error, type: CREATE_URL_FAILURE }) })
+      .then((data) => { dispatch({ data, type: CREATE_URL.SUCCESS }) })
+      .catch((error) => { dispatch({ error, type: CREATE_URL.FAILURE }) })
   }
 }
 
 function fetchCollection(token, id) {
   return (dispatch, getState) => {
-    dispatch({ type: FETCH_COLLECTION_REQUEST, id })
+    dispatch({ type: FETCH_COLLECTION.REQUEST, id })
 
     client.get(`/url-collection/${id}`, token)
-      .then((data) => { dispatch({ data, type: FETCH_COLLECTION_SUCCESS }) })
-      .catch((error) => { dispatch({ error, type: FETCH_COLLECTION_FAILURE }) })
+      .then((data) => { dispatch({ data, type: FETCH_COLLECTION.SUCCESS }) })
+      .catch((error) => { dispatch({ error, type: FETCH_COLLECTION.FAILURE }) })
   }
 
 }
@@ -94,9 +99,21 @@ export function fetchCollectionIfNeeded() {
 }
 
 export function setWantedUrl(url: IUrl) {
-  return {
-    data: url,
-    type: SET_WANTED_URL,
+  return (dispatch, getState) => {
+    const {
+      wantedUrl
+    } = getState()
+
+    const urlIdChanged = wantedUrl ? (wantedUrl.id === url.id) : true
+
+    if (urlIdChanged) {
+      dispatch({ data: url, type: URL_ID_EXISTS.REQUEST })
+    } else {
+      return {
+        data: url,
+        type: SET_WANTED_URL,
+      }
+    }
   }
 }
 
@@ -110,35 +127,35 @@ export function shouldFetchCollection({ current, selected }) {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case CREATE_URL_FAILURE:
+    case CREATE_URL.FAILURE:
       return {
         ...state,
         itIsCreatingUrl: false,
       }
 
-    case CREATE_URL_REQUEST:
+    case CREATE_URL.REQUEST:
       return {
         ...state,
         itIsCreatingUrl: true,
       }
 
-    case CREATE_URL_SUCCESS:
+    case CREATE_URL.SUCCESS:
       return {
         ...state,
         itIsCreatingUrl: false,
       }
 
-    case FETCH_COLLECTION_FAILURE:
+    case FETCH_COLLECTION.FAILURE:
       return {
         ...state,
       }
 
-    case FETCH_COLLECTION_REQUEST:
+    case FETCH_COLLECTION.REQUEST:
       return {
         ...state,
       }
 
-    case FETCH_COLLECTION_SUCCESS:
+    case FETCH_COLLECTION.SUCCESS:
       return {
         ...state,
         current: action.data
@@ -148,6 +165,25 @@ export default function(state = initialState, action) {
       return {
         ...state,
         wantedUrl: action.data
+      }
+
+    case URL_ID_EXISTS.FAILURE:
+      return {
+        ...state,
+        itIsCheckingIfUrlIdExists: false,
+      }
+
+    case URL_ID_EXISTS.REQUEST:
+      return {
+        ...state,
+        itIsCheckingIfUrlIdExists: true,
+        wantedUrl: action.data
+      }
+
+    case URL_ID_EXISTS.SUCCESS:
+      return {
+        ...state,
+        itIsCheckingIfUrlIdExists: false,
       }
 
     default: return state

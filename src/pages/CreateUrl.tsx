@@ -22,6 +22,7 @@ interface IProps {
   collection: ICollectionsState["current"]
   fetchCollection: IUrlCollectionProps["fetchCollection"]
   exit: () => void
+  itIsCheckingIfUrlIdExists: ICollectionsState["itIsCheckingIfUrlIdExists"]
   itIsCreatingUrl: ICollectionsState["itIsCreatingUrl"]
   setWantedUrl: IUrlCreatorProps["setWantedUrl"]
   wantedUrl: ICollectionsState["wantedUrl"]
@@ -37,6 +38,7 @@ class CreateUrl extends React.Component<IProps> {
       createUrl,
       exit,
       fetchCollection,
+      itIsCheckingIfUrlIdExists,
       itIsCreatingUrl,
       setWantedUrl,
       wantedUrl,
@@ -55,7 +57,8 @@ class CreateUrl extends React.Component<IProps> {
 
         <UrlCreator
           createUrl={createUrl}
-          itIsCreating={itIsCreatingUrl}
+          itIsCheckingIfUrlIdExists={itIsCheckingIfUrlIdExists}
+          itIsCreatingUrl={itIsCreatingUrl}
           setWantedUrl={setWantedUrl}
           wantedUrl={wantedUrl}
         />
@@ -67,6 +70,7 @@ class CreateUrl extends React.Component<IProps> {
 const mapStateToProps = (state) => ({
   authentication: state.account.authentication,
   collection: state.collections.current,
+  itIsCheckingIfUrlIdExists: state.collections.itIsCheckingIfUrlIdExists,
   itIsCreatingUrl: state.collections.itIsCreatingUrl,
   wantedUrl: state.collections.wantedUrl,
 })
