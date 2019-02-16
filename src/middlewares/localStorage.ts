@@ -1,6 +1,6 @@
 /* global localStorage */
 import {
-  AUTHENTICATION_SUCCESS,
+  AUTHENTICATION,
   CHECK_AUTHENTICATION,
   EXIT
 } from "../reducers/account"
@@ -8,7 +8,7 @@ import {
 export default function localStorageMiddleware(store) {
    return (next) => (action) => {
      switch (action.type) {
-       case AUTHENTICATION_SUCCESS:
+       case AUTHENTICATION.SUCCESS:
          try {
            localStorage.setItem("authentication", JSON.stringify(action.data))
          } catch (ignore) {

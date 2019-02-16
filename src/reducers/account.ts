@@ -1,12 +1,9 @@
+import asyncActions from "../asyncActions"
 import * as client from "../client"
 
-const AUTHENTICATION_FAILURE = "AUTHENTICATION_FAILURE"
-const AUTHENTICATION_REQUEST = "AUTHENTICATION_REQUEST"
-export const AUTHENTICATION_SUCCESS = "AUTHENTICATION_SUCCESS"
+export const AUTHENTICATION = asyncActions("AUTHENTICATION")
 export const CHECK_AUTHENTICATION = "CHECK_AUTHENTICATION"
-const CREATE_ACCOUNT_FAILURE = "CREATE_ACCOUNT_FAILURE"
-const CREATE_ACCOUNT_REQUEST = "CREATE_ACCOUNT_REQUEST"
-const CREATE_ACCOUNT_SUCCESS = "CREATE_ACCOUNT_SUCCESS"
+const CREATE_ACCOUNT = asyncActions("CREATE_ACCOUNT")
 export const EXIT = "EXIT"
 
 export interface ICredentials {
@@ -34,22 +31,24 @@ export interface IAccountState {
 
 export function createAccount(credentials: ICredentials) {
   return (dispatch, getState) => {
-    dispatch({ type: CREATE_ACCOUNT_REQUEST })
+    dispatch({ type: CREATE_ACCOUNT.REQUEST })
 
-    client.post("/account", credentials)
-      .then(() => { dispatch({ type: CREATE_ACCOUNT_SUCCESS }) })
-      .catch((error) => { dispatch({ type: CREATE_ACCOUNT_FAILURE, error }) })
+    client.post("/account", credentials).then(
+      () => dispatch({ type: CREATE_ACCOUNT.SUCCESS }),
+      (error) => dispatch({ error, type: CREATE_ACCOUNT.FAILURE }),
+    )
   }
 
 }
 
 export function enter(credentials: ICredentials) {
   return (dispatch, getState) => {
-    dispatch({ type: AUTHENTICATION_REQUEST })
+    dispatch({ type: AUTHENTICATION.REQUEST })
 
-    client.post("/enter", credentials)
-      .then((data) => { dispatch({ type: AUTHENTICATION_SUCCESS, data }) })
-      .catch((error) => { dispatch({ type: AUTHENTICATION_FAILURE, error }) })
+    client.post("/enter", credentials).then(
+      (data) => dispatch({ type: AUTHENTICATION.SUCCESS, data }),
+      (error) => dispatch({ type: AUTHENTICATION.FAILURE, error }),
+    )
   }
 
 }
@@ -61,7 +60,7 @@ export const initialState: IAccountState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case AUTHENTICATION_FAILURE:
+    case AUTHENTICATION.FAILURE:
       return {
         ...state,
         authentication: {
@@ -71,7 +70,7 @@ export default function(state = initialState, action) {
         }
       }
 
-    case AUTHENTICATION_REQUEST:
+    case AUTHENTICATION.REQUEST:
       return {
         ...state,
         authentication: {
@@ -81,7 +80,7 @@ export default function(state = initialState, action) {
         }
       }
 
-    case AUTHENTICATION_SUCCESS:
+    case AUTHENTICATION.SUCCESS:
       return {
         ...state,
         authentication: {
@@ -99,7 +98,7 @@ export default function(state = initialState, action) {
         }
       }
 
-    case CREATE_ACCOUNT_FAILURE:
+    case CREATE_ACCOUNT.FAILURE:
       return {
         ...state,
         authentication: {
@@ -109,7 +108,7 @@ export default function(state = initialState, action) {
         }
       }
 
-    case CREATE_ACCOUNT_REQUEST:
+    case CREATE_ACCOUNT.REQUEST:
       return {
         ...state,
         authentication: {
@@ -119,7 +118,7 @@ export default function(state = initialState, action) {
         }
       }
 
-    case CREATE_ACCOUNT_SUCCESS:
+    case CREATE_ACCOUNT.SUCCESS:
       return {
         ...state,
         authentication: {

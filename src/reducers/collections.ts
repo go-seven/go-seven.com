@@ -1,13 +1,8 @@
 // A Collection is a set of URLs. Every collection has an identifier and a name.
 // User can organize its URLs into collections.
 // If no collection is selected there is always a "default" collection which includes all URLs.
+import asyncActions from "../asyncActions"
 import * as client from "../client"
-
-const asyncActions = (NAME) => ({
-  FAILURE: `${NAME}_FAILURE`,
-  REQUEST: `${NAME}_REQUEST`,
-  SUCCESS: `${NAME}_SUCCESS`,
-})
 
 const CREATE_URL = asyncActions("CREATE_URL")
 const FETCH_COLLECTION = asyncActions("FETCH_COLLECTION")
@@ -59,9 +54,10 @@ export function createUrl(url: IUrl) {
       type: CREATE_URL.REQUEST
     })
 
-    client.post("/url", { collectionId, url }, token)
-      .then((data) => { dispatch({ data, type: CREATE_URL.SUCCESS }) })
-      .catch((error) => { dispatch({ error, type: CREATE_URL.FAILURE }) })
+    client.post("/url", { collectionId, url }, token).then(
+      (data) => dispatch({ data, type: CREATE_URL.SUCCESS }),
+      (error) => dispatch({ error, type: CREATE_URL.FAILURE }),
+    )
   }
 }
 
@@ -69,9 +65,10 @@ function fetchCollection(token, id) {
   return (dispatch, getState) => {
     dispatch({ type: FETCH_COLLECTION.REQUEST, id })
 
-    client.get(`/url-collection/${id}`, token)
-      .then((data) => { dispatch({ data, type: FETCH_COLLECTION.SUCCESS }) })
-      .catch((error) => { dispatch({ error, type: FETCH_COLLECTION.FAILURE }) })
+    client.get(`/url-collection/${id}`, token).then(
+      (data) => dispatch({ data, type: FETCH_COLLECTION.SUCCESS }),
+      (error) => dispatch({ error, type: FETCH_COLLECTION.FAILURE }),
+    )
   }
 
 }
@@ -101,13 +98,29 @@ export function fetchCollectionIfNeeded() {
 export function setWantedUrl(url: IUrl) {
   return (dispatch, getState) => {
     const {
-      wantedUrl
+      account,
+      wantedUrl,
     } = getState()
 
-    const urlIdChanged = wantedUrl ? (wantedUrl.id === url.id) : true
+    const {
+      token,
+    } = account.authentication
+
+    const urlIdChanged = wantedUrl ? (wantedUrl.id !== url.id) : true
 
     if (urlIdChanged) {
       dispatch({ data: url, type: URL_ID_EXISTS.REQUEST })
+
+      client.get(`/url/${url.id}`, token).then(
+        (data) => dispatch({
+          data: {
+            exists: true,
+            url,
+          },
+          type: URL_ID_EXISTS.SUCCESS,
+        }),
+        (error) => dispatch({ error, type: URL_ID_EXISTS.FAILURE }),
+      )
     } else {
       return {
         data: url,
