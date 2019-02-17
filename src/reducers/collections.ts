@@ -27,6 +27,7 @@ export interface ICollectionsState {
   itIsCheckingIfUrlIdExists: boolean
   itIsCreatingUrl: boolean
   wantedUrl: IUrl | null
+  wantedUrlIdExists: boolean | null
 }
 
 export const initialState: ICollectionsState = {
@@ -35,6 +36,7 @@ export const initialState: ICollectionsState = {
   itIsCreatingUrl: false,
   selected: "default",
   wantedUrl: null,
+  wantedUrlIdExists: null,
 }
 
 export function createUrl(url: IUrl) {
@@ -56,7 +58,7 @@ export function createUrl(url: IUrl) {
 
     client.post("/url", { collectionId, url }, token).then(
       (data) => dispatch({ data, type: CREATE_URL.SUCCESS }),
-      (error) => dispatch({ error, type: CREATE_URL.FAILURE }),
+      (error) => dispatch({ error: client.parseError(error), type: CREATE_URL.FAILURE }),
     )
   }
 }
@@ -67,7 +69,7 @@ function fetchCollection(token, id) {
 
     client.get(`/url-collection/${id}`, token).then(
       (data) => dispatch({ data, type: FETCH_COLLECTION.SUCCESS }),
-      (error) => dispatch({ error, type: FETCH_COLLECTION.FAILURE }),
+      (error) => dispatch({ error: client.parseError(error), type: FETCH_COLLECTION.FAILURE }),
     )
   }
 
@@ -107,24 +109,26 @@ export function setWantedUrl(url: IUrl) {
     } = account.authentication
 
     const urlIdChanged = wantedUrl ? (wantedUrl.id !== url.id) : true
+    const urlIdIsEmpty = url.id === ""
 
     if (urlIdChanged) {
-      dispatch({ data: url, type: URL_ID_EXISTS.REQUEST })
+      if (urlIdIsEmpty) {
+        dispatch({ data: url, type: SET_WANTED_URL })
+      } else {
+        dispatch({ data: url, type: URL_ID_EXISTS.REQUEST })
 
-      client.get(`/url/${url.id}`, token).then(
-        (data) => dispatch({
-          data: {
-            exists: true,
-            url,
-          },
-          type: URL_ID_EXISTS.SUCCESS,
-        }),
-        (error) => dispatch({ error, type: URL_ID_EXISTS.FAILURE }),
-      )
-    } else {
-      return {
-        data: url,
-        type: SET_WANTED_URL,
+        client.get(`/url/${url.id}`, token).then(
+          (data) => dispatch({ data: true, type: URL_ID_EXISTS.SUCCESS }),
+            (error) => {
+            const { code, message } = client.parseError(error)
+
+            if (code === "UrlDoesNotExistError") {
+              dispatch({ data: false, type: URL_ID_EXISTS.SUCCESS })
+            } else {
+              dispatch({ error: { code, message }, type: URL_ID_EXISTS.FAILURE })
+            }
+          }
+        )
       }
     }
   }
@@ -150,6 +154,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         itIsCreatingUrl: true,
+        wantedUrlIdExists: null,
       }
 
     case CREATE_URL.SUCCESS:
@@ -177,26 +182,30 @@ export default function(state = initialState, action) {
     case SET_WANTED_URL:
       return {
         ...state,
-        wantedUrl: action.data
+        wantedUrl: action.data,
+        wantedUrlIdExists: action.data.id === "" ? null : state.wantedUrlIdExists,
       }
 
     case URL_ID_EXISTS.FAILURE:
       return {
         ...state,
         itIsCheckingIfUrlIdExists: false,
+        wantedUrlIdExists: null,
       }
 
     case URL_ID_EXISTS.REQUEST:
       return {
         ...state,
         itIsCheckingIfUrlIdExists: true,
-        wantedUrl: action.data
+        wantedUrl: action.data,
+        wantedUrlIdExists: null,
       }
 
     case URL_ID_EXISTS.SUCCESS:
       return {
         ...state,
         itIsCheckingIfUrlIdExists: false,
+        wantedUrlIdExists: action.data,
       }
 
     default: return state

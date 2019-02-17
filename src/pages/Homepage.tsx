@@ -1,3 +1,4 @@
+import * as history from "history"
 import * as React from "react"
 import { connect } from "react-redux"
 import {
@@ -19,6 +20,7 @@ import {
 interface IProps {
   authenticationIsValid: boolean
   exit: () => void
+  location: history.Location
 }
 
 class Homepage extends React.Component<IProps> {
@@ -34,6 +36,7 @@ class Homepage extends React.Component<IProps> {
       <React.Fragment>
         <Navbar
           authenticationIsValid={authenticationIsValid}
+          locationPath={this.props.location.pathname}
           exit={exit}
         />
 

@@ -2,6 +2,7 @@ import * as React from "react"
 import { Link, Redirect } from "react-router-dom"
 import {
   Button,
+  Buttons,
   Control,
   Field,
   Image,
@@ -11,12 +12,14 @@ import {
 import Logo from "./Logo"
 
 import CreateAccount from "../pages/CreateAccount"
+import CreateUrl from "../pages/CreateUrl"
 import Enter from "../pages/Enter"
 import Homepage from "../pages/Homepage"
 
 interface IProps {
   authenticationIsValid?: boolean
   exit: () => void
+  locationPath?: string
   noMenu?: boolean
 }
 
@@ -46,6 +49,12 @@ export default class Nav extends React.Component<IProps, IState> {
     })
   }
 
+  onClickCreateUrl = (event) => {
+    this.setState({
+      redirect: CreateUrl.path
+    })
+  }
+
   onClickEnter = (event) => {
     this.setState({
       redirect: Enter.path
@@ -63,6 +72,7 @@ export default class Nav extends React.Component<IProps, IState> {
   render() {
     const {
       authenticationIsValid,
+      locationPath,
       noMenu,
     } = this.props
 
@@ -101,8 +111,11 @@ export default class Nav extends React.Component<IProps, IState> {
           <Navbar.Menu isActive={expanded}>
             {authenticationIsValid && (
               <Navbar.Start>
-                <Navbar.Item>
-                  Create
+                <Navbar.Item
+                  isActive={locationPath === CreateUrl.path}
+                  onClick={this.onClickCreateUrl}
+                >
+                  Create URL
                 </Navbar.Item>
               </Navbar.Start>
             )}
@@ -110,33 +123,27 @@ export default class Nav extends React.Component<IProps, IState> {
             <Navbar.End>
               <Navbar.Item>
                 {authenticationIsValid ? (
-                  <Field>
-                    <Control>
-                      <Button
-                        onClick={this.onClickExit}
-                      >
-                        Exit
-                      </Button>
-                    </Control>
-                  </Field>
+                  <Buttons>
+                    <Button
+                      onClick={this.onClickExit}
+                    >
+                      Exit
+                    </Button>
+                  </Buttons>
                 ) : (
-                  <Field isGrouped>
-                    <Control>
-                      <Button
-                        onClick={this.onClickEnter}
-                      >
-                        Enter
-                      </Button>
-                    </Control>
+                  <Buttons>
+                    <Button
+                      onClick={this.onClickEnter}
+                    >
+                      Enter
+                    </Button>
 
-                    <Control>
-                      <Button
-                        onClick={this.onClickCreateAccount}
-                      >
-                        Create Account
-                      </Button>
-                    </Control>
-                  </Field>
+                    <Button
+                      onClick={this.onClickCreateAccount}
+                    >
+                      Create Account
+                    </Button>
+                  </Buttons>
                 )}
               </Navbar.Item>
             </Navbar.End>

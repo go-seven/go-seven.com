@@ -35,7 +35,7 @@ export function createAccount(credentials: ICredentials) {
 
     client.post("/account", credentials).then(
       () => dispatch({ type: CREATE_ACCOUNT.SUCCESS }),
-      (error) => dispatch({ error, type: CREATE_ACCOUNT.FAILURE }),
+      (error) => dispatch({ error: JSON.parse(error), type: CREATE_ACCOUNT.FAILURE }),
     )
   }
 
@@ -46,8 +46,8 @@ export function enter(credentials: ICredentials) {
     dispatch({ type: AUTHENTICATION.REQUEST })
 
     client.post("/enter", credentials).then(
-      (data) => dispatch({ type: AUTHENTICATION.SUCCESS, data }),
-      (error) => dispatch({ type: AUTHENTICATION.FAILURE, error }),
+      (data) => dispatch({ data, type: AUTHENTICATION.SUCCESS }),
+      (error) => dispatch({ error: JSON.parse(error), type: AUTHENTICATION.FAILURE }),
     )
   }
 

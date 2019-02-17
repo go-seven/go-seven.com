@@ -18,27 +18,32 @@ import {
 
 export interface IUrlCreatorProps {
   createUrl: (IUrl) => void
+  domain: string
   itIsCheckingIfUrlIdExists: ICollectionsState["itIsCheckingIfUrlIdExists"]
   itIsCreatingUrl: ICollectionsState["itIsCreatingUrl"]
   setWantedUrlTimeout: number
   setWantedUrl: (IUrl) => void
-  wantedUrl: IUrl | null
+  wantedUrl: ICollectionsState["wantedUrl"]
+  wantedUrlIdExists: ICollectionsState["wantedUrlIdExists"]
 }
 
 interface IState {
   canSetWantedUrlId: boolean
-  wantedUrlHref: IUrl["href"]
-  wantedUrlId: IUrl["href"]
+  wantedUrlHref: string
+  wantedUrlHrefIsValid: boolean | null
+  wantedUrlId: string
 }
 
 export default class UrlCreator extends React.Component<IUrlCreatorProps, IState> {
   static defaultProps = {
-    setWantedUrlTimeout: 2000
+    domain: "go7.li",
+    setWantedUrlTimeout: 2000,
   }
 
   state = {
     canSetWantedUrlId: true,
     wantedUrlHref: "",
+    wantedUrlHrefIsValid: null,
     wantedUrlId: "",
   }
 
@@ -58,7 +63,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
       urlHref = urlHref.trim()
     }
 
-    if (wantedUrlHref.length < urlHref.length) { // is not deleting text
+    if (wantedUrlHref.length < urlHref.length) { // user is not deleting text
       if (urlHref.toLowerCase() === "https") {
         urlHref = "https://"
       }
@@ -73,16 +78,27 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
 
   getUrlId(): string {
     const {
+      domain
+    } = this.props
+
+    const {
       wantedUrlId
     } = this.state
 
+    const prefix = `${domain}/`
+
     let urlId = this.urlIdRef.current && this.urlIdRef.current.value
 
-    if (urlId === "" || urlId === null) {
+    if (urlId === null) {
       return ""
-    } else {
-      urlId = urlId.trim()
     }
+
+    if (urlId.length <= prefix.length) {
+      return ""
+    }
+
+    urlId = urlId.trim()
+    urlId = urlId.replace(prefix, "")
 
     return urlId
   }
@@ -90,9 +106,13 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
   onChangeUrlHref = (event) => {
     pdsp(event)
 
-    const urlHref = this.getUrlHref()
+    const wantedUrlHref = this.getUrlHref()
+    const wantedUrlHrefIsValid = urlRegex.test(wantedUrlHref)
 
-    this.setState({ wantedUrlHref: urlHref })
+    this.setState({
+      wantedUrlHref,
+      wantedUrlHrefIsValid,
+    })
   }
 
   onChangeUrlId = (event) => {
@@ -130,42 +150,17 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
     }
   }
 
-  onPasteUrlHref = (event) => {
-    pdsp(event)
-
-    const {
-      createUrl,
-      itIsCreatingUrl,
-      wantedUrl,
-    } = this.props
-
-    if (itIsCreatingUrl) {
-      return null
-    }
-
-    const urlHref = event.clipboardData.getData("Text")
-
-    const isValid = urlRegex.test(urlHref)
-    const urlIsEmpty = wantedUrl === null || wantedUrl.href === ""
-
-    // If a valid target URL is pasted in empty input text,
-    // create a shortened URL on the fly. If input text is not
-    // empty it does not make sense to create a shortened URL on paste
-    // cause the user could need to paste few times.
-    if (isValid && urlIsEmpty) {
-      createUrl({ href: urlHref })
-    }
-  }
-
   render() {
     const {
       itIsCheckingIfUrlIdExists,
       itIsCreatingUrl,
       wantedUrl,
+      wantedUrlIdExists,
     } = this.props
 
     const {
       wantedUrlHref,
+      wantedUrlHrefIsValid,
       wantedUrlId,
     } = this.state
 
@@ -180,8 +175,9 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
             <Input
               autoFocus
               inputRef={this.urlHrefRef}
+              isDanger={wantedUrlHref !== "" && wantedUrlHrefIsValid === false}
+              isSuccess={wantedUrlHref !== "" && wantedUrlHrefIsValid === true}
               onChange={this.onChangeUrlHref}
-              onPaste={this.onPasteUrlHref}
               placeholder="Paste or write your URL here"
               readOnly={itIsCreatingUrl}
               type="text"
@@ -200,17 +196,23 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
           >
             <Input
               inputRef={this.urlIdRef}
+              isDanger={wantedUrlId !== "" && wantedUrlIdExists === true}
+              isSuccess={wantedUrlId !== "" && wantedUrlIdExists === false}
               onChange={this.onChangeUrlId}
+              placeholder="go7.li/"
               readOnly={itIsCreatingUrl}
               type="text"
-              value={wantedUrlId}
+              value={`go7.li/${wantedUrlId}`}
             />
           </Control>
         </Field>
         <Field>
           <Control>
             <Button
-              disabled
+              disabled={wantedUrlIdExists || wantedUrlHref === "" || !wantedUrlHrefIsValid
+              }
+              isLoading={itIsCreatingUrl}
+              isSuccess={wantedUrlHrefIsValid === true}
             >
               Save
             </Button>

@@ -11,26 +11,20 @@ const headersWithAuthentication = (token) => ({
   Authorization: `BEARER ${token}`,
 })
 
-class GoSevenApiError extends Error {
-  constructor({ message }) {
-    super(message)
-  }
-
-  toJSON() {
-    return {
-      message: this.message
-    }
-  }
-}
-
 const checkResponse = (response) => {
   if (response.ok) {
     return response.json()
   } else {
     return response.json().then(({ error }) => {
-      throw new GoSevenApiError(error)
+      // Pass error data as string in Error message. See parseError function below.
+      throw new Error(JSON.stringify(error))
     })
   }
+}
+
+// Strip initial "Error :" in stringified error and return result parsed as JSON.
+export function parseError(error: Error) {
+  return JSON.parse(error.toString().substring("Error :".length))
 }
 
 function client(method, endpoint, token?) {

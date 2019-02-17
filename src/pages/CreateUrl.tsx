@@ -26,6 +26,7 @@ interface IProps {
   itIsCreatingUrl: ICollectionsState["itIsCreatingUrl"]
   setWantedUrl: IUrlCreatorProps["setWantedUrl"]
   wantedUrl: ICollectionsState["wantedUrl"]
+  wantedUrlIdExists: ICollectionsState["wantedUrlIdExists"]
 }
 
 class CreateUrl extends React.Component<IProps> {
@@ -42,6 +43,7 @@ class CreateUrl extends React.Component<IProps> {
       itIsCreatingUrl,
       setWantedUrl,
       wantedUrl,
+      wantedUrlIdExists,
     } = this.props
 
     if (authentication === null) {
@@ -61,6 +63,7 @@ class CreateUrl extends React.Component<IProps> {
           itIsCreatingUrl={itIsCreatingUrl}
           setWantedUrl={setWantedUrl}
           wantedUrl={wantedUrl}
+          wantedUrlIdExists={wantedUrlIdExists}
         />
       </React.Fragment>
     )
@@ -73,6 +76,7 @@ const mapStateToProps = (state) => ({
   itIsCheckingIfUrlIdExists: state.collections.itIsCheckingIfUrlIdExists,
   itIsCreatingUrl: state.collections.itIsCreatingUrl,
   wantedUrl: state.collections.wantedUrl,
+  wantedUrlIdExists: state.collections.wantedUrlIdExists,
 })
 
 const mapDispatchToProps = (dispatch) => ({
