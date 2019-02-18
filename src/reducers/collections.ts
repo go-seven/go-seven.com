@@ -6,6 +6,7 @@ import * as client from "../client"
 
 const CREATE_URL = asyncActions("CREATE_URL")
 const FETCH_COLLECTION = asyncActions("FETCH_COLLECTION")
+const FETCH_URL_METADATA = asyncActions("FETCH_URL_METADATA")
 const SET_WANTED_URL = "SET_WANTED_URL"
 const URL_ID_EXISTS = asyncActions("URL_ID_EXISTS")
 
@@ -108,14 +109,32 @@ export function setWantedUrl(url: IUrl) {
       token,
     } = account.authentication
 
+    const urlHrefChanged = wantedUrl ? (wantedUrl.href !== url.href) : true
+    const urlHrefIsEmpty = url.href === ""
+
     const urlIdChanged = wantedUrl ? (wantedUrl.id !== url.id) : true
     const urlIdIsEmpty = url.id === ""
+
+    if (urlHrefChanged) {
+      if (urlHrefIsEmpty) {
+        dispatch({ data: url, type: SET_WANTED_URL })
+      } else {
+        dispatch({ type: FETCH_URL_METADATA.REQUEST })
+
+        const encodedHref = encodeURIComponent(url.href)
+
+        client.get(`/fetch-url-metadata?href=${encodedHref}`, token).then(
+          (data) => dispatch({ data, type: FETCH_URL_METADATA.SUCCESS }),
+          (error) => dispatch({ error: client.parseError(error), type: URL_ID_EXISTS.FAILURE }),
+        )
+      }
+    }
 
     if (urlIdChanged) {
       if (urlIdIsEmpty) {
         dispatch({ data: url, type: SET_WANTED_URL })
       } else {
-        dispatch({ data: url, type: URL_ID_EXISTS.REQUEST })
+        dispatch({ type: URL_ID_EXISTS.REQUEST })
 
         client.get(`/url/${url.id}`, token).then(
           (data) => dispatch({ data: true, type: URL_ID_EXISTS.SUCCESS }),
@@ -177,6 +196,21 @@ export default function(state = initialState, action) {
       return {
         ...state,
         current: action.data
+      }
+
+    case FETCH_URL_METADATA.FAILURE:
+      return {
+        ...state,
+      }
+
+    case FETCH_URL_METADATA.REQUEST:
+      return {
+        ...state,
+      }
+
+    case FETCH_URL_METADATA.SUCCESS:
+      return {
+        ...state,
       }
 
     case SET_WANTED_URL:
