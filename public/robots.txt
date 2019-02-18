@@ -1,6 +1,4 @@
 # www.robotstxt.org/
 
 User-agent: *
-Disallow: /bundle.js
-Disallow: /404.html
 Sitemap: https://go-seven.com/sitemap.xml
