@@ -15,7 +15,8 @@ const initialState = {
 
 window.addEventListener("load", () => {
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register(`js/cache.v${version}.js`, { scope: "/" })
+    // Register service worker, it is better to put it in the root public directory, i.e. under the max scope.
+    navigator.serviceWorker.register(`cache.v${version}.js`, { scope: "/" })
   }
 
   render(<Root store={configureStore(initialState)} />, document.getElementById("root"))
