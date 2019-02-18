@@ -14,10 +14,15 @@ const initialState = {
 }
 
 window.addEventListener("load", () => {
+  // Register service worker, it is better to put it in the root public directory, i.e. under the max scope.
   if ("serviceWorker" in navigator) {
-    // Register service worker, it is better to put it in the root public directory, i.e. under the max scope.
     navigator.serviceWorker.register(`cache.v${version}.js`, { scope: "/" })
   }
 
+  // Hide splashscreen.
+  const splashscreen = document.querySelector(".splashscreen") as HTMLElement
+  splashscreen.style.display = "none"
+
+  // Mount app.
   render(<Root store={configureStore(initialState)} />, document.getElementById("root"))
 })
