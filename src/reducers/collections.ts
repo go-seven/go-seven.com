@@ -10,10 +10,14 @@ const FETCH_URL_METADATA = asyncActions("FETCH_URL_METADATA")
 const SET_WANTED_URL = "SET_WANTED_URL"
 const URL_ID_EXISTS = asyncActions("URL_ID_EXISTS")
 
+export interface IUrlMetadata {
+  title?: string
+}
+
 export interface IUrl {
   href: string
   id?: string
-  title?: string
+  metadata?: IUrlMetadata
 }
 
 export interface ICollection {
@@ -27,6 +31,7 @@ export interface ICollectionsState {
   selected: string
   itIsCheckingIfUrlIdExists: boolean
   itIsCreatingUrl: boolean
+  itIsFetchingUrlMetadata: boolean
   wantedUrl: IUrl | null
   wantedUrlIdExists: boolean | null
 }
@@ -35,6 +40,7 @@ export const initialState: ICollectionsState = {
   current: null,
   itIsCheckingIfUrlIdExists: false,
   itIsCreatingUrl: false,
+  itIsFetchingUrlMetadata: false,
   selected: "default",
   wantedUrl: null,
   wantedUrlIdExists: null,
@@ -109,10 +115,10 @@ export function setWantedUrl(url: IUrl) {
       token,
     } = account.authentication
 
-    const urlHrefChanged = wantedUrl ? (wantedUrl.href !== url.href) : true
+    const urlHrefChanged = wantedUrl ? (wantedUrl.href !== url.href) : typeof url.href === "string"
     const urlHrefIsEmpty = url.href === ""
 
-    const urlIdChanged = wantedUrl ? (wantedUrl.id !== url.id) : true
+    const urlIdChanged = wantedUrl ? (wantedUrl.id !== url.id) : typeof url.id === "string"
     const urlIdIsEmpty = url.id === ""
 
     if (urlHrefChanged) {
@@ -123,9 +129,9 @@ export function setWantedUrl(url: IUrl) {
 
         const encodedHref = encodeURIComponent(url.href)
 
-        client.get(`/fetch-url-metadata?href=${encodedHref}`, token).then(
-          (data) => dispatch({ data, type: FETCH_URL_METADATA.SUCCESS }),
-          (error) => dispatch({ error: client.parseError(error), type: URL_ID_EXISTS.FAILURE }),
+        client.get(`/url-metadata?href=${encodedHref}`, token).then(
+          (data) => dispatch({ data: { href: url.href, metadata: data }, type: FETCH_URL_METADATA.SUCCESS }),
+          (error) => dispatch({ error: client.parseError(error), type: FETCH_URL_METADATA.FAILURE }),
         )
       }
     }
@@ -201,16 +207,26 @@ export default function(state = initialState, action) {
     case FETCH_URL_METADATA.FAILURE:
       return {
         ...state,
+        itIsFetchingUrlMetadata: false,
+        wantedUrl: {
+        }
       }
 
     case FETCH_URL_METADATA.REQUEST:
       return {
         ...state,
+        itIsFetchingUrlMetadata: true,
       }
 
     case FETCH_URL_METADATA.SUCCESS:
       return {
         ...state,
+        itIsFetchingUrlMetadata: false,
+        wantedUrl: {
+          ...state.wantedUrl,
+          href: action.data.href,
+          metadata: action.data.metadata,
+        }
       }
 
     case SET_WANTED_URL:

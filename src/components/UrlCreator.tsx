@@ -3,6 +3,8 @@ import * as React from "react"
 import * as urlRegex from "regex-weburl"
 import {
   Button,
+  Column,
+  Columns,
   Control,
   Field,
   Hero,
@@ -21,6 +23,7 @@ export interface IUrlCreatorProps {
   domain: string
   itIsCheckingIfUrlIdExists: ICollectionsState["itIsCheckingIfUrlIdExists"]
   itIsCreatingUrl: ICollectionsState["itIsCreatingUrl"]
+  itIsFetchingUrlMetadata: ICollectionsState["itIsFetchingUrlMetadata"]
   setWantedUrlTimeout: number
   setWantedUrl: (IUrl) => void
   wantedUrl: ICollectionsState["wantedUrl"]
@@ -28,6 +31,7 @@ export interface IUrlCreatorProps {
 }
 
 interface IState {
+  canSetWantedUrlHref: boolean
   canSetWantedUrlId: boolean
   wantedUrlHref: string
   wantedUrlHrefIsValid: boolean | null
@@ -41,6 +45,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
   }
 
   state = {
+    canSetWantedUrlHref: true,
     canSetWantedUrlId: true,
     wantedUrlHref: "",
     wantedUrlHrefIsValid: null,
@@ -64,12 +69,20 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
     }
 
     if (wantedUrlHref.length < urlHref.length) { // user is not deleting text
+      if (urlHref.toLowerCase() === "http:") {
+        urlHref = "http://"
+      }
+
       if (urlHref.toLowerCase() === "https") {
         urlHref = "https://"
       }
 
-      if (urlHref.toLowerCase() === "http:") {
+      if (urlHref.toLowerCase() === "http:///") {
         urlHref = "http://"
+      }
+
+      if (urlHref.toLowerCase() === "https:///") {
+        urlHref = "https://"
       }
     }
 
@@ -106,6 +119,15 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
   onChangeUrlHref = (event) => {
     pdsp(event)
 
+    const {
+      setWantedUrl,
+      setWantedUrlTimeout,
+    } = this.props
+
+    const {
+      canSetWantedUrlHref,
+    } = this.state
+
     const wantedUrlHref = this.getUrlHref()
     const wantedUrlHrefIsValid = urlRegex.test(wantedUrlHref)
 
@@ -113,6 +135,33 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
       wantedUrlHref,
       wantedUrlHrefIsValid,
     })
+    if (canSetWantedUrlHref) {
+      this.setState({
+        canSetWantedUrlHref: false,
+        wantedUrlHref,
+        wantedUrlHrefIsValid,
+      }, () => {
+        setTimeout(() => {
+          const wantedUrlHref = this.getUrlHref()
+          const wantedUrlHrefIsValid = urlRegex.test(wantedUrlHref)
+
+          this.setState({
+            canSetWantedUrlHref: true,
+            wantedUrlHref,
+            wantedUrlHrefIsValid,
+          }, () => {
+            if (wantedUrlHrefIsValid) {
+              setWantedUrl({ href: wantedUrlHref })
+            }
+          })
+        }, setWantedUrlTimeout)
+      })
+    } else {
+      this.setState({
+        wantedUrlHref,
+        wantedUrlHrefIsValid,
+      })
+    }
   }
 
   onChangeUrlId = (event) => {
@@ -127,26 +176,26 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
       canSetWantedUrlId,
     } = this.state
 
-    const urlId = this.getUrlId()
+    const wantedUrlId = this.getUrlId()
 
     if (canSetWantedUrlId) {
       this.setState({
         canSetWantedUrlId: false,
-        wantedUrlId: urlId,
+        wantedUrlId,
       }, () => {
         setTimeout(() => {
-          const urlId = this.getUrlId()
+          const wantedUrlId = this.getUrlId()
 
           this.setState({
             canSetWantedUrlId: true,
-            wantedUrlId: urlId,
+            wantedUrlId,
           }, () => {
-            setWantedUrl({ id: urlId })
+            setWantedUrl({ id: wantedUrlId })
           })
         }, setWantedUrlTimeout)
       })
     } else {
-      this.setState({ wantedUrlId: urlId })
+      this.setState({ wantedUrlId })
     }
   }
 
@@ -154,6 +203,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
     const {
       itIsCheckingIfUrlIdExists,
       itIsCreatingUrl,
+      itIsFetchingUrlMetadata,
       wantedUrl,
       wantedUrlIdExists,
     } = this.props
@@ -171,7 +221,9 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
             Your long URL
           </Label>
 
-          <Control>
+          <Control
+            isLoading={itIsFetchingUrlMetadata}
+          >
             <Input
               autoFocus
               inputRef={this.urlHrefRef}
@@ -186,26 +238,31 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
           </Control>
         </Field>
 
-        <Field>
-          <Label>
-            Short URL
-          </Label>
+        <Columns isDesktop>
+          <Column isHalf>
+            <Field>
+              <Label>
+                Short URL
+              </Label>
 
-          <Control
-            isLoading={itIsCheckingIfUrlIdExists}
-          >
-            <Input
-              inputRef={this.urlIdRef}
-              isDanger={wantedUrlId !== "" && wantedUrlIdExists === true}
-              isSuccess={wantedUrlId !== "" && wantedUrlIdExists === false}
-              onChange={this.onChangeUrlId}
-              placeholder="go7.li/"
-              readOnly={itIsCreatingUrl}
-              type="text"
-              value={`go7.li/${wantedUrlId}`}
-            />
-          </Control>
-        </Field>
+              <Control
+                isLoading={itIsCheckingIfUrlIdExists}
+              >
+                <Input
+                  inputRef={this.urlIdRef}
+                  isDanger={wantedUrlId !== "" && wantedUrlIdExists === true}
+                  isSuccess={wantedUrlId !== "" && wantedUrlIdExists === false}
+                  onChange={this.onChangeUrlId}
+                  placeholder="go7.li/"
+                  readOnly={itIsCreatingUrl}
+                  type="text"
+                  value={`go7.li/${wantedUrlId}`}
+                />
+              </Control>
+            </Field>
+          </Column>
+        </Columns>
+
         <Field>
           <Control>
             <Button

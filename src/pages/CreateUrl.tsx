@@ -24,6 +24,7 @@ interface IProps {
   exit: () => void
   itIsCheckingIfUrlIdExists: ICollectionsState["itIsCheckingIfUrlIdExists"]
   itIsCreatingUrl: ICollectionsState["itIsCreatingUrl"]
+  itIsFetchingUrlMetadata: ICollectionsState["itIsFetchingUrlMetadata"]
   setWantedUrl: IUrlCreatorProps["setWantedUrl"]
   wantedUrl: ICollectionsState["wantedUrl"]
   wantedUrlIdExists: ICollectionsState["wantedUrlIdExists"]
@@ -41,6 +42,7 @@ class CreateUrl extends React.Component<IProps> {
       fetchCollection,
       itIsCheckingIfUrlIdExists,
       itIsCreatingUrl,
+      itIsFetchingUrlMetadata,
       setWantedUrl,
       wantedUrl,
       wantedUrlIdExists,
@@ -61,6 +63,7 @@ class CreateUrl extends React.Component<IProps> {
           createUrl={createUrl}
           itIsCheckingIfUrlIdExists={itIsCheckingIfUrlIdExists}
           itIsCreatingUrl={itIsCreatingUrl}
+          itIsFetchingUrlMetadata={itIsFetchingUrlMetadata}
           setWantedUrl={setWantedUrl}
           wantedUrl={wantedUrl}
           wantedUrlIdExists={wantedUrlIdExists}
@@ -75,6 +78,7 @@ const mapStateToProps = (state) => ({
   collection: state.collections.current,
   itIsCheckingIfUrlIdExists: state.collections.itIsCheckingIfUrlIdExists,
   itIsCreatingUrl: state.collections.itIsCreatingUrl,
+  itIsFetchingUrlMetadata: state.collections.itIsFetchingUrlMetadata,
   wantedUrl: state.collections.wantedUrl,
   wantedUrlIdExists: state.collections.wantedUrlIdExists,
 })
