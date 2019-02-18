@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.go7.li</loc>
+    <loc>https://go-seven.com</loc>
     <lastmod>2010-01-01T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://www.go7.li/enter</loc>
+    <loc>https://go-seven.com/create-account</loc>
     <lastmod>2010-01-01T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://www.go7.li/create-account</loc>
+    <loc>https://go-seven.com/enter</loc>
     <lastmod>2010-01-01T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://www.go7.li/privacy-policy</loc>
+    <loc>https://go-seven.com/privacy-policy</loc>
     <lastmod>2010-01-01T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://www.go7.li/terms-of-service</loc>
+    <loc>https://go-seven.com/terms-of-service</loc>
     <lastmod>2010-01-01T00:00:00+00:00</lastmod>
   </url>
 </urlset>
