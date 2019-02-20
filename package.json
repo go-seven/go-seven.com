@@ -1,6 +1,6 @@
 {
   "name": "go-seven.com",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "description": "URL shortener",
   "config": {

@@ -1,16 +1,16 @@
 import * as pdsp from "pdsp"
 import * as React from "react"
-import * as urlRegex from "regex-weburl"
 import {
   Button,
+  Checkbox,
   Column,
   Columns,
+  Container,
   Control,
   Field,
   Hero,
   Input,
   Label,
-  Section,
 } from "trunx"
 
 import {
@@ -27,14 +27,15 @@ export interface IUrlCreatorProps {
   setWantedUrlTimeout: number
   setWantedUrl: (IUrl) => void
   wantedUrl: ICollectionsState["wantedUrl"]
+  wantedUrlHrefIsValid: ICollectionsState["wantedUrlHrefIsValid"]
   wantedUrlIdExists: ICollectionsState["wantedUrlIdExists"]
 }
 
 interface IState {
   canSetWantedUrlHref: boolean
   canSetWantedUrlId: boolean
+  showOptions: boolean
   wantedUrlHref: string
-  wantedUrlHrefIsValid: boolean | null
   wantedUrlId: string
 }
 
@@ -47,8 +48,8 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
   state = {
     canSetWantedUrlHref: true,
     canSetWantedUrlId: true,
+    showOptions: false,
     wantedUrlHref: "",
-    wantedUrlHrefIsValid: null,
     wantedUrlId: "",
   }
 
@@ -129,37 +130,29 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
     } = this.state
 
     const wantedUrlHref = this.getUrlHref()
-    const wantedUrlHrefIsValid = urlRegex.test(wantedUrlHref)
 
     this.setState({
       wantedUrlHref,
-      wantedUrlHrefIsValid,
     })
     if (canSetWantedUrlHref) {
       this.setState({
         canSetWantedUrlHref: false,
         wantedUrlHref,
-        wantedUrlHrefIsValid,
       }, () => {
         setTimeout(() => {
           const wantedUrlHref = this.getUrlHref()
-          const wantedUrlHrefIsValid = urlRegex.test(wantedUrlHref)
 
           this.setState({
             canSetWantedUrlHref: true,
             wantedUrlHref,
-            wantedUrlHrefIsValid,
           }, () => {
-            if (wantedUrlHrefIsValid) {
-              setWantedUrl({ href: wantedUrlHref })
-            }
+            setWantedUrl({ href: wantedUrlHref })
           })
         }, setWantedUrlTimeout)
       })
     } else {
       this.setState({
         wantedUrlHref,
-        wantedUrlHrefIsValid,
       })
     }
   }
@@ -199,6 +192,12 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
     }
   }
 
+  onChangeOptionsVisibility = (event) => {
+    this.setState({
+        showOptions: event.target.checked
+    })
+  }
+
   render() {
     const {
       itIsCheckingIfUrlIdExists,
@@ -206,76 +205,111 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
       itIsFetchingUrlMetadata,
       wantedUrl,
       wantedUrlIdExists,
+      wantedUrlHrefIsValid,
     } = this.props
 
     const {
+      showOptions,
       wantedUrlHref,
-      wantedUrlHrefIsValid,
       wantedUrlId,
     } = this.state
 
+    const saveButtonDisabled = wantedUrlIdExists === true || wantedUrlHrefIsValid !== true || itIsFetchingUrlMetadata || itIsCheckingIfUrlIdExists
+
     return (
-      <Section>
-        <Field>
-          <Label>
-            Your long URL
-          </Label>
-
-          <Control
-            isLoading={itIsFetchingUrlMetadata}
-          >
-            <Input
-              autoFocus
-              inputRef={this.urlHrefRef}
-              isDanger={wantedUrlHref !== "" && wantedUrlHrefIsValid === false}
-              isSuccess={wantedUrlHref !== "" && wantedUrlHrefIsValid === true}
-              onChange={this.onChangeUrlHref}
-              placeholder="Paste or write your URL here"
-              readOnly={itIsCreatingUrl}
-              type="text"
-              value={wantedUrlHref}
-            />
-          </Control>
-        </Field>
-
-        <Columns isDesktop>
-          <Column isHalf>
+      <Hero isPrimary>
+        <Hero.Body>
+            <Container>
             <Field>
               <Label>
-                Short URL
+                Your long URL
               </Label>
 
               <Control
-                isLoading={itIsCheckingIfUrlIdExists}
+                isLoading={itIsFetchingUrlMetadata}
               >
                 <Input
-                  inputRef={this.urlIdRef}
-                  isDanger={wantedUrlId !== "" && wantedUrlIdExists === true}
-                  isSuccess={wantedUrlId !== "" && wantedUrlIdExists === false}
-                  onChange={this.onChangeUrlId}
-                  placeholder="go7.li/"
+                  autoFocus
+                  inputRef={this.urlHrefRef}
+                  isDanger={wantedUrlHref !== "" && wantedUrlHrefIsValid === false}
+                  isSuccess={wantedUrlHref !== "" && wantedUrlHrefIsValid === true}
+                  onChange={this.onChangeUrlHref}
+                  placeholder="Paste or write your URL here"
                   readOnly={itIsCreatingUrl}
                   type="text"
-                  value={`go7.li/${wantedUrlId}`}
+                  value={wantedUrlHref}
                 />
               </Control>
             </Field>
-          </Column>
-        </Columns>
 
-        <Field>
-          <Control>
-            <Button
-              disabled={wantedUrlIdExists || wantedUrlHref === "" || !wantedUrlHrefIsValid
-              }
-              isLoading={itIsCreatingUrl}
-              isSuccess={wantedUrlHrefIsValid === true}
-            >
-              Save
-            </Button>
-          </Control>
-        </Field>
-      </Section>
+            {showOptions && (
+              <React.Fragment>
+                <Field>
+                  <Label>
+                    Title
+                  </Label>
+
+                  <Control
+                    isLoading={itIsFetchingUrlMetadata}
+                  >
+                    <Input
+                      readOnly
+                      type="text"
+                      value={wantedUrl && wantedUrl.metadata && wantedUrl.metadata.title || ""}
+                    />
+                  </Control>
+                </Field>
+
+                <Columns isDesktop>
+                  <Column isHalf>
+                    <Field>
+                      <Label>
+                        Short URL
+                      </Label>
+
+                      <Control
+                        isLoading={itIsCheckingIfUrlIdExists}
+                      >
+                        <Input
+                          inputRef={this.urlIdRef}
+                          isDanger={wantedUrlId !== "" && wantedUrlIdExists === true}
+                          isSuccess={wantedUrlId !== "" && wantedUrlIdExists === false}
+                          onChange={this.onChangeUrlId}
+                          placeholder="go7.li/"
+                          readOnly={itIsCreatingUrl}
+                          type="text"
+                          value={`go7.li/${wantedUrlId}`}
+                        />
+                      </Control>
+                    </Field>
+                  </Column>
+                </Columns>
+              </React.Fragment>
+            )}
+
+            <Field>
+              <Checkbox
+                checked={showOptions}
+                onClick={this.onChangeOptionsVisibility}
+              >
+                Show Options
+              </Checkbox>
+            </Field>
+
+            <Field>
+              <Control>
+                <Button
+                  disabled={saveButtonDisabled}
+                  isLoading={itIsCreatingUrl}
+                  isSuccess={wantedUrlHrefIsValid === true}
+                >
+                  Save
+                </Button>
+              </Control>
+            </Field>
+          </Container>
+        </Hero.Body>
+      </Hero>
     )
   }
 

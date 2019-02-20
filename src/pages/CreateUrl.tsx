@@ -27,6 +27,7 @@ interface IProps {
   itIsFetchingUrlMetadata: ICollectionsState["itIsFetchingUrlMetadata"]
   setWantedUrl: IUrlCreatorProps["setWantedUrl"]
   wantedUrl: ICollectionsState["wantedUrl"]
+  wantedUrlHrefIsValid: ICollectionsState["wantedUrlHrefIsValid"]
   wantedUrlIdExists: ICollectionsState["wantedUrlIdExists"]
 }
 
@@ -45,6 +46,7 @@ class CreateUrl extends React.Component<IProps> {
       itIsFetchingUrlMetadata,
       setWantedUrl,
       wantedUrl,
+      wantedUrlHrefIsValid,
       wantedUrlIdExists,
     } = this.props
 
@@ -67,6 +69,7 @@ class CreateUrl extends React.Component<IProps> {
           setWantedUrl={setWantedUrl}
           wantedUrl={wantedUrl}
           wantedUrlIdExists={wantedUrlIdExists}
+          wantedUrlHrefIsValid={wantedUrlHrefIsValid}
         />
       </React.Fragment>
     )
@@ -80,6 +83,7 @@ const mapStateToProps = (state) => ({
   itIsCreatingUrl: state.collections.itIsCreatingUrl,
   itIsFetchingUrlMetadata: state.collections.itIsFetchingUrlMetadata,
   wantedUrl: state.collections.wantedUrl,
+  wantedUrlHrefIsValid: state.collections.wantedUrlHrefIsValid,
   wantedUrlIdExists: state.collections.wantedUrlIdExists,
 })
 

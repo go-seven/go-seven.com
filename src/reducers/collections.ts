@@ -1,6 +1,8 @@
 // A Collection is a set of URLs. Every collection has an identifier and a name.
 // User can organize its URLs into collections.
 // If no collection is selected there is always a "default" collection which includes all URLs.
+import * as urlRegex from "regex-weburl"
+
 import asyncActions from "../asyncActions"
 import * as client from "../client"
 
@@ -11,6 +13,7 @@ const SET_WANTED_URL = "SET_WANTED_URL"
 const URL_ID_EXISTS = asyncActions("URL_ID_EXISTS")
 
 export interface IUrlMetadata {
+  statusCode?: number
   title?: string
 }
 
@@ -33,6 +36,7 @@ export interface ICollectionsState {
   itIsCreatingUrl: boolean
   itIsFetchingUrlMetadata: boolean
   wantedUrl: IUrl | null
+  wantedUrlHrefIsValid: boolean | null
   wantedUrlIdExists: boolean | null
 }
 
@@ -43,6 +47,7 @@ export const initialState: ICollectionsState = {
   itIsFetchingUrlMetadata: false,
   selected: "default",
   wantedUrl: null,
+  wantedUrlHrefIsValid: null,
   wantedUrlIdExists: null,
 }
 
@@ -123,16 +128,22 @@ export function setWantedUrl(url: IUrl) {
 
     if (urlHrefChanged) {
       if (urlHrefIsEmpty) {
-        dispatch({ data: url, type: SET_WANTED_URL })
+        dispatch({ data: { url, wantedUrlHrefIsValid: null }, type: SET_WANTED_URL })
       } else {
-        dispatch({ type: FETCH_URL_METADATA.REQUEST })
+        const wantedUrlHrefIsValid = urlRegex.test(url.href)
 
-        const encodedHref = encodeURIComponent(url.href)
+        if (wantedUrlHrefIsValid) {
+          dispatch({ type: FETCH_URL_METADATA.REQUEST })
 
-        client.get(`/url-metadata?href=${encodedHref}`, token).then(
-          (data) => dispatch({ data: { href: url.href, metadata: data }, type: FETCH_URL_METADATA.SUCCESS }),
-          (error) => dispatch({ error: client.parseError(error), type: FETCH_URL_METADATA.FAILURE }),
-        )
+          const encodedHref = encodeURIComponent(url.href)
+
+          client.get(`/url-metadata?href=${encodedHref}`, token).then(
+            (data) => dispatch({ data: { href: url.href, metadata: data }, type: FETCH_URL_METADATA.SUCCESS }),
+            (error) => dispatch({ error: client.parseError(error), type: FETCH_URL_METADATA.FAILURE }),
+          )
+        } else {
+          dispatch({ data: { url, wantedUrlHrefIsValid: false }, type: SET_WANTED_URL })
+        }
       }
     }
 
@@ -208,14 +219,13 @@ export default function(state = initialState, action) {
       return {
         ...state,
         itIsFetchingUrlMetadata: false,
-        wantedUrl: {
-        }
       }
 
     case FETCH_URL_METADATA.REQUEST:
       return {
         ...state,
         itIsFetchingUrlMetadata: true,
+        wantedUrlHrefIsValid: true,
       }
 
     case FETCH_URL_METADATA.SUCCESS:
@@ -232,7 +242,8 @@ export default function(state = initialState, action) {
     case SET_WANTED_URL:
       return {
         ...state,
-        wantedUrl: action.data,
+        wantedUrl: action.data.url,
+        wantedUrlHrefIsValid: action.data.wantedUrlHrefIsValid,
         wantedUrlIdExists: action.data.id === "" ? null : state.wantedUrlIdExists,
       }
 
