@@ -1,22 +1,22 @@
 /* global self, caches, fetch */
-const { version } = require('../package.json')
+const pkg = require('../package.json')
 const CACHE_NAME = `go-seven-cache-v${version}`
 
 const REQUIRED_FILES = [
   '/',
-  `/js/bundle.v${version}.js`,
-  `/js/cache.v${version}.js`,
+  `/js/bundle.v${pkg.version}.js`,
+  `/js/cache.v${pkg.version}.js`,
   '/favicon.ico',
   '/fonts/roboto-v18.css',
   '/fonts/KFOkCnqEu92Fr1Mu51xIIzI.woff2',
   '/fonts/KFOlCnqEu92Fr1MmWUlfBBc4.woff2',
   '/fonts/KFOmCnqEu92Fr1Mu4mxK.woff2',
   '/libs/react.js',
-  '/libs/react.v16.8.2.min.js',
+  `/libs/react.v${pkg.config.versions.react}.min.js`,
   '/libs/react-dom.js',
-  '/libs/react-dom.v16.8.2.min.js',
+  `/libs/react-dom.v${pkg.config.versions['react-dom']}.min.js`,
   '/libs/react-router-dom.js',
-  '/libs/react-router-dom.v4.3.1.min.js',
+  `/libs/react-router-dom.v${pkg.config.versions['react-router-dom']}.min.js`,
   '/manifest.json',
   '/media/logo-16x16.png',
   '/media/logo-32x32.png',
@@ -33,7 +33,7 @@ const REQUIRED_FILES = [
   '/media/logo-256x256.png',
   '/media/logo-512x512.png',
   '/media/logo.svg',
-  '/style.css'
+  `/css/app.v${version}.css`
 ]
 
 self.addEventListener('install', event => {

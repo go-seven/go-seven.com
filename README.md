@@ -48,7 +48,20 @@ Remember to add them to packages excluded by browserify, add something like this
   },
 ```
 
+Also add npm scripts to fetch js dist, for example
+
+```json
+  "scripts": {
+    "get_js_libs:react": "wget -N https://unpkg.com/react@${npm_package_config_versions_react}/umd/react.production.min.js -O public/libs/react.v${npm_package_config_versions_react}.min.js",
+    "get_js_libs:react-dom": "wget -N https://unpkg.com/react-dom@${npm_package_config_versions_react-dom}/umd/react-dom.production.min.js -O public/libs/react-dom.v${npm_package_config_versions_react-dom}.min.js",
+
+    "postget_js_libs:react": "npm run browserify:shim:react",
+    "postget_js_libs:react-dom": "npm run browserify:shim:react-dom"
+  }
+```
+
 Check for consistency running
+assert(typeof pkg.scripts.)
 
 ```bash
 npm test
