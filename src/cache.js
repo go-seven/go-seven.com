@@ -1,22 +1,28 @@
 /* global self, caches, fetch */
 const pkg = require('../package.json')
+
+const {
+  config,
+  version
+} = pkg
+
 const CACHE_NAME = `go-seven-cache-v${version}`
 
 const REQUIRED_FILES = [
   '/',
-  `/js/bundle.v${pkg.version}.js`,
-  `/js/cache.v${pkg.version}.js`,
+  `/js/bundle.v${version}.js`,
+  `/js/cache.v${version}.js`,
   '/favicon.ico',
   '/fonts/roboto-v18.css',
   '/fonts/KFOkCnqEu92Fr1Mu51xIIzI.woff2',
   '/fonts/KFOlCnqEu92Fr1MmWUlfBBc4.woff2',
   '/fonts/KFOmCnqEu92Fr1Mu4mxK.woff2',
   '/libs/react.js',
-  `/libs/react.v${pkg.config.versions.react}.min.js`,
+  `/libs/react.v${config.versions.react}.min.js`,
   '/libs/react-dom.js',
-  `/libs/react-dom.v${pkg.config.versions['react-dom']}.min.js`,
+  `/libs/react-dom.v${config.versions['react-dom']}.min.js`,
   '/libs/react-router-dom.js',
-  `/libs/react-router-dom.v${pkg.config.versions['react-router-dom']}.min.js`,
+  `/libs/react-router-dom.v${config.versions['react-router-dom']}.min.js`,
   '/manifest.json',
   '/media/logo-16x16.png',
   '/media/logo-32x32.png',
@@ -66,7 +72,7 @@ self.addEventListener('fetch', event => {
 
 // Clean up caches other than current.
 self.addEventListener('activate', event => {
-  event.waitUntil(async function() {
+  event.waitUntil(async function () {
     const cacheNames = await caches.keys()
 
     await Promise.all(

@@ -5,7 +5,7 @@ const pkg = require('./package.json')
 const { version } = pkg
 
 const browserifyExclude = Object.keys(pkg.config.versions).map(lib => `-x ${lib}`).join(' ')
-assert.equal(browserifyExclude, pkg.config.browserify.exclude)
+assert.strictEqual(browserifyExclude, pkg.config.browserify.exclude)
 
 Object.keys(pkg.config.versions).forEach(lib => {
   assert(typeof pkg.scripts[`get_js_libs:${lib}`] === 'string')
@@ -21,6 +21,10 @@ const libPaths = Object.keys(pkg.config.versions).map(lib => {
 const linkToCssApp = `<link rel="stylesheet" href="/css/app.v${version}.css">`
 
 fs.readFile('public/index.html', 'utf8', (error, html) => {
+  if (error) {
+    throw error
+  }
+
   assert(html.includes(linkToCssApp))
 
   libPaths.forEach(libPath => assert(html.includes(libPath)))
