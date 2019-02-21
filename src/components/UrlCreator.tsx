@@ -8,6 +8,7 @@ import {
   Container,
   Control,
   Field,
+  Help,
   Hero,
   Input,
   Label,
@@ -240,6 +241,10 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
                   value={wantedUrlHref}
                 />
               </Control>
+
+              <Help isDanger={wantedUrlHrefIsValid === false}>
+                {wantedUrlHrefIsValid === false && "Invalid URL"}
+              </Help>
             </Field>
 
             {showOptions && (
@@ -255,7 +260,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
                     <Input
                       readOnly
                       type="text"
-                      value={wantedUrl && wantedUrl.metadata && wantedUrl.metadata.title || ""}
+                      value={wantedUrl && wantedUrl.title || ""}
                     />
                   </Control>
                 </Field>
@@ -281,6 +286,10 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
                           value={`go7.li/${wantedUrlId}`}
                         />
                       </Control>
+
+                      <Help isDanger={wantedUrlIdExists === true}>
+                        {wantedUrlIdExists === true && "Not available"}
+                      </Help>
                     </Field>
                   </Column>
                 </Columns>

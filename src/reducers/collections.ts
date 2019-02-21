@@ -21,6 +21,7 @@ export interface IUrl {
   href: string
   id?: string
   metadata?: IUrlMetadata
+  title?: string
 }
 
 export interface ICollection {
@@ -236,6 +237,7 @@ export default function(state = initialState, action) {
           ...state.wantedUrl,
           href: action.data.href,
           metadata: action.data.metadata,
+          title: action.data.metadata.title,
         }
       }
 
