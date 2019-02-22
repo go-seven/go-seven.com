@@ -52,17 +52,27 @@ self.addEventListener('install', event => {
 
 // Cache and update with stale-while-revalidate policy.
 self.addEventListener('fetch', event => {
+  const { request } = event
+
+  // Prevent Chrome Developer Tools error:
+  // Failed to execute 'fetch' on 'ServiceWorkerGlobalScope': 'only-if-cached' can be set only with 'same-origin' mode
+  //
+  // See also https://stackoverflow.com/a/49719964/1217468
+  if (request.cache === 'only-if-cached' && request.mode !== 'same-origin') {
+    return
+  }
+
   event.respondWith(async function () {
     const cache = await caches.open(CACHE_NAME)
 
-    const cachedResponsePromise = await cache.match(event.request)
-    const networkResponsePromise = fetch(event.request)
+    const cachedResponsePromise = await cache.match(request)
+    const networkResponsePromise = fetch(request)
 
-    if (event.request.url.startsWith(self.location.origin)) {
+    if (request.url.startsWith(self.location.origin)) {
       event.waitUntil(async function () {
         const networkResponse = await networkResponsePromise
 
-        await cache.put(event.request, networkResponse.clone())
+        await cache.put(request, networkResponse.clone())
       }())
     }
 
