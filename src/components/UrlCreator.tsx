@@ -199,6 +199,19 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
     })
   }
 
+  onClickSave = (event) => {
+    pdsp(event)
+
+    const {
+      createUrl,
+      wantedUrl,
+    } = this.props
+
+    // Since the Save button is enabled only if url isValid
+    // there is no No need to check for URL validity here.
+    createUrl(wantedUrl)
+  }
+
   render() {
     const {
       itIsCheckingIfUrlIdExists,
@@ -301,7 +314,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
                 checked={showOptions}
                 onClick={this.onChangeOptionsVisibility}
               >
-                Show Options
+                {showOptions ? "Hide Options" : "Show Options"}
               </Checkbox>
             </Field>
 
@@ -311,6 +324,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
                   disabled={saveButtonDisabled}
                   isLoading={itIsCreatingUrl}
                   isSuccess={wantedUrlHrefIsValid === true}
+                  onClick={this.onClickSave}
                 >
                   Save
                 </Button>
@@ -320,16 +334,5 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
         </Hero.Body>
       </Hero>
     )
-  }
-
-  saveUrl = () => {
-    const {
-      createUrl,
-      wantedUrl,
-    } = this.props
-
-    // Since the Save button is enabled only if url isValid
-    // there is no No need to check for URL validity here.
-    createUrl(wantedUrl)
   }
 }
