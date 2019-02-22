@@ -16,7 +16,7 @@
   "scripts": {
     "aws_s3_sync": "run-s aws_s3_sync:*",
     "aws_s3_sync:public": "aws s3 sync public s3://go-seven.com --profile GoSeven --exclude 'css/*' --exclude 'fonts/*' --exclude 'js/*' --exclude 'libs/*' --cache-control 'max-age=86400'",
-    "aws_s3_sync:public/css": "aws s3 sync public/js/ s3://go-seven.com/css --profile GoSeven --exclude '.gitignore' --expires 'Sun, 01 Jan 2040 01:01:01 GMT'",
+    "aws_s3_sync:public/css": "aws s3 sync public/css/ s3://go-seven.com/css --profile GoSeven --exclude '.gitignore' --expires 'Sun, 01 Jan 2040 01:01:01 GMT'",
     "aws_s3_sync:public/fonts": "aws s3 sync public/fonts/ s3://go-seven.com/fonts --profile GoSeven --expires 'Sun, 01 Jan 2040 01:01:01 GMT'",
     "aws_s3_sync:public/js": "aws s3 sync public/js/ s3://go-seven.com/js --profile GoSeven --exclude '.gitignore' --expires 'Sun, 01 Jan 2040 01:01:01 GMT'",
     "aws_s3_sync:public/libs": "aws s3 sync public/libs/ s3://go-seven.com/libs --profile GoSeven --exclude '.gitignore' --expires 'Sun, 01 Jan 2040 01:01:01 GMT'",
