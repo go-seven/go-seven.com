@@ -3,19 +3,23 @@ import * as React from "react"
 import {
   Control,
   Field,
+  Help,
   Icon,
   Input,
   Label,
+  Span,
 } from "trunx"
 
 interface IProps {
+  errorMessage?: string,
   inputRef?: React.RefObject<HTMLInputElement>
 }
 
 export default class EmailField extends React.Component<IProps> {
   render() {
     const {
-      inputRef
+      errorMessage,
+      inputRef,
     } = this.props
 
     return (
@@ -25,6 +29,7 @@ export default class EmailField extends React.Component<IProps> {
         <Control hasIconsLeft>
           <Input
             inputRef={inputRef}
+            isDanger={!!errorMessage}
             required
             type="email"
           />
@@ -32,6 +37,12 @@ export default class EmailField extends React.Component<IProps> {
           <Icon hasTextGrey isLeft>
             <Icon.Svg icon={envelope} />
           </Icon>
+
+          {errorMessage && (
+            <Help>
+              <Span hasTextDanger>{errorMessage}</Span>
+            </Help>
+          )}
         </Control>
       </Field>
     )

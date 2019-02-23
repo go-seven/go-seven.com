@@ -36,6 +36,7 @@ import TermsOfService from "./TermsOfService"
 interface IProps {
   authentication: IAuthentication
   createAccount: (ICredentials) => void
+  isCreatingAccount: boolean
 }
 
 interface IState {
@@ -90,6 +91,7 @@ class CreateAccount extends React.Component<IProps, IState> {
   render() {
     const {
       authentication,
+      isCreatingAccount,
     } = this.props
 
     const {
@@ -107,6 +109,10 @@ class CreateAccount extends React.Component<IProps, IState> {
         <Redirect push to={redirect} />
       )
     }
+
+    const error = authentication.error || { code: "", message: "" }
+    const emailFieldError = error.code === "AccountNotFoundError" ? error.message : undefined
+    const passwordFieldError = error.code === "InvalidPasswordError" ? error.message : undefined
 
     return (
       <Modal isActive>
@@ -135,13 +141,14 @@ class CreateAccount extends React.Component<IProps, IState> {
                   onSubmit={this.onSubmit}
                 >
                   <EmailField
+                    errorMessage={emailFieldError}
                     inputRef={this.emailRef}
                   />
 
                   <PasswordField
                     autoComplete="new-password"
                     canShowPassword
-                    errorMessage={authentication.error && authentication.error.message}
+                    errorMessage={passwordFieldError}
                     inputRef={this.passwordRef}
                     showPasswordPolicy
                   />
@@ -160,6 +167,7 @@ class CreateAccount extends React.Component<IProps, IState> {
                     <Control>
                       <Button
                         disabled={!clientAgrees}
+                        isLoading={isCreatingAccount}
                         isSuccess
                         isSrOnly={clientIsRobot}
                         type="submit"
@@ -200,7 +208,8 @@ class CreateAccount extends React.Component<IProps, IState> {
 }
 
 const mapStateToProps = (state) => ({
-  authentication: state.account.authentication
+  authentication: state.account.authentication,
+  isCreatingAccount: state.account.isCreating,
 })
 
 const mapDispatchToProps = (dispatch) => ({

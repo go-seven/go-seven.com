@@ -22,12 +22,14 @@ export interface IAuthentication {
   error?: IError
   hasExpired?: boolean
   isValid: boolean
-  isWaiting: boolean
   token?: string
 }
 
 export interface IAccountState {
   authentication: IAuthentication | null
+  isCreating: boolean
+  isDeleting: boolean
+  isEntering: boolean
 }
 
 export function createAccount(credentials: ICredentials) {
@@ -36,7 +38,7 @@ export function createAccount(credentials: ICredentials) {
 
     client.post("/account", credentials).then(
       () => dispatch({ type: CREATE_ACCOUNT.SUCCESS }),
-      (error) => dispatch({ error: JSON.parse(error), type: CREATE_ACCOUNT.FAILURE }),
+      (error) => dispatch({ error: client.parseError(error), type: CREATE_ACCOUNT.FAILURE }),
     )
   }
 }
@@ -55,7 +57,7 @@ export function deleteAccount() {
 
     client.del("/account", token).then(
       () => dispatch({ type: DELETE_ACCOUNT.SUCCESS }),
-      (error) => dispatch({ error: JSON.parse(error), type: DELETE_ACCOUNT.FAILURE }),
+      (error) => dispatch({ error: client.parseError(error), type: DELETE_ACCOUNT.FAILURE }),
     )
   }
 }
@@ -66,7 +68,7 @@ export function enter(credentials: ICredentials) {
 
     client.post("/enter", credentials).then(
       (data) => dispatch({ data, type: AUTHENTICATION.SUCCESS }),
-      (error) => dispatch({ error: JSON.parse(error), type: AUTHENTICATION.FAILURE }),
+      (error) => dispatch({ error: client.parseError(error), type: AUTHENTICATION.FAILURE }),
     )
   }
 
@@ -74,7 +76,10 @@ export function enter(credentials: ICredentials) {
 export function exit() { return { type: EXIT } }
 
 export const initialState: IAccountState = {
-  authentication: null
+  authentication: null,
+  isCreating: false,
+  isDeleting: false,
+  isEntering: false,
 }
 
 export default function(state = initialState, action) {
@@ -85,8 +90,8 @@ export default function(state = initialState, action) {
         authentication: {
           ...state.authentication,
           error: action.error,
-          isWaiting: false,
-        }
+        },
+        isEntering: false,
       }
 
     case AUTHENTICATION.REQUEST:
@@ -95,8 +100,8 @@ export default function(state = initialState, action) {
         authentication: {
           ...state.authentication,
           error: null,
-          isWaiting: true,
-        }
+        },
+        isEntering: true,
       }
 
     case AUTHENTICATION.SUCCESS:
@@ -105,8 +110,8 @@ export default function(state = initialState, action) {
         authentication: {
           ...action.data,
           isValid: true,
-          isWaiting: false,
-        }
+        },
+        isEntering: false,
       }
 
     case CHECK_AUTHENTICATION:
@@ -123,8 +128,8 @@ export default function(state = initialState, action) {
         authentication: {
           error: action.error,
           isValid: false,
-          isWaiting: false,
-        }
+        },
+        isCreating: false,
       }
 
     case CREATE_ACCOUNT.REQUEST:
@@ -133,8 +138,8 @@ export default function(state = initialState, action) {
         authentication: {
           error: null,
           isValid: false,
-          isWaiting: true,
-        }
+        },
+        isCreating: true,
       }
 
     case CREATE_ACCOUNT.SUCCESS:
@@ -143,24 +148,27 @@ export default function(state = initialState, action) {
         authentication: {
           error: null,
           isValid: false,
-          isWaiting: false,
-        }
+        },
+        isCreating: false,
       }
 
     case DELETE_ACCOUNT.FAILURE:
       return {
-      ...state
-    }
+        ...state,
+        isDeleting: false,
+      }
 
     case DELETE_ACCOUNT.REQUEST:
       return {
-      ...state
-    }
+        ...state,
+        isDeleting: true,
+      }
 
     case DELETE_ACCOUNT.SUCCESS:
       return {
-      ...state
-    }
+        ...state,
+        isDeleting: false,
+      }
 
     case EXIT:
       return initialState

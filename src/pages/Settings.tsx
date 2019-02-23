@@ -17,6 +17,7 @@ interface IProps {
   authentication: IAuthentication
   deleteAccount: () => void
   exit: () => void
+  isDeletingAccount: boolean
 }
 
 class Settings extends React.Component<IProps> {
@@ -33,6 +34,7 @@ class Settings extends React.Component<IProps> {
       authentication,
       deleteAccount,
       exit,
+      isDeletingAccount,
     } = this.props
 
     if (authentication === null) {
@@ -45,6 +47,7 @@ class Settings extends React.Component<IProps> {
 
         <Button
           isDanger
+          isLoading={isDeletingAccount}
           onClick={this.onClickDeleteAccount}
         >
           Delete Account
@@ -57,6 +60,7 @@ class Settings extends React.Component<IProps> {
 
 const mapStateToProps = (state) => ({
   authentication: state.account.authentication,
+  isDeletingAccount: state.account.isDeleteing,
 })
 
 const mapDispatchToProps = (dispatch) => ({

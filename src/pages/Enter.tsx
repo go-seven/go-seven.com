@@ -34,6 +34,7 @@ import Homepage from "./Homepage"
 interface IProps {
   authentication: IAuthentication
   enter: (ICredentials) => void
+  isEnteringAccount: boolean
 }
 
 interface IState {
@@ -60,6 +61,7 @@ class Enter extends React.Component<IProps, IState> {
   render() {
     const {
       authentication,
+      isEnteringAccount,
     } = this.props
 
     if (authentication === null) {
@@ -71,6 +73,10 @@ class Enter extends React.Component<IProps, IState> {
         <Redirect push to={CreateUrl.path} />
       )
     }
+
+    const error = authentication.error || { code: "", message: "" }
+    const emailFieldError = error.code === "AccountNotFoundError" ? error.message : undefined
+    const passwordFieldError = error.code === "InvalidPasswordError" ? error.message : undefined
 
     return (
       <Modal isActive>
@@ -96,18 +102,19 @@ class Enter extends React.Component<IProps, IState> {
                 onSubmit={this.onSubmit}
               >
                 <EmailField
+                  errorMessage={emailFieldError}
                   inputRef={this.emailRef}
                 />
 
                 <PasswordField
-                  errorMessage={authentication.error && authentication.error.message}
+                  errorMessage={passwordFieldError}
                   inputRef={this.passwordRef}
                 />
 
                 <Field>
                   <Control>
                     <Button
-                      isLoading={authentication.isWaiting}
+                      isLoading={isEnteringAccount}
                       isSuccess
                       type="submit"
                       value="Enter"
@@ -125,6 +132,7 @@ class Enter extends React.Component<IProps, IState> {
 
 const mapStateToProps = (state) => ({
   authentication: state.account.authentication,
+  isEnteringAccount: state.account.isEntering
 })
 
 const mapDispatchToProps = (dispatch) => ({
