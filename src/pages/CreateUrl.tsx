@@ -2,8 +2,9 @@ import * as React from "react"
 import { connect } from "react-redux"
 
 import Navbar from "../components/Navbar"
-import UrlCollection, { IUrlCollectionProps } from "../components/UrlCollection"
 import UrlCreator, { IUrlCreatorProps } from "../components/UrlCreator"
+
+import Homepage from "./Homepage"
 
 import {
   exit,
@@ -11,7 +12,6 @@ import {
 } from "../reducers/account"
 import {
   createUrl,
-  fetchCollectionIfNeeded,
   setWantedUrl,
   ICollectionsState,
 } from "../reducers/collections"
@@ -19,8 +19,6 @@ import {
 interface IProps {
   authentication: IAuthentication
   createUrl: IUrlCreatorProps["createUrl"]
-  collection: ICollectionsState["current"]
-  fetchCollection: IUrlCollectionProps["fetchCollection"]
   exit: () => void
   itIsCheckingIfUrlIdExists: ICollectionsState["itIsCheckingIfUrlIdExists"]
   itIsCreatingUrl: ICollectionsState["itIsCreatingUrl"]
@@ -37,10 +35,8 @@ class CreateUrl extends React.Component<IProps> {
   render() {
     const {
       authentication,
-      collection,
       createUrl,
       exit,
-      fetchCollection,
       itIsCheckingIfUrlIdExists,
       itIsCreatingUrl,
       itIsFetchingUrlMetadata,
@@ -78,7 +74,6 @@ class CreateUrl extends React.Component<IProps> {
 
 const mapStateToProps = (state) => ({
   authentication: state.account.authentication,
-  collection: state.collections.current,
   itIsCheckingIfUrlIdExists: state.collections.itIsCheckingIfUrlIdExists,
   itIsCreatingUrl: state.collections.itIsCreatingUrl,
   itIsFetchingUrlMetadata: state.collections.itIsFetchingUrlMetadata,
@@ -90,7 +85,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   createUrl: (url) => dispatch(createUrl(url)),
   exit: () => dispatch(exit()),
-  fetchCollection: () => dispatch(fetchCollectionIfNeeded()),
   setWantedUrl: (url) => dispatch(setWantedUrl(url)),
 })
 

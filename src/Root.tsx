@@ -14,6 +14,7 @@ import Enter from "./pages/Enter"
 import Homepage from "./pages/Homepage"
 import PrivacyPolicy from "./pages/PrivacyPolicy"
 import TermsOfService from "./pages/TermsOfService"
+import UrlCollections from "./pages/UrlCollections"
 
 import {
   CHECK_AUTHENTICATION,
@@ -48,6 +49,8 @@ export default class Root extends React.Component<IProps> {
             <Route component={PrivacyPolicy} exact path={PrivacyPolicy.path} />
 
             <Route component={TermsOfService} exact path={TermsOfService.path} />
+
+            <Route component={UrlCollections} exact path={UrlCollections.path} />
           </Switch>
         </BrowserRouter>
       </Provider>

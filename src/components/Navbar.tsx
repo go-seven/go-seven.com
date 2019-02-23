@@ -15,6 +15,7 @@ import CreateAccount from "../pages/CreateAccount"
 import CreateUrl from "../pages/CreateUrl"
 import Enter from "../pages/Enter"
 import Homepage from "../pages/Homepage"
+import UrlCollections from "../pages/UrlCollections"
 
 interface IProps {
   authenticationIsValid?: boolean
@@ -69,6 +70,12 @@ export default class Nav extends React.Component<IProps, IState> {
     })
   }
 
+  onClickUrlCollections = (event) => {
+    this.setState({
+      redirect: UrlCollections.path
+    })
+  }
+
   render() {
     const {
       authenticationIsValid,
@@ -116,6 +123,13 @@ export default class Nav extends React.Component<IProps, IState> {
                   onClick={this.onClickCreateUrl}
                 >
                   Create URL
+                </Navbar.Item>
+
+                <Navbar.Item
+                  isActive={locationPath === UrlCollections.path}
+                  onClick={this.onClickUrlCollections}
+                >
+                  URL Collections
                 </Navbar.Item>
               </Navbar.Start>
             )}
