@@ -65,9 +65,7 @@ export function createUrl(url: IUrl) {
 
     const collectionId = collections.selected
 
-    dispatch({
-      type: CREATE_URL.REQUEST
-    })
+    dispatch({ type: CREATE_URL.REQUEST })
 
     client.post("/url", { collectionId, url }, token).then(
       (data) => dispatch({ data, type: CREATE_URL.SUCCESS }),

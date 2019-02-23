@@ -40,7 +40,7 @@ function clientSend(method, endpoint, data, token?) {
   return fetch(`${basePath}${endpoint}`, { body, headers, method }).then(checkResponse)
 }
 
-export function del(endpoint, token?) {
+export function del(endpoint, token) {
   return client("DELETE", endpoint, token)
 }
 

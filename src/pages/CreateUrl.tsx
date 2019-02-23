@@ -4,8 +4,6 @@ import { connect } from "react-redux"
 import Navbar from "../components/Navbar"
 import UrlCreator, { IUrlCreatorProps } from "../components/UrlCreator"
 
-import Homepage from "./Homepage"
-
 import {
   exit,
   IAuthentication,

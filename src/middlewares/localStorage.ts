@@ -2,7 +2,8 @@
 import {
   AUTHENTICATION,
   CHECK_AUTHENTICATION,
-  EXIT
+  DELETE_ACCOUNT,
+  EXIT,
 } from "../reducers/account"
 
 export default function localStorageMiddleware(store) {
@@ -75,6 +76,9 @@ export default function localStorageMiddleware(store) {
              }
            })
          }
+
+       case DELETE_ACCOUNT.SUCCESS:
+         localStorage.removeItem("authentication")
 
        case EXIT:
          localStorage.removeItem("authentication")

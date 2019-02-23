@@ -3,7 +3,8 @@ import * as client from "../client"
 
 export const AUTHENTICATION = asyncActions("AUTHENTICATION")
 export const CHECK_AUTHENTICATION = "CHECK_AUTHENTICATION"
-const CREATE_ACCOUNT = asyncActions("CREATE_ACCOUNT")
+export const CREATE_ACCOUNT = asyncActions("CREATE_ACCOUNT")
+export const DELETE_ACCOUNT = asyncActions("DELETE_ACCOUNT")
 export const EXIT = "EXIT"
 
 export interface ICredentials {
@@ -38,7 +39,25 @@ export function createAccount(credentials: ICredentials) {
       (error) => dispatch({ error: JSON.parse(error), type: CREATE_ACCOUNT.FAILURE }),
     )
   }
+}
 
+export function deleteAccount() {
+  return (dispatch, getState) => {
+    const {
+      account,
+    } = getState()
+
+    const {
+      token,
+    } = account.authentication
+
+    dispatch({ type: DELETE_ACCOUNT.REQUEST })
+
+    client.del("/account", token).then(
+      () => dispatch({ type: DELETE_ACCOUNT.SUCCESS }),
+      (error) => dispatch({ error: JSON.parse(error), type: DELETE_ACCOUNT.FAILURE }),
+    )
+  }
 }
 
 export function enter(credentials: ICredentials) {
@@ -127,6 +146,21 @@ export default function(state = initialState, action) {
           isWaiting: false,
         }
       }
+
+    case DELETE_ACCOUNT.FAILURE:
+      return {
+      ...state
+    }
+
+    case DELETE_ACCOUNT.REQUEST:
+      return {
+      ...state
+    }
+
+    case DELETE_ACCOUNT.SUCCESS:
+      return {
+      ...state
+    }
 
     case EXIT:
       return initialState

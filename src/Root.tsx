@@ -4,7 +4,7 @@ import {
   BrowserRouter,
   Redirect,
   Route,
-  Switch
+  Switch,
 } from "react-router-dom"
 import { Store } from "redux"
 
@@ -13,6 +13,7 @@ import CreateUrl from "./pages/CreateUrl"
 import Enter from "./pages/Enter"
 import Homepage from "./pages/Homepage"
 import PrivacyPolicy from "./pages/PrivacyPolicy"
+import Settings from "./pages/Settings"
 import TermsOfService from "./pages/TermsOfService"
 import UrlCollections from "./pages/UrlCollections"
 
@@ -47,6 +48,8 @@ export default class Root extends React.Component<IProps> {
             <Route component={Homepage} exact path={Homepage.path} />
 
             <Route component={PrivacyPolicy} exact path={PrivacyPolicy.path} />
+
+            <Route component={Settings} exact path={Settings.path} />
 
             <Route component={TermsOfService} exact path={TermsOfService.path} />
 
