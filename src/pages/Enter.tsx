@@ -22,6 +22,8 @@ import EmailField from "../components/EmailField"
 import Logo from "../components/Logo"
 import PasswordField from "../components/PasswordField"
 
+import * as apiError from "../apiErrors"
+
 import {
   enter,
   IAuthentication,
@@ -75,8 +77,8 @@ class Enter extends React.Component<IProps, IState> {
     }
 
     const error = authentication.error || { code: "", message: "" }
-    const emailFieldError = error.code === "AccountNotFoundError" ? error.message : undefined
-    const passwordFieldError = error.code === "InvalidPasswordError" ? error.message : undefined
+    const emailFieldError = error.code === apiError.AccountNotFoundError ? error.message : undefined
+    const passwordFieldError = error.code === apiError.InvalidPasswordError ? error.message : undefined
 
     return (
       <Modal isActive>
@@ -123,6 +125,12 @@ class Enter extends React.Component<IProps, IState> {
                 </Field>
               </form>
             </Box>
+
+            {error.code === apiError.AccountNotVerifiedError && (
+              <Message>
+                Account not verified.
+              </Message>
+            )}
           </Column>
         </Modal.Content>
       </Modal>

@@ -1,0 +1,7 @@
+export const AccountExistsError = "AccountExistsError"
+export const AccountNotFoundError = "AccountNotFoundError"
+export const AccountNotVerifiedError = "AccountNotVerifiedError"
+export const CollectionNotFoundError = "CollectionNotFoundError"
+export const InvalidPasswordError = "InvalidPasswordError"
+export const UrlIdIsAlreadyTakenError = "UrlIdIsAlreadyTakenError"
+export const UrlDoesNotExistError = "UrlDoesNotExistError"
