@@ -6,6 +6,16 @@ export const CHECK_AUTHENTICATION = "CHECK_AUTHENTICATION"
 export const CREATE_ACCOUNT = asyncActions("CREATE_ACCOUNT")
 export const DELETE_ACCOUNT = asyncActions("DELETE_ACCOUNT")
 export const EXIT = "EXIT"
+export const SEND_VERIFICATION_EMAIL = asyncActions("SEND_VERIFICATION_EMAIL")
+
+export const initialState: IAccountState = {
+  authentication: null,
+  emailVerificationSent: false,
+  isCreating: false,
+  isDeleting: false,
+  isEntering: false,
+  isSendingVerification: false,
+}
 
 export interface ICredentials {
   email: string
@@ -27,9 +37,11 @@ export interface IAuthentication {
 
 export interface IAccountState {
   authentication: IAuthentication | null
+  emailVerificationSent: boolean
   isCreating: boolean
   isDeleting: boolean
   isEntering: boolean
+  isSendingVerification: boolean
 }
 
 export function createAccount(credentials: ICredentials) {
@@ -73,13 +85,18 @@ export function enter(credentials: ICredentials) {
   }
 
 }
+
 export function exit() { return { type: EXIT } }
 
-export const initialState: IAccountState = {
-  authentication: null,
-  isCreating: false,
-  isDeleting: false,
-  isEntering: false,
+export function sendVerificationEmail(email) {
+  return (dispatch, getState) => {
+    dispatch({ type: SEND_VERIFICATION_EMAIL.REQUEST })
+
+    client.post("/send-verification", { email }).then(
+      (data) => dispatch({ data, type: SEND_VERIFICATION_EMAIL.SUCCESS }),
+      (error) => dispatch({ error: client.parseError(error), type: SEND_VERIFICATION_EMAIL.FAILURE }),
+    )
+  }
 }
 
 export default function(state = initialState, action) {
@@ -172,6 +189,25 @@ export default function(state = initialState, action) {
 
     case EXIT:
       return initialState
+
+    case SEND_VERIFICATION_EMAIL.FAILURE:
+      return {
+        ...state,
+        isSendingVerification: false,
+      }
+
+    case SEND_VERIFICATION_EMAIL.REQUEST:
+      return {
+        ...state,
+        isSendingVerification: true,
+      }
+
+    case SEND_VERIFICATION_EMAIL.SUCCESS:
+      return {
+        ...state,
+        emailVerificationSent: true,
+        isSendingVerification: false,
+      }
 
     default: return state
   }

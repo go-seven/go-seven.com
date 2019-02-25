@@ -26,6 +26,7 @@ import * as apiError from "../apiErrors"
 
 import {
   enter,
+  sendVerificationEmail,
   IAuthentication,
   ICredentials,
 } from "../reducers/account"
@@ -35,8 +36,11 @@ import Homepage from "./Homepage"
 
 interface IProps {
   authentication: IAuthentication
+  emailVericationSent: boolean
   enter: (ICredentials) => void
   isEnteringAccount: boolean
+  isSendingVerification: boolean
+  sendVerificationEmail: (email: string) => void
 }
 
 interface IState {
@@ -51,6 +55,20 @@ class Enter extends React.Component<IProps, IState> {
   private emailRef = React.createRef<HTMLInputElement>()
   private passwordRef = React.createRef<HTMLInputElement>()
 
+  onClickSendVerificationEmail = (event) => {
+    pdsp(event)
+
+    const {
+      sendVerificationEmail
+    } = this.props
+
+    const email = this.emailRef.current && this.emailRef.current.value
+
+    if (typeof email === "string") {
+      sendVerificationEmail(email)
+    }
+  }
+
   onSubmit = (event) => {
     pdsp(event)
 
@@ -63,7 +81,9 @@ class Enter extends React.Component<IProps, IState> {
   render() {
     const {
       authentication,
+      emailVericationSent,
       isEnteringAccount,
+      isSendingVerification,
     } = this.props
 
     if (authentication === null) {
@@ -77,8 +97,10 @@ class Enter extends React.Component<IProps, IState> {
     }
 
     const error = authentication.error || { code: "", message: "" }
+
     const emailFieldError = error.code === apiError.AccountNotFoundError ? error.message : undefined
     const passwordFieldError = error.code === apiError.InvalidPasswordError ? error.message : undefined
+    const accountNotVerifiedError = error.code === apiError.AccountNotVerifiedError
 
     return (
       <Modal isActive>
@@ -126,10 +148,53 @@ class Enter extends React.Component<IProps, IState> {
               </form>
             </Box>
 
-            {error.code === apiError.AccountNotVerifiedError && (
-              <Message>
-                Account not verified.
-              </Message>
+            {accountNotVerifiedError && (
+              <React.Fragment>
+                {emailVericationSent ? (
+                  <Message isSuccess>
+                    <Message.Header>
+                      Email sent
+                    </Message.Header>
+
+                    <Message.Body>
+                      <p>
+                        Email was sent successfully.
+                        Please check your email inbox and also your <em>spam</em> folder.
+                      </p>
+
+                    </Message.Body>
+                  </Message>
+                ) : (
+                  <React.Fragment>
+                    <Message>
+                      <Message.Header>
+                        Account not verified.
+                      </Message.Header>
+
+                      <Message.Body>
+                        <p>
+                          Account was not verified yet.
+                          Please check your email inbox and also your <em>spam</em> folder.
+                          Look for <b>verification email</b>, if not found you can try to resend it.
+                        </p>
+
+                      </Message.Body>
+                    </Message>
+
+                    <Field>
+                      <Control>
+                        <Button
+                          isLoading={isSendingVerification}
+                          isWarning
+                          onClick={this.onClickSendVerificationEmail}
+                        >
+                          Resend Email
+                        </Button>
+                      </Control>
+                    </Field>
+                  </React.Fragment>
+                )}
+              </React.Fragment>
             )}
           </Column>
         </Modal.Content>
@@ -140,11 +205,14 @@ class Enter extends React.Component<IProps, IState> {
 
 const mapStateToProps = (state) => ({
   authentication: state.account.authentication,
-  isEnteringAccount: state.account.isEntering
+  emailVericationSent: state.account.emailVericationSent,
+  isEnteringAccount: state.account.isEntering,
+  isSendingVerification: state.account.isSendingVerification,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  enter: (credentials) => dispatch(enter(credentials))
+  enter: (credentials) => dispatch(enter(credentials)),
+  sendVerificationEmail: (email) => dispatch(sendVerificationEmail(email)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Enter)
