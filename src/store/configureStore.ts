@@ -15,7 +15,7 @@ export default function configureStore(state) {
         localStorageMiddleware,
       ),
       /* tslint:disable-next-line:no-string-literal */
-      window["__REDUX_DEVTOOLS_EXTENSION__"] && window["__REDUX_DEVTOOLS_EXTENSION__"]()
+      window["__REDUX_DEVTOOLS_EXTENSION__"] ? window["__REDUX_DEVTOOLS_EXTENSION__"]() : (storeCreator) => storeCreator
     )
   )
 }
