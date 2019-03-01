@@ -6,6 +6,7 @@ export const CHECK_AUTHENTICATION = "CHECK_AUTHENTICATION"
 export const CREATE_ACCOUNT = asyncActions("CREATE_ACCOUNT")
 export const DELETE_ACCOUNT = asyncActions("DELETE_ACCOUNT")
 export const EXIT = "EXIT"
+const RESET_AUTHENTICATION_ERROR = "RESET_AUTHENTICATION_ERROR"
 export const SEND_VERIFICATION_EMAIL = asyncActions("SEND_VERIFICATION_EMAIL")
 
 export const initialState: IAccountState = {
@@ -87,6 +88,8 @@ export function enter(credentials: ICredentials) {
 }
 
 export function exit() { return { type: EXIT } }
+
+export function resetAuthenticationError() { return { type: RESET_AUTHENTICATION_ERROR } }
 
 export function sendVerificationEmail(email) {
   return (dispatch, getState) => {
@@ -189,6 +192,15 @@ export default function(state = initialState, action) {
 
     case EXIT:
       return initialState
+
+    case RESET_AUTHENTICATION_ERROR:
+      return {
+        ...state,
+        authentication: {
+          ...state.authentication,
+          error: null,
+        }
+      }
 
     case SEND_VERIFICATION_EMAIL.FAILURE:
       return {

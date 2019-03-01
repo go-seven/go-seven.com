@@ -27,6 +27,7 @@ import * as apiError from "../apiErrors"
 
 import {
   createAccount,
+  resetAuthenticationError,
   IAuthentication,
   ICredentials,
 } from "../reducers/account"
@@ -39,6 +40,7 @@ interface IProps {
   authentication: IAuthentication
   createAccount: (ICredentials) => void
   isCreatingAccount: boolean
+  resetAuthenticationError: () => void
 }
 
 interface IState {
@@ -60,7 +62,13 @@ class CreateAccount extends React.Component<IProps, IState> {
   private passwordRef = React.createRef<HTMLInputElement>()
 
   componentDidMount() {
+    const {
+      resetAuthenticationError,
+    } = this.props
+
     this.loadAntiSpam()
+
+    resetAuthenticationError()
   }
 
   loadAntiSpam() {
@@ -215,7 +223,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  createAccount: (credentials) => dispatch(createAccount(credentials))
+  createAccount: (credentials) => dispatch(createAccount(credentials)),
+  resetAuthenticationError: () => dispatch(resetAuthenticationError),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateAccount)

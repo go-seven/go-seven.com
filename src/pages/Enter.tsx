@@ -26,6 +26,7 @@ import * as apiError from "../apiErrors"
 
 import {
   enter,
+  resetAuthenticationError,
   sendVerificationEmail,
   IAuthentication,
   ICredentials,
@@ -40,6 +41,7 @@ interface IProps {
   enter: (ICredentials) => void
   isEnteringAccount: boolean
   isSendingVerification: boolean
+  resetAuthenticationError: () => void
   sendVerificationEmail: (email: string) => void
 }
 
@@ -54,6 +56,14 @@ class Enter extends React.Component<IProps, IState> {
 
   private emailRef = React.createRef<HTMLInputElement>()
   private passwordRef = React.createRef<HTMLInputElement>()
+
+  componentDidMount() {
+    const {
+      resetAuthenticationError,
+    } = this.props
+
+    resetAuthenticationError()
+  }
 
   onClickSendVerificationEmail = (event) => {
     pdsp(event)
@@ -212,6 +222,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   enter: (credentials) => dispatch(enter(credentials)),
+  resetAuthenticationError: () => dispatch(resetAuthenticationError()),
   sendVerificationEmail: (email) => dispatch(sendVerificationEmail(email)),
 })
 
