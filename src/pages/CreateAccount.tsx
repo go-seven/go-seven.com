@@ -66,21 +66,31 @@ class CreateAccount extends React.Component<IProps, IState> {
       resetAuthenticationError,
     } = this.props
 
-    this.loadAntiSpam()
-
     resetAuthenticationError()
   }
 
   loadAntiSpam() {
-    ticTacToe(this.antispamRef.current, () => {
-      this.setState({ clientIsRobot: false })
-    })
+    const {
+      clientIsRobot
+    } = this.state
+
+    if (clientIsRobot) {
+      ticTacToe(this.antispamRef.current, () => {
+        this.setState({ clientIsRobot: false })
+      })
+    }
   }
 
   onChangeCheckbox = (event) => {
+    const {
+      clientIsRobot
+    } = this.state
+
     this.setState({
       clientAgrees: event.target.checked
-    })
+      }, () => {
+        this.loadAntiSpam()
+      })
   }
 
   onClickLogo = (event) => {
