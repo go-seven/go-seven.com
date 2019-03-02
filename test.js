@@ -4,18 +4,21 @@ const fs = require('fs')
 const pkg = require('./package.json')
 const { version } = pkg
 
-const browserifyExclude = Object.keys(pkg.config.versions).map(lib => `-x ${lib}`).join(' ')
+const browserifyExclude = Object.keys(pkg.config.versions).map(lib => `-x ${lib.replace(/_/g, '-')}`).join(' ')
 assert.strictEqual(browserifyExclude, pkg.config.browserify.exclude)
 
 Object.keys(pkg.config.versions).forEach(lib => {
-  assert(typeof pkg.scripts[`get_js_libs:${lib}`] === 'string')
-  assert(typeof pkg.scripts[`postget_js_libs:${lib}`] === 'string')
+  const packageName = lib.replace(/_/g, '-')
+
+  assert(typeof pkg.scripts[`browserify:shim:${packageName}`] === 'string')
+  assert(typeof pkg.scripts[`get_js_libs:${packageName}`] === 'string')
+  assert(typeof pkg.scripts[`postget_js_libs:${packageName}`] === 'string')
 })
 
 const libPaths = Object.keys(pkg.config.versions).map(lib => {
   const version = pkg.config.versions[lib]
 
-  return `/libs/${lib}.v${version}.min.js`
+  return `/libs/${lib.replace(/_/g, '-')}.v${version}.min.js`
 })
 
 const linkToCssApp = `<link rel="stylesheet" href="/css/app.v${version}.css">`

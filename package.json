@@ -1,16 +1,17 @@
 {
   "name": "go-seven.com",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "private": true,
   "description": "URL shortener",
   "config": {
     "versions": {
       "react": "16.8.2",
-      "react-dom": "16.8.2",
-      "react-router-dom": "4.3.1"
+      "react_dom": "16.8.2",
+      "react_router_dom": "4.3.1",
+      "redux": "4.0.1"
     },
     "browserify": {
-      "exclude": "-x react -x react-dom -x react-router-dom"
+      "exclude": "-x react -x react-dom -x react-router-dom -x redux"
     }
   },
   "scripts": {
@@ -27,18 +28,21 @@
     "browserify:shim:react": "browserify -r ./src/libs/react.js:react -o public/libs/react.js",
     "browserify:shim:react-dom": "browserify -r ./src/libs/react-dom.js:react-dom -o public/libs/react-dom.js",
     "browserify:shim:react-router-dom": "browserify -r ./src/libs/react-router-dom.js:react-router-dom -o public/libs/react-router-dom.js",
+    "browserify:shim:redux": "browserify -r ./src/libs/redux.js:redux -o public/libs/redux.js",
     "build": "npm run browserify; npm run node-sass",
     "budo": "budo src/index.tsx --live --pushstate --dir public --serve js/bundle.v${npm_package_version}.js --open -- -p tsify $npm_package_config_browserify_exclude",
     "deploy": "npm run build; npm run aws_s3_sync",
     "get_js_libs": "run-s get_js_libs:*",
-    "get_js_libs:react": "wget -N https://unpkg.com/react@${npm_package_config_versions_react}/umd/react.production.min.js -O public/libs/react.v${npm_package_config_versions_react}.min.js",
-    "get_js_libs:react-dom": "wget -N https://unpkg.com/react-dom@${npm_package_config_versions_react-dom}/umd/react-dom.production.min.js -O public/libs/react-dom.v${npm_package_config_versions_react-dom}.min.js",
-    "get_js_libs:react-router-dom": "wget -N https://unpkg.com/react-router-dom@${npm_package_config_versions_react-router-dom}/umd/react-router-dom.min.js -O public/libs/react-router-dom.v${npm_package_config_versions_react-router-dom}.min.js",
+    "get_js_libs:react": "wget https://unpkg.com/react@${npm_package_config_versions_react}/umd/react.production.min.js -O public/libs/react.v${npm_package_config_versions_react}.min.js",
+    "get_js_libs:react-dom": "wget https://unpkg.com/react-dom@${npm_package_config_versions_react_dom}/umd/react-dom.production.min.js -O public/libs/react-dom.v${npm_package_config_versions_react_dom}.min.js",
+    "get_js_libs:react-router-dom": "wget https://unpkg.com/react-router-dom@${npm_package_config_versions_react_router_dom}/umd/react-router-dom.min.js -O public/libs/react-router-dom.v${npm_package_config_versions_react_router_dom}.min.js",
+    "get_js_libs:redux": "wget https://unpkg.com/redux@${npm_package_config_versions_redux}/dist/redux.min.js -O public/libs/redux.v${npm_package_config_versions_redux}.min.js",
     "node-sass": "run-s node-sass:*",
     "node-sass:app": "node-sass --include-path node_modules src/sass/app.scss --output-style compressed > public/css/app.v${npm_package_version}.css",
     "postget_js_libs:react": "npm run browserify:shim:react",
     "postget_js_libs:react-dom": "npm run browserify:shim:react-dom",
     "postget_js_libs:react-router-dom": "npm run browserify:shim:react-router-dom",
+    "postget_js_libs:redux": "npm run browserify:shim:redux",
     "postinstall": "npm run get_js_libs",
     "predeploy": "npm test",
     "standa": "standa test.js src/*.js",
@@ -72,13 +76,12 @@
     "budo": "^11.6.0",
     "dot-editorconfig": "^1.1.1",
     "fa-svg-icon": "^0.3.0",
-    "i-am-not-a-robot": "^0.6.0",
+    "i-am-not-a-robot": "^0.7.0",
     "node-sass": "^4.11.0",
     "npm-run-all": "^4.1.5",
     "pdsp": "^0.1.0",
     "pre-commit": "^1.2.2",
-    "react-redux": "^6.0.0",
-    "redux": "^4.0.1",
+    "react-redux": "^6.0.1",
     "redux-thunk": "^2.3.0",
     "regex-weburl": "^1.0.0",
     "standa": "^12.0.1",

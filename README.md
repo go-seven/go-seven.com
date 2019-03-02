@@ -10,10 +10,13 @@ First of all, add version numbers to package config, for example
   "config": {
     "versions": {
       "react": "16.8.0",
-      "react-dom": "16.8.0"
+      "react_dom": "16.8.0"
     }
   },
 ```
+
+Note that since dashes are not allowed in bash variable names (used in npm scripts prefixed by *get_js_libs:*),
+there are underscores instead of dashes in package names. In this case `react_dom` is used instead of `react-dom`.
 
 Add related files to [public/cache.js](public/cache.js), for instance
 
@@ -23,7 +26,7 @@ const REQUIRED_FILES = [
   '/libs/react.js',
   `/libs/react.v${pkg.config.versions.react}.min.js`,
   '/libs/react-dom.js',
-  `/libs/react-dom.v${pkg.config.versions['react-dom']}.min.js`,
+  `/libs/react-dom.v${pkg.config.versions.react_dom}.min.js`,
 // ...
 ]
 ```
@@ -53,15 +56,14 @@ Also add npm scripts to fetch js dist, for example
 ```json
   "scripts": {
     "get_js_libs:react": "wget -N https://unpkg.com/react@${npm_package_config_versions_react}/umd/react.production.min.js -O public/libs/react.v${npm_package_config_versions_react}.min.js",
-    "get_js_libs:react-dom": "wget -N https://unpkg.com/react-dom@${npm_package_config_versions_react-dom}/umd/react-dom.production.min.js -O public/libs/react-dom.v${npm_package_config_versions_react-dom}.min.js",
+    "get_js_libs:react_dom": "wget -N https://unpkg.com/react-dom@${npm_package_config_versions_react-dom}/umd/react-dom.production.min.js -O public/libs/react-dom.v${npm_package_config_versions_react-dom}.min.js",
 
     "postget_js_libs:react": "npm run browserify:shim:react",
-    "postget_js_libs:react-dom": "npm run browserify:shim:react-dom"
+    "postget_js_libs:react_dom": "npm run browserify:shim:react-dom"
   }
 ```
 
 Check for consistency running
-assert(typeof pkg.scripts.)
 
 ```bash
 npm test
