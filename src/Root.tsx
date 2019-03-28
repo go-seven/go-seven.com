@@ -54,6 +54,8 @@ export default class Root extends React.Component<IProps> {
             <Route component={TermsOfService} exact path={TermsOfService.path} />
 
             <Route component={UrlCollections} exact path={UrlCollections.path} />
+
+            <Redirect from="*" to={Homepage.path} />
           </Switch>
         </BrowserRouter>
       </Provider>
