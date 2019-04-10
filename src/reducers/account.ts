@@ -84,7 +84,6 @@ export function enter(credentials: ICredentials) {
       (error) => dispatch({ error: client.parseError(error), type: AUTHENTICATION.FAILURE }),
     )
   }
-
 }
 
 export function exit() { return { type: EXIT } }
