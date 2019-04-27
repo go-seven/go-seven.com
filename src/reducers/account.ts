@@ -7,6 +7,7 @@ export const CREATE_ACCOUNT = asyncActions("CREATE_ACCOUNT")
 export const DELETE_ACCOUNT = asyncActions("DELETE_ACCOUNT")
 export const EXIT = "EXIT"
 const RESET_AUTHENTICATION_ERROR = "RESET_AUTHENTICATION_ERROR"
+const SEND_PASSWORD_RESET_EMAIL = asyncActions("SEND_PASSWORD_RESET_EMAIL")
 export const SEND_VERIFICATION_EMAIL = asyncActions("SEND_VERIFICATION_EMAIL")
 
 export const initialState: IAccountState = {
@@ -15,6 +16,7 @@ export const initialState: IAccountState = {
   isCreating: false,
   isDeleting: false,
   isEntering: false,
+  isSendingPasswordReset: false,
   isSendingVerification: false,
 }
 
@@ -42,6 +44,7 @@ export interface IAccountState {
   isCreating: boolean
   isDeleting: boolean
   isEntering: boolean
+  isSendingPasswordReset: boolean
   isSendingVerification: boolean
 }
 
@@ -89,6 +92,19 @@ export function enter(credentials: ICredentials) {
 export function exit() { return { type: EXIT } }
 
 export function resetAuthenticationError() { return { type: RESET_AUTHENTICATION_ERROR } }
+
+export function sendPasswordReset(email) {
+  const { FAILURE, SUCCESS, REQUEST } = SEND_PASSWORD_RESET_EMAIL
+
+  return (dispatch, getState) => {
+    dispatch({ type: REQUEST })
+
+    client.post("/reset-password", { email }).then(
+      (data) => dispatch({ data, type: SUCCESS }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
+    )
+  }
+}
 
 export function sendVerificationEmail(email) {
   return (dispatch, getState) => {
@@ -199,6 +215,25 @@ export default function(state = initialState, action) {
           ...state.authentication,
           error: null,
         }
+      }
+
+    case SEND_PASSWORD_RESET_EMAIL.FAILURE:
+      return {
+        ...state,
+        isSendingPasswordReset: false,
+      }
+
+    case SEND_PASSWORD_RESET_EMAIL.REQUEST:
+      return {
+        ...state,
+        isSendingPasswordReset: true,
+      }
+
+    case SEND_PASSWORD_RESET_EMAIL.SUCCESS:
+      return {
+        ...state,
+        isSendingPasswordReset: false,
+        passwordResetEmailSent: true,
       }
 
     case SEND_VERIFICATION_EMAIL.FAILURE:

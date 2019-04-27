@@ -18,11 +18,11 @@ import {
   Title,
 } from "trunx"
 
+import * as apiError from "../apiErrors"
+
 import EmailField from "../components/EmailField"
 import Logo from "../components/Logo"
 import PasswordField from "../components/PasswordField"
-
-import * as apiError from "../apiErrors"
 
 import {
   enter,
@@ -143,6 +143,7 @@ class Enter extends React.Component<IProps, IState> {
                 <PasswordField
                   errorMessage={passwordFieldError}
                   inputRef={this.passwordRef}
+                  showForgotPassword
                 />
 
                 <Field>
@@ -168,7 +169,7 @@ class Enter extends React.Component<IProps, IState> {
 
                     <Message.Body>
                       <p>
-                        Email was sent successfully.
+                        <b>Verification email</b> was sent successfully.
                         Please check your email inbox and also your <em>spam</em> folder.
                       </p>
 

@@ -3,6 +3,7 @@ import * as eyeSlash from "fa-svg-icon/regular/eye-slash"
 import * as lock from "fa-svg-icon/solid/lock"
 import * as pdsp from "pdsp"
 import * as React from "react"
+import { Redirect } from "react-router-dom"
 import {
   Control,
   Field,
@@ -13,11 +14,14 @@ import {
   Span,
 } from "trunx"
 
+import PasswordReset from "../pages/PasswordReset"
+
 interface IProps {
   autoComplete?: string
   canShowPassword?: boolean
   errorMessage?: string,
   inputRef: React.RefObject<HTMLInputElement>
+  showForgotPassword?: boolean
   showPasswordPolicy?: boolean
 }
 
@@ -31,6 +35,7 @@ interface IPasswordPolicyChecks {
 interface IState {
   passwordIsVisible: boolean
   passwordCheck: IPasswordPolicyChecks
+  redirect?: string
 }
 
 export default class PasswordField extends React.Component<IProps, IState> {
@@ -68,6 +73,12 @@ export default class PasswordField extends React.Component<IProps, IState> {
     this.setState({ passwordCheck })
   }
 
+  onClickForgotPassword = (event) => {
+    this.setState({
+      redirect: PasswordReset.path
+    })
+  }
+
   togglePasswordVisibility = (event) => {
     pdsp(event)
 
@@ -82,12 +93,14 @@ export default class PasswordField extends React.Component<IProps, IState> {
       canShowPassword,
       errorMessage,
       inputRef,
+      showForgotPassword,
       showPasswordPolicy,
     } = this.props
 
     const {
       passwordCheck,
       passwordIsVisible,
+      redirect,
     } = this.state
 
     const {
@@ -97,9 +110,26 @@ export default class PasswordField extends React.Component<IProps, IState> {
       isLongEnough,
     } = passwordCheck
 
+    if (redirect) {
+      return (
+        <Redirect push to={redirect} />
+      )
+    }
+
     return (
       <Field>
-        <Label>Password</Label>
+        <Label>
+          Password
+
+          {showForgotPassword && (
+            <a
+              className="is-pulled-right"
+              onClick={this.onClickForgotPassword}
+            >
+              Forgot password?
+            </a>
+          )}
+        </Label>
 
         <Control hasIconsLeft hasIconsRight={canShowPassword}>
           <Input

@@ -19,11 +19,11 @@ import {
   Title,
 } from "trunx"
 
+import * as apiError from "../apiErrors"
+
 import EmailField from "../components/EmailField"
 import Logo from "../components/Logo"
 import PasswordField from "../components/PasswordField"
-
-import * as apiError from "../apiErrors"
 
 import {
   createAccount,

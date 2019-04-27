@@ -12,6 +12,7 @@ import CreateAccount from "./pages/CreateAccount"
 import CreateUrl from "./pages/CreateUrl"
 import Enter from "./pages/Enter"
 import Homepage from "./pages/Homepage"
+import PasswordReset from "./pages/PasswordReset"
 import PrivacyPolicy from "./pages/PrivacyPolicy"
 import Settings from "./pages/Settings"
 import TermsOfService from "./pages/TermsOfService"
@@ -46,6 +47,8 @@ export default class Root extends React.Component<IProps> {
             <Route component={Enter} exact path={Enter.path} />
 
             <Route component={Homepage} exact path={Homepage.path} />
+
+            <Route component={PasswordReset} exact path={PasswordReset.path} />
 
             <Route component={PrivacyPolicy} exact path={PrivacyPolicy.path} />
 
