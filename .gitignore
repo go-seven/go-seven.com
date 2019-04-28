@@ -1,6 +1,4 @@
 # build
-public/js/
-public/style.css
 public/cache.v*.*.*.js
 
 # miscellaneus trash

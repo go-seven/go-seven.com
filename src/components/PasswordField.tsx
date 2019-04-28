@@ -14,7 +14,7 @@ import {
   Span,
 } from "trunx"
 
-import PasswordReset from "../pages/PasswordReset"
+import PasswordResetPage from "../pages/PasswordResetPage"
 
 interface IProps {
   autoComplete?: string
@@ -75,7 +75,7 @@ export default class PasswordField extends React.Component<IProps, IState> {
 
   onClickForgotPassword = (event) => {
     this.setState({
-      redirect: PasswordReset.path
+      redirect: PasswordResetPage.path
     })
   }
 

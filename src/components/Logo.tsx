@@ -4,7 +4,7 @@ import {
   Image,
 } from "trunx"
 
-import Homepage from "../pages/Homepage"
+import HomePage from "../pages/HomePage"
 
 interface IProps {}
 
@@ -18,7 +18,7 @@ export default class Logo extends React.Component<IProps, IState> {
 
   onClickLogo = (event) => {
     this.setState({
-      redirect: Homepage.path
+      redirect: HomePage.path
     })
   }
 
@@ -35,7 +35,7 @@ export default class Logo extends React.Component<IProps, IState> {
 
     return (
       <Image
-        alt="GoSeven Logo"
+        alt=""
         height="28"
         onClick={this.onClickLogo}
         src="media/logo.svg"

@@ -33,19 +33,19 @@ export interface ICollection {
 export interface ICollectionsState {
   current: ICollection | null
   selected: string
-  itIsCheckingIfUrlIdExists: boolean
-  itIsCreatingUrl: boolean
-  itIsFetchingUrlMetadata: boolean
+  checkingIfUrlIdExists: boolean
+  creatingUrl: boolean
+  fetchingUrlMetadata: boolean
   wantedUrl: IUrl | null
   wantedUrlHrefIsValid: boolean | null
   wantedUrlIdExists: boolean | null
 }
 
 export const initialState: ICollectionsState = {
+  checkingIfUrlIdExists: false,
+  creatingUrl: false,
   current: null,
-  itIsCheckingIfUrlIdExists: false,
-  itIsCreatingUrl: false,
-  itIsFetchingUrlMetadata: false,
+  fetchingUrlMetadata: false,
   selected: "default",
   wantedUrl: null,
   wantedUrlHrefIsValid: null,
@@ -53,34 +53,36 @@ export const initialState: ICollectionsState = {
 }
 
 export function createUrl(url: IUrl) {
+  const { FAILURE, SUCCESS, REQUEST } = CREATE_URL
+
   return (dispatch, getState) => {
     const {
       account,
       collections,
     } = getState()
 
-    const {
-      token,
-    } = account.authentication
+    const { token } = account.authentication
 
     const collectionId = collections.selected
 
-    dispatch({ type: CREATE_URL.REQUEST })
+    dispatch({ type: REQUEST })
 
     client.post("/url", { collectionId, url }, token).then(
-      (data) => dispatch({ data, type: CREATE_URL.SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: CREATE_URL.FAILURE }),
+      (data) => dispatch({ data, type: SUCCESS }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
   }
 }
 
 function fetchCollection(token, id) {
+  const { FAILURE, SUCCESS, REQUEST } = FETCH_COLLECTION
+
   return (dispatch, getState) => {
-    dispatch({ type: FETCH_COLLECTION.REQUEST, id })
+    dispatch({ id, type: REQUEST })
 
     client.get(`/url-collection/${id}`, token).then(
-      (data) => dispatch({ data, type: FETCH_COLLECTION.SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FETCH_COLLECTION.FAILURE }),
+      (data) => dispatch({ data, type: SUCCESS }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
   }
 
@@ -93,9 +95,7 @@ export function fetchCollectionIfNeeded() {
       collections,
     } = getState()
 
-    const {
-      token
-    } = account.authentication
+    const { token } = account.authentication
 
     const {
       current,
@@ -115,9 +115,7 @@ export function setWantedUrl(url: IUrl) {
       wantedUrl,
     } = getState()
 
-    const {
-      token,
-    } = account.authentication
+    const { token } = account.authentication
 
     const urlHrefChanged = wantedUrl ? (wantedUrl.href !== url.href) : typeof url.href === "string"
     const urlHrefIsEmpty = url.href === ""
@@ -169,7 +167,7 @@ export function setWantedUrl(url: IUrl) {
   }
 }
 
-export function shouldFetchCollection({ current, selected }) {
+function shouldFetchCollection({ current, selected }) {
   if (current === null) {
     return true
   } else {
@@ -182,20 +180,20 @@ export default function(state = initialState, action) {
     case CREATE_URL.FAILURE:
       return {
         ...state,
-        itIsCreatingUrl: false,
+        creatingUrl: false,
       }
 
     case CREATE_URL.REQUEST:
       return {
         ...state,
-        itIsCreatingUrl: true,
+        creatingUrl: true,
         wantedUrlIdExists: null,
       }
 
     case CREATE_URL.SUCCESS:
       return {
         ...state,
-        itIsCreatingUrl: false,
+        creatingUrl: false,
       }
 
     case FETCH_COLLECTION.FAILURE:
@@ -217,20 +215,20 @@ export default function(state = initialState, action) {
     case FETCH_URL_METADATA.FAILURE:
       return {
         ...state,
-        itIsFetchingUrlMetadata: false,
+        fetchingUrlMetadata: false,
       }
 
     case FETCH_URL_METADATA.REQUEST:
       return {
         ...state,
-        itIsFetchingUrlMetadata: true,
+        fetchingUrlMetadata: true,
         wantedUrlHrefIsValid: true,
       }
 
     case FETCH_URL_METADATA.SUCCESS:
       return {
         ...state,
-        itIsFetchingUrlMetadata: false,
+        fetchingUrlMetadata: false,
         wantedUrl: {
           ...state.wantedUrl,
           href: action.data.href,
@@ -250,14 +248,14 @@ export default function(state = initialState, action) {
     case URL_ID_EXISTS.FAILURE:
       return {
         ...state,
-        itIsCheckingIfUrlIdExists: false,
+        checkingIfUrlIdExists: false,
         wantedUrlIdExists: null,
       }
 
     case URL_ID_EXISTS.REQUEST:
       return {
         ...state,
-        itIsCheckingIfUrlIdExists: true,
+        checkingIfUrlIdExists: true,
         wantedUrl: action.data,
         wantedUrlIdExists: null,
       }
@@ -265,7 +263,7 @@ export default function(state = initialState, action) {
     case URL_ID_EXISTS.SUCCESS:
       return {
         ...state,
-        itIsCheckingIfUrlIdExists: false,
+        checkingIfUrlIdExists: false,
         wantedUrlIdExists: action.data,
       }
 

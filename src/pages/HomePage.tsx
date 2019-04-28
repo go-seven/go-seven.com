@@ -23,7 +23,7 @@ interface IProps {
   location: history.Location
 }
 
-class Homepage extends React.Component<IProps> {
+class HomePage extends React.Component<IProps> {
   static path = "/"
 
   render() {
@@ -79,4 +79,4 @@ const mapDispatchToProps = (dispatch) => ({
   exit: () => dispatch(exit()),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Homepage)
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage)

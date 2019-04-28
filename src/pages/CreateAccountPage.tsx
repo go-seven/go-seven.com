@@ -32,9 +32,9 @@ import {
   ICredentials,
 } from "../reducers/account"
 
-import Homepage from "./Homepage"
-import PrivacyPolicy from "./PrivacyPolicy"
-import TermsOfService from "./TermsOfService"
+import HomePage from "./HomePage"
+import PrivacyPolicyPage from "./PrivacyPolicyPage"
+import TermsOfServicePage from "./TermsOfServicePage"
 
 interface IProps {
   authentication: IAuthentication
@@ -49,7 +49,7 @@ interface IState {
   redirect?: string
 }
 
-class CreateAccount extends React.Component<IProps, IState> {
+class CreateAccountPage extends React.Component<IProps, IState> {
   static path = "/create-account"
 
   state: IState = {
@@ -95,7 +95,7 @@ class CreateAccount extends React.Component<IProps, IState> {
 
   onClickLogo = (event) => {
     this.setState({
-      redirect: Homepage.path
+      redirect: HomePage.path
     })
   }
 
@@ -178,7 +178,7 @@ class CreateAccount extends React.Component<IProps, IState> {
                       <Checkbox
                         onChange={this.onChangeCheckbox}
                       >
-                        I agree to the <a href={PrivacyPolicy.path} target="_blank">Privacy Policy</a> and to the <a href={TermsOfService.path} target="_blank">Terms of Service</a>.
+                        I agree to the <a href={PrivacyPolicyPage.path} target="_blank">Privacy Policy</a> and to the <a href={TermsOfServicePage.path} target="_blank">Terms of Service</a>.
                       </Checkbox>
                     </Control>
                   </Field>
@@ -237,4 +237,4 @@ const mapDispatchToProps = (dispatch) => ({
   resetAuthenticationError: () => dispatch(resetAuthenticationError),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateAccount)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountPage)

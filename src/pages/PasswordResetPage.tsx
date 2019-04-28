@@ -22,7 +22,7 @@ import Footer from "../components/Footer"
 import Logo from "../components/Logo"
 import Navbar from "../components/Navbar"
 
-import CreateUrl from "./CreateUrl"
+import UrlCollectionPage from "./UrlCollectionPage"
 
 import {
   sendPasswordReset,
@@ -40,7 +40,7 @@ interface IState {
   redirect?: string
 }
 
-class PasswordReset extends React.Component<IProps, IState> {
+class PasswordResetPage extends React.Component<IProps, IState> {
   static path = "/password-reset"
 
   private emailRef = React.createRef<HTMLInputElement>()
@@ -64,7 +64,7 @@ class PasswordReset extends React.Component<IProps, IState> {
 
     if (authentication.isValid) {
       return (
-        <Redirect push to={CreateUrl.path} />
+        <Redirect push to={UrlCollectionPage.path} />
       )
     }
 
@@ -144,4 +144,4 @@ const mapDispatchToProps = (dispatch) => ({
   sendPasswordReset: (email) => dispatch(sendPasswordReset(email)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(PasswordReset)
+export default connect(mapStateToProps, mapDispatchToProps)(PasswordResetPage)

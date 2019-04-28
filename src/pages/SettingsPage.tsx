@@ -20,7 +20,7 @@ interface IProps {
   isDeletingAccount: boolean
 }
 
-class Settings extends React.Component<IProps> {
+class SettingsPage extends React.Component<IProps> {
   static path = "/settings"
 
   onClickDeleteAccount = (event) => {
@@ -43,7 +43,10 @@ class Settings extends React.Component<IProps> {
 
     return (
       <React.Fragment>
-        <Navbar noMenu />
+        <Navbar
+          authenticationIsValid={authentication.isValid}
+          exit={exit}
+        />
 
         <Button
           isDanger
@@ -68,4 +71,4 @@ const mapDispatchToProps = (dispatch) => ({
   exit: () => dispatch(exit()),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Settings)
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsPage)

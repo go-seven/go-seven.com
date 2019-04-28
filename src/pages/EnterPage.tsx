@@ -27,13 +27,13 @@ import PasswordField from "../components/PasswordField"
 import {
   enter,
   resetAuthenticationError,
-  sendVerificationEmail,
+  sendVerification,
   IAuthentication,
   ICredentials,
 } from "../reducers/account"
 
-import CreateUrl from "./CreateUrl"
-import Homepage from "./Homepage"
+import HomePage from "./HomePage"
+import UrlCollectionPage from "./UrlCollectionPage"
 
 interface IProps {
   authentication: IAuthentication
@@ -42,14 +42,14 @@ interface IProps {
   isEnteringAccount: boolean
   isSendingVerification: boolean
   resetAuthenticationError: () => void
-  sendVerificationEmail: (email: string) => void
+  sendVerification: (email: string) => void
 }
 
 interface IState {
   redirect?: string
 }
 
-class Enter extends React.Component<IProps, IState> {
+class EnterPage extends React.Component<IProps, IState> {
   static path = "/enter"
 
   state: IState = {}
@@ -69,13 +69,13 @@ class Enter extends React.Component<IProps, IState> {
     pdsp(event)
 
     const {
-      sendVerificationEmail
+      sendVerification
     } = this.props
 
     const email = this.emailRef.current && this.emailRef.current.value
 
     if (typeof email === "string") {
-      sendVerificationEmail(email)
+      sendVerification(email)
     }
   }
 
@@ -102,7 +102,7 @@ class Enter extends React.Component<IProps, IState> {
 
     if (authentication.isValid) {
       return (
-        <Redirect push to={CreateUrl.path} />
+        <Redirect push to={UrlCollectionPage.path} />
       )
     }
 
@@ -224,7 +224,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   enter: (credentials) => dispatch(enter(credentials)),
   resetAuthenticationError: () => dispatch(resetAuthenticationError()),
-  sendVerificationEmail: (email) => dispatch(sendVerificationEmail(email)),
+  sendVerification: (email) => dispatch(sendVerification(email)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Enter)
+export default connect(mapStateToProps, mapDispatchToProps)(EnterPage)

@@ -4,7 +4,7 @@
   "description": "URL shortener",
   "display": "fullscreen",
   "orientation": "portrait",
-  "background_color": "#000000",
+  "background_color": "#284f8b",
   "theme_color": "#89cfeb",
   "start_url": "/",
   "icons": [

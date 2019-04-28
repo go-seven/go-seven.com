@@ -11,11 +11,11 @@ import {
 
 import Logo from "./Logo"
 
-import CreateAccount from "../pages/CreateAccount"
-import CreateUrl from "../pages/CreateUrl"
-import Enter from "../pages/Enter"
-import Homepage from "../pages/Homepage"
-import UrlCollections from "../pages/UrlCollections"
+import CreateAccountPage from "../pages/CreateAccountPage"
+import EnterPage from "../pages/EnterPage"
+import HomePage from "../pages/HomePage"
+import SettingsPage from "../pages/SettingsPage"
+import UrlCollectionPage from "../pages/UrlCollectionPage"
 
 interface IProps {
   authenticationIsValid?: boolean
@@ -46,34 +46,38 @@ export default class Nav extends React.Component<IProps, IState> {
 
   onClickCreateAccount = (event) => {
     this.setState({
-      redirect: CreateAccount.path
-    })
-  }
-
-  onClickCreateUrl = (event) => {
-    this.setState({
-      redirect: CreateUrl.path
+      redirect: CreateAccountPage.path
     })
   }
 
   onClickEnter = (event) => {
     this.setState({
-      redirect: Enter.path
+      redirect: EnterPage.path
     })
   }
 
   onClickExit = (event) => {
     this.setState({
-      redirect: Homepage.path
+      redirect: HomePage.path
     }, () => {
       this.props.exit()
     })
   }
 
-  onClickUrlCollections = (event) => {
-    this.setState({
-      redirect: UrlCollections.path
-    })
+  onClickSettings = (event) => {
+    if (this.props.locationPath !== SettingsPage.path) {
+      this.setState({
+        redirect: SettingsPage.path
+      })
+    }
+  }
+
+  onClickUrlCollection = (event) => {
+    if (this.props.locationPath !== UrlCollectionPage.path) {
+      this.setState({
+        redirect: UrlCollectionPage.path
+      })
+    }
   }
 
   render() {
@@ -119,17 +123,17 @@ export default class Nav extends React.Component<IProps, IState> {
             {authenticationIsValid && (
               <Navbar.Start>
                 <Navbar.Item
-                  isActive={locationPath === CreateUrl.path}
-                  onClick={this.onClickCreateUrl}
+                  isActive={locationPath === UrlCollectionPage.path}
+                  onClick={this.onClickUrlCollection}
                 >
-                  Create URL
+                  URL Collection
                 </Navbar.Item>
 
                 <Navbar.Item
-                  isActive={locationPath === UrlCollections.path}
-                  onClick={this.onClickUrlCollections}
+                  isActive={locationPath === SettingsPage.path}
+                  onClick={this.onClickSettings}
                 >
-                  URL Collections
+                  Settings
                 </Navbar.Item>
               </Navbar.Start>
             )}

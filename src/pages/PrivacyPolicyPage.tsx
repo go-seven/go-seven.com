@@ -9,7 +9,7 @@ import {
 import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 
-export default class PrivacyPolicy extends React.Component {
+export default class PrivacyPolicyPage extends React.Component {
   static path = "/privacy-policy"
 
   render() {

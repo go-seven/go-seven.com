@@ -8,8 +8,8 @@ import {
   Tags
 } from "trunx"
 
-import PrivacyPolicy from "../pages/PrivacyPolicy"
-import TermsOfService from "../pages/TermsOfService"
+import PrivacyPolicyPage from "../pages/PrivacyPolicyPage"
+import TermsOfServicePage from "../pages/TermsOfServicePage"
 
 export default function() {
   return (
@@ -30,7 +30,7 @@ export default function() {
             <Tags>
               <Tag
                 isDark
-                href={PrivacyPolicy.path}
+                href={PrivacyPolicyPage.path}
                 target="_blank"
               >
                 Privacy Policy
@@ -38,7 +38,7 @@ export default function() {
 
               <Tag
                 isDark
-                href={TermsOfService.path}
+                href={TermsOfServicePage.path}
                 target="_blank"
               >
                 Terms of Service

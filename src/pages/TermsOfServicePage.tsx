@@ -8,7 +8,7 @@ import {
 import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 
-export default class Homepage extends React.Component {
+export default class TermsOfServicePage extends React.Component {
   static path = "/terms-of-service"
 
   render() {

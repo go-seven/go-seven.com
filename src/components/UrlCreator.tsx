@@ -22,9 +22,9 @@ import {
 export interface IUrlCreatorProps {
   createUrl: (IUrl) => void
   domain: string
-  itIsCheckingIfUrlIdExists: ICollectionsState["itIsCheckingIfUrlIdExists"]
-  itIsCreatingUrl: ICollectionsState["itIsCreatingUrl"]
-  itIsFetchingUrlMetadata: ICollectionsState["itIsFetchingUrlMetadata"]
+  checkingIfUrlIdExists: ICollectionsState["checkingIfUrlIdExists"]
+  creatingUrl: ICollectionsState["creatingUrl"]
+  fetchingUrlMetadata: ICollectionsState["fetchingUrlMetadata"]
   setWantedUrlTimeout: number
   setWantedUrl: (IUrl) => void
   wantedUrl: ICollectionsState["wantedUrl"]
@@ -214,9 +214,9 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
 
   render() {
     const {
-      itIsCheckingIfUrlIdExists,
-      itIsCreatingUrl,
-      itIsFetchingUrlMetadata,
+      checkingIfUrlIdExists,
+      creatingUrl,
+      fetchingUrlMetadata,
       wantedUrl,
       wantedUrlIdExists,
       wantedUrlHrefIsValid,
@@ -228,7 +228,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
       wantedUrlId,
     } = this.state
 
-    const saveButtonDisabled = wantedUrlIdExists === true || wantedUrlHrefIsValid !== true || itIsFetchingUrlMetadata || itIsCheckingIfUrlIdExists
+    const saveButtonDisabled = wantedUrlIdExists === true || wantedUrlHrefIsValid !== true || fetchingUrlMetadata || checkingIfUrlIdExists
 
     return (
       <Hero isPrimary>
@@ -240,7 +240,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
               </Label>
 
               <Control
-                isLoading={itIsFetchingUrlMetadata}
+                isLoading={fetchingUrlMetadata}
               >
                 <Input
                   autoFocus
@@ -249,7 +249,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
                   isSuccess={wantedUrlHref !== "" && wantedUrlHrefIsValid === true}
                   onChange={this.onChangeUrlHref}
                   placeholder="Paste or write your URL here"
-                  readOnly={itIsCreatingUrl}
+                  readOnly={creatingUrl}
                   type="text"
                   value={wantedUrlHref}
                 />
@@ -268,7 +268,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
                   </Label>
 
                   <Control
-                    isLoading={itIsFetchingUrlMetadata}
+                    isLoading={fetchingUrlMetadata}
                   >
                     <Input
                       readOnly
@@ -286,7 +286,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
                       </Label>
 
                       <Control
-                        isLoading={itIsCheckingIfUrlIdExists}
+                        isLoading={checkingIfUrlIdExists}
                       >
                         <Input
                           inputRef={this.urlIdRef}
@@ -294,7 +294,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
                           isSuccess={wantedUrlId !== "" && wantedUrlIdExists === false}
                           onChange={this.onChangeUrlId}
                           placeholder="go7.li/"
-                          readOnly={itIsCreatingUrl}
+                          readOnly={creatingUrl}
                           type="text"
                           value={`go7.li/${wantedUrlId}`}
                         />
@@ -322,7 +322,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
               <Control>
                 <Button
                   disabled={saveButtonDisabled}
-                  isLoading={itIsCreatingUrl}
+                  isLoading={creatingUrl}
                   isSuccess={wantedUrlHrefIsValid === true}
                   onClick={this.onClickSave}
                 >

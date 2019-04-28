@@ -7,8 +7,8 @@ export const CREATE_ACCOUNT = asyncActions("CREATE_ACCOUNT")
 export const DELETE_ACCOUNT = asyncActions("DELETE_ACCOUNT")
 export const EXIT = "EXIT"
 const RESET_AUTHENTICATION_ERROR = "RESET_AUTHENTICATION_ERROR"
-const SEND_PASSWORD_RESET_EMAIL = asyncActions("SEND_PASSWORD_RESET_EMAIL")
-export const SEND_VERIFICATION_EMAIL = asyncActions("SEND_VERIFICATION_EMAIL")
+const SEND_PASSWORD_RESET = asyncActions("SEND_PASSWORD_RESET")
+export const SEND_VERIFICATION = asyncActions("SEND_VERIFICATION")
 
 export const initialState: IAccountState = {
   authentication: null,
@@ -49,42 +49,44 @@ export interface IAccountState {
 }
 
 export function createAccount(credentials: ICredentials) {
+  const { FAILURE, SUCCESS, REQUEST } = CREATE_ACCOUNT
+
   return (dispatch, getState) => {
-    dispatch({ type: CREATE_ACCOUNT.REQUEST })
+    dispatch({ type: REQUEST })
 
     client.post("/account", credentials).then(
-      () => dispatch({ type: CREATE_ACCOUNT.SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: CREATE_ACCOUNT.FAILURE }),
+      () => dispatch({ type: SUCCESS }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
   }
 }
 
 export function deleteAccount() {
+  const { FAILURE, SUCCESS, REQUEST } = DELETE_ACCOUNT
+
   return (dispatch, getState) => {
-    const {
-      account,
-    } = getState()
+    const { account } = getState()
 
-    const {
-      token,
-    } = account.authentication
+    const { token } = account.authentication
 
-    dispatch({ type: DELETE_ACCOUNT.REQUEST })
+    dispatch({ type: REQUEST })
 
     client.del("/account", token).then(
-      () => dispatch({ type: DELETE_ACCOUNT.SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: DELETE_ACCOUNT.FAILURE }),
+      () => dispatch({ type: SUCCESS }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
   }
 }
 
 export function enter(credentials: ICredentials) {
+  const { FAILURE, SUCCESS, REQUEST } = AUTHENTICATION
+
   return (dispatch, getState) => {
-    dispatch({ type: AUTHENTICATION.REQUEST })
+    dispatch({ type: REQUEST })
 
     client.post("/enter", credentials).then(
-      (data) => dispatch({ data, type: AUTHENTICATION.SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: AUTHENTICATION.FAILURE }),
+      (data) => dispatch({ data, type: SUCCESS }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
   }
 }
@@ -94,7 +96,7 @@ export function exit() { return { type: EXIT } }
 export function resetAuthenticationError() { return { type: RESET_AUTHENTICATION_ERROR } }
 
 export function sendPasswordReset(email) {
-  const { FAILURE, SUCCESS, REQUEST } = SEND_PASSWORD_RESET_EMAIL
+  const { FAILURE, SUCCESS, REQUEST } = SEND_PASSWORD_RESET
 
   return (dispatch, getState) => {
     dispatch({ type: REQUEST })
@@ -106,13 +108,15 @@ export function sendPasswordReset(email) {
   }
 }
 
-export function sendVerificationEmail(email) {
+export function sendVerification(email) {
+  const { FAILURE, SUCCESS, REQUEST } = SEND_VERIFICATION
+
   return (dispatch, getState) => {
-    dispatch({ type: SEND_VERIFICATION_EMAIL.REQUEST })
+    dispatch({ type: REQUEST })
 
     client.post("/send-verification", { email }).then(
-      (data) => dispatch({ data, type: SEND_VERIFICATION_EMAIL.SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: SEND_VERIFICATION_EMAIL.FAILURE }),
+      (data) => dispatch({ data, type: SUCCESS }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
   }
 }
@@ -217,38 +221,38 @@ export default function(state = initialState, action) {
         }
       }
 
-    case SEND_PASSWORD_RESET_EMAIL.FAILURE:
+    case SEND_PASSWORD_RESET.FAILURE:
       return {
         ...state,
         isSendingPasswordReset: false,
       }
 
-    case SEND_PASSWORD_RESET_EMAIL.REQUEST:
+    case SEND_PASSWORD_RESET.REQUEST:
       return {
         ...state,
         isSendingPasswordReset: true,
       }
 
-    case SEND_PASSWORD_RESET_EMAIL.SUCCESS:
+    case SEND_PASSWORD_RESET.SUCCESS:
       return {
         ...state,
         isSendingPasswordReset: false,
         passwordResetEmailSent: true,
       }
 
-    case SEND_VERIFICATION_EMAIL.FAILURE:
+    case SEND_VERIFICATION.FAILURE:
       return {
         ...state,
         isSendingVerification: false,
       }
 
-    case SEND_VERIFICATION_EMAIL.REQUEST:
+    case SEND_VERIFICATION.REQUEST:
       return {
         ...state,
         isSendingVerification: true,
       }
 
-    case SEND_VERIFICATION_EMAIL.SUCCESS:
+    case SEND_VERIFICATION.SUCCESS:
       return {
         ...state,
         emailVerificationSent: true,
