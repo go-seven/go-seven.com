@@ -1,4 +1,5 @@
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import {
   Container,
   Section,
@@ -18,7 +19,10 @@ export default class TermsOfServicePage extends React.Component {
 
         <Section>
           <Container>
-            <Title>Terms of Service</Title>
+            <Title>
+              <FormattedMessage id={"TermsOfServicePage.title"} />
+            </Title>
+
           </Container>
         </Section>
 

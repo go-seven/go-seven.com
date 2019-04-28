@@ -1,4 +1,5 @@
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import {
   Column,
   Columns,
@@ -33,7 +34,7 @@ export default function() {
                 href={PrivacyPolicyPage.path}
                 target="_blank"
               >
-                Privacy Policy
+                <FormattedMessage id={"PrivacyPolicyPage.title"} />
               </Tag>
 
               <Tag
@@ -41,7 +42,7 @@ export default function() {
                 href={TermsOfServicePage.path}
                 target="_blank"
               >
-                Terms of Service
+                <FormattedMessage id={"TermsOfServicePage.title"} />
               </Tag>
             </Tags>
           </Column>

@@ -1,4 +1,5 @@
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import {
   Container,
   Content,
@@ -19,7 +20,9 @@ export default class PrivacyPolicyPage extends React.Component {
 
         <Section>
           <Container>
-            <Title>Privacy Policy</Title>
+            <Title>
+              <FormattedMessage id={"PrivacyPolicyPage.title"} />
+            </Title>
 
             <Content>
               We take your privacy very seriously. This policy describes all information collected or submitted on the GoSeven platform, and what we do with it.
