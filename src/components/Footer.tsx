@@ -1,5 +1,5 @@
 import * as React from "react"
-import { FormattedMessage } from "react-intl"
+import { FormattedHTMLMessage, FormattedMessage } from "react-intl"
 import {
   Column,
   Columns,
@@ -24,7 +24,9 @@ export default function() {
               <Tag isInfo>free</Tag>
             </Tags>
 
-            <p>This website does <strong>not</strong> use cookies.</p>
+            <p>
+              <FormattedHTMLMessage id="Footer.sugar-free.message" />
+            </p>
           </Column>
 
           <Column is6 isOffset2>

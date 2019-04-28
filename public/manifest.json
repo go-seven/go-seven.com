@@ -1,6 +1,6 @@
 {
-  "name": "Go Seven",
-  "short_name": "Go7",
+  "name": "GoSeven",
+  "short_name": "GoSeven",
   "description": "URL shortener",
   "display": "fullscreen",
   "orientation": "portrait",

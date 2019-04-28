@@ -1,6 +1,7 @@
 {
   "locale": "it",
   "messages": {
+    "Footer.sugar-free.message": "Questo sito <strong>non</strong> utilizza cookie.",
     "PrivacyPolicyPage.title": "Informativa sulla Privacy",
     "TermsOfServicePage.title": "Condizioni di Utilizzo"
   }

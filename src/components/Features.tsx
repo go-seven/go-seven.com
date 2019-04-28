@@ -19,7 +19,7 @@ export default function() {
             </li>
 
             <li>
-              <b>Privacy safe!</b> Go7 wants to provide you a service and will never track you to sell your data.
+              <b>Privacy safe!</b> GoSeven wants to provide you a service and will never track you to sell your data.
             </li>
 
             <li>
