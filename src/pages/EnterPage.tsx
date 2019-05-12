@@ -32,6 +32,7 @@ import {
   ICredentials,
 } from "../reducers/account"
 
+import CreateAccountPage from "./CreateAccountPage"
 import HomePage from "./HomePage"
 import UrlCollectionPage from "./UrlCollectionPage"
 
@@ -65,6 +66,12 @@ class EnterPage extends React.Component<IProps, IState> {
     resetAuthenticationError()
   }
 
+  onClickCreateAccount = (event) => {
+    this.setState({
+      redirect: CreateAccountPage.path
+    })
+  }
+
   onClickSendVerificationEmail = (event) => {
     pdsp(event)
 
@@ -96,6 +103,10 @@ class EnterPage extends React.Component<IProps, IState> {
       isSendingVerification,
     } = this.props
 
+    const {
+      redirect
+    } = this.state
+
     if (authentication === null) {
       return null
     }
@@ -103,6 +114,12 @@ class EnterPage extends React.Component<IProps, IState> {
     if (authentication.isValid) {
       return (
         <Redirect push to={UrlCollectionPage.path} />
+      )
+    }
+
+    if (redirect) {
+      return (
+        <Redirect push to={redirect} />
       )
     }
 
@@ -207,6 +224,17 @@ class EnterPage extends React.Component<IProps, IState> {
                 )}
               </React.Fragment>
             )}
+
+            <Box>
+              <p>
+                New to GoSeven?
+                &nbsp;
+
+                <a onClick={this.onClickCreateAccount}>
+                  Create an account.
+                </a>
+              </p>
+            </Box>
           </Column>
         </Modal.Content>
       </Modal>
