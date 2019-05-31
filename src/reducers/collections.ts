@@ -92,7 +92,7 @@ export function deleteUrl(id: string) {
 
     dispatch({ data: { id }, type: REQUEST })
 
-    client.delete(`/url/${id}`, { collectionId, url }, token).then(
+    client.del(`/url/${id}`, token).then(
       (data) => dispatch({ type: SUCCESS }),
       (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
