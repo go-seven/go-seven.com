@@ -177,7 +177,7 @@ class EnterPage extends React.Component<IProps, IState> {
             </Box>
 
             {accountNotVerifiedError && (
-              <React.Fragment>
+              <>
                 {emailVericationSent ? (
                   <Message isSuccess>
                     <Message.Header>
@@ -193,7 +193,7 @@ class EnterPage extends React.Component<IProps, IState> {
                     </Message.Body>
                   </Message>
                 ) : (
-                  <React.Fragment>
+                  <>
                     <Message>
                       <Message.Header>
                         Account not verified.
@@ -220,9 +220,9 @@ class EnterPage extends React.Component<IProps, IState> {
                         </Button>
                       </Control>
                     </Field>
-                  </React.Fragment>
+                  </>
                 )}
-              </React.Fragment>
+              </>
             )}
 
             <Box>

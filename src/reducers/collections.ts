@@ -7,6 +7,7 @@ import asyncActions from "../asyncActions"
 import * as client from "../client"
 
 const CREATE_URL = asyncActions("CREATE_URL")
+const DELETE_URL = asyncActions("DELETE_URL")
 const FETCH_COLLECTION = asyncActions("FETCH_COLLECTION")
 const FETCH_URL_METADATA = asyncActions("FETCH_URL_METADATA")
 const SET_WANTED_URL = "SET_WANTED_URL"
@@ -35,6 +36,7 @@ export interface ICollectionsState {
   selected: string
   checkingIfUrlIdExists: boolean
   creatingUrl: boolean
+  deletingUrlId: string | null
   fetchingUrlMetadata: boolean
   wantedUrl: IUrl | null
   wantedUrlHrefIsValid: boolean | null
@@ -45,6 +47,7 @@ export const initialState: ICollectionsState = {
   checkingIfUrlIdExists: false,
   creatingUrl: false,
   current: null,
+  deletingUrlId: null,
   fetchingUrlMetadata: false,
   selected: "default",
   wantedUrl: null,
@@ -69,6 +72,28 @@ export function createUrl(url: IUrl) {
 
     client.post("/url", { collectionId, url }, token).then(
       (data) => dispatch({ data, type: SUCCESS }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
+    )
+  }
+}
+
+export function deleteUrl(id: string) {
+  const { FAILURE, SUCCESS, REQUEST } = DELETE_URL
+
+  return (dispatch, getState) => {
+    const {
+      account,
+      collections,
+    } = getState()
+
+    const { token } = account.authentication
+
+    const collectionId = collections.selected
+
+    dispatch({ data: { id }, type: REQUEST })
+
+    client.delete(`/url/${id}`, { collectionId, url }, token).then(
+      (data) => dispatch({ type: SUCCESS }),
       (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
   }
@@ -194,6 +219,24 @@ export default function(state = initialState, action) {
       return {
         ...state,
         creatingUrl: false,
+      }
+
+    case DELETE_URL.FAILURE:
+      return {
+        ...state,
+        deletingUrlId: null,
+      }
+
+    case DELETE_URL.REQUEST:
+      return {
+        ...state,
+        deletingUrlId: action.data.id,
+      }
+
+    case DELETE_URL.SUCCESS:
+      return {
+        ...state,
+        deletingUrlId: null,
       }
 
     case FETCH_COLLECTION.FAILURE:

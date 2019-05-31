@@ -15,7 +15,7 @@ export default class PrivacyPolicyPage extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <Navbar noMenu />
 
         <Section>
@@ -31,7 +31,7 @@ export default class PrivacyPolicyPage extends React.Component {
         </Section>
 
         <Footer />
-      </React.Fragment>
+      </>
     )
   }
 }

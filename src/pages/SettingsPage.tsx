@@ -42,7 +42,7 @@ class SettingsPage extends React.Component<IProps> {
     }
 
     return (
-      <React.Fragment>
+      <>
         <Navbar
           authenticationIsValid={authentication.isValid}
           exit={exit}
@@ -56,7 +56,7 @@ class SettingsPage extends React.Component<IProps> {
           Delete Account
         </Button>
 
-      </React.Fragment>
+      </>
     )
   }
 }

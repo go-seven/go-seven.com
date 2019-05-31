@@ -47,6 +47,7 @@
     "postinstall": "npm run get_js_libs",
     "predeploy": "npm run build",
     "standa": "standa test.js src/*.js",
+    "start": "npm run budo",
     "test": "node test.js",
     "tsc--noemit": "tsc --declaration --project . --noemit",
     "tslint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'"

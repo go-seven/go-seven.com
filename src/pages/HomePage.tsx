@@ -33,7 +33,7 @@ class HomePage extends React.Component<IProps> {
     } = this.props
 
     return (
-      <React.Fragment>
+      <>
         <Navbar
           authenticationIsValid={authenticationIsValid}
           locationPath={this.props.location.pathname}
@@ -54,7 +54,7 @@ class HomePage extends React.Component<IProps> {
         <Pricing />
 
         <Footer />
-      </React.Fragment>
+      </>
     )
   }
 }

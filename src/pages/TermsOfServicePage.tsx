@@ -14,7 +14,7 @@ export default class TermsOfServicePage extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <Navbar noMenu />
 
         <Section>
@@ -27,7 +27,7 @@ export default class TermsOfServicePage extends React.Component {
         </Section>
 
         <Footer />
-      </React.Fragment>
+      </>
     )
   }
 }

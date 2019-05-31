@@ -261,7 +261,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
             </Field>
 
             {showOptions && (
-              <React.Fragment>
+              <>
                 <Field>
                   <Label>
                     Title
@@ -306,7 +306,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
                     </Field>
                   </Column>
                 </Columns>
-              </React.Fragment>
+              </>
             )}
 
             <Field>
