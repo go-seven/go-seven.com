@@ -102,7 +102,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   createUrl: (url) => dispatch(createUrl(url)),
-  deleteUrl: (id) => dispatch(deleteUrl(id)),
+  deleteUrl: (urlId) => () => dispatch(deleteUrl(urlId)),
   exitAccount: () => dispatch(exitAccount()),
   fetchCollection: () => dispatch(fetchCollectionIfNeeded()),
   setWantedUrl: (url) => dispatch(setWantedUrl(url)),

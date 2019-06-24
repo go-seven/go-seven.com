@@ -5,7 +5,7 @@ import {
   Section
 } from "trunx"
 
-import UrlCard, { IUrlCardProps } from "./UrlCard"
+import UrlCard from "./UrlCard"
 
 import {
   ICollection,
@@ -14,8 +14,8 @@ import {
 
 export interface IUrlCollectionProps {
   collection: ICollection | null
-  deleteUrl: IUrlCardProps["deleteUrl"]
   deletingUrlId: ICollectionsState["deletingUrlId"]
+  deleteUrl: (urlId?: string) => () => void
   fetchCollection: () => void
 }
 
@@ -45,7 +45,7 @@ export default class UrlCollection extends React.Component<IUrlCollectionProps> 
           {urls.map((url, i) => (
             <Column key={i} isOneQuarter>
               <UrlCard
-                deleteUrl={deleteUrl}
+                deleteUrl={deleteUrl(url.id)}
                 deletingUrl={deletingUrlId === url.id}
                 url={url}
               />
