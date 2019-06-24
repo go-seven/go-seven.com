@@ -5,16 +5,13 @@ import { Redirect } from "react-router-dom"
 import {
   Box,
   Button,
-  Checkbox,
   Column,
   Content,
   Control,
   Field,
-  Image,
   Media,
   Message,
   Modal,
-  Section,
   Title,
 } from "trunx"
 
@@ -33,7 +30,6 @@ import {
 } from "../reducers/account"
 
 import CreateAccountPage from "./CreateAccountPage"
-import HomePage from "./HomePage"
 import UrlCollectionPage from "./UrlCollectionPage"
 
 interface IProps {
@@ -66,7 +62,7 @@ class EnterPage extends React.Component<IProps, IState> {
     resetAuthenticationError()
   }
 
-  onClickCreateAccount = (event) => {
+  onClickCreateAccount = () => {
     this.setState({
       redirect: CreateAccountPage.path
     })
@@ -177,7 +173,7 @@ class EnterPage extends React.Component<IProps, IState> {
             </Box>
 
             {accountNotVerifiedError && (
-              <React.Fragment>
+              <>
                 {emailVericationSent ? (
                   <Message isSuccess>
                     <Message.Header>
@@ -193,7 +189,7 @@ class EnterPage extends React.Component<IProps, IState> {
                     </Message.Body>
                   </Message>
                 ) : (
-                  <React.Fragment>
+                  <>
                     <Message>
                       <Message.Header>
                         Account not verified.
@@ -220,9 +216,9 @@ class EnterPage extends React.Component<IProps, IState> {
                         </Button>
                       </Control>
                     </Field>
-                  </React.Fragment>
+                  </>
                 )}
-              </React.Fragment>
+              </>
             )}
 
             <Box>

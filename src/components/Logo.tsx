@@ -16,7 +16,7 @@ export default class Logo extends React.Component<IProps, IState> {
   state: IState = {
   }
 
-  onClickLogo = (event) => {
+  onClickLogo = () => {
     this.setState({
       redirect: HomePage.path
     })

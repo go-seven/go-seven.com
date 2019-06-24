@@ -14,12 +14,12 @@ import Navbar from "../components/Navbar"
 import Pricing from "../components/Pricing"
 
 import {
-  exit,
+  exitAccount,
 } from "../reducers/account"
 
 interface IProps {
   authenticationIsValid: boolean
-  exit: () => void
+  exitAccount: () => void
   location: history.Location
 }
 
@@ -29,15 +29,15 @@ class HomePage extends React.Component<IProps> {
   render() {
     const {
       authenticationIsValid,
-      exit,
+      exitAccount,
     } = this.props
 
     return (
-      <React.Fragment>
+      <>
         <Navbar
           authenticationIsValid={authenticationIsValid}
           locationPath={this.props.location.pathname}
-          exit={exit}
+          exit={exitAccount}
         />
 
         <Hero isPrimary>
@@ -54,7 +54,7 @@ class HomePage extends React.Component<IProps> {
         <Pricing />
 
         <Footer />
-      </React.Fragment>
+      </>
     )
   }
 }
@@ -76,7 +76,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  exit: () => dispatch(exit()),
+  exitAccount: () => dispatch(exitAccount()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage)

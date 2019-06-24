@@ -1,11 +1,8 @@
 import * as React from "react"
-import { Link, Redirect } from "react-router-dom"
+import { Redirect } from "react-router-dom"
 import {
   Button,
   Buttons,
-  Control,
-  Field,
-  Image,
   Navbar,
 } from "trunx"
 
@@ -38,25 +35,25 @@ export default class Nav extends React.Component<IProps, IState> {
     expanded: false
   }
 
-  onClickBurger = (event) => {
+  onClickBurger = () => {
     this.setState({
       expanded: !this.state.expanded
     })
   }
 
-  onClickCreateAccount = (event) => {
+  onClickCreateAccount = () => {
     this.setState({
       redirect: CreateAccountPage.path
     })
   }
 
-  onClickEnter = (event) => {
+  onClickEnter = () => {
     this.setState({
       redirect: EnterPage.path
     })
   }
 
-  onClickExit = (event) => {
+  onClickExit = () => {
     this.setState({
       redirect: HomePage.path
     }, () => {
@@ -64,7 +61,7 @@ export default class Nav extends React.Component<IProps, IState> {
     })
   }
 
-  onClickSettings = (event) => {
+  onClickSettings = () => {
     if (this.props.locationPath !== SettingsPage.path) {
       this.setState({
         redirect: SettingsPage.path
@@ -72,7 +69,7 @@ export default class Nav extends React.Component<IProps, IState> {
     }
   }
 
-  onClickUrlCollection = (event) => {
+  onClickUrlCollection = () => {
     if (this.props.locationPath !== UrlCollectionPage.path) {
       this.setState({
         redirect: UrlCollectionPage.path

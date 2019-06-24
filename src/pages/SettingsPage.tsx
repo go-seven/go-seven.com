@@ -9,14 +9,14 @@ import Navbar from "../components/Navbar"
 
 import {
   deleteAccount,
-  exit,
+  exitAccount,
   IAuthentication,
 } from "../reducers/account"
 
 interface IProps {
   authentication: IAuthentication
   deleteAccount: () => void
-  exit: () => void
+  exitAccount: () => void
   isDeletingAccount: boolean
 }
 
@@ -32,8 +32,7 @@ class SettingsPage extends React.Component<IProps> {
   render() {
     const {
       authentication,
-      deleteAccount,
-      exit,
+      exitAccount,
       isDeletingAccount,
     } = this.props
 
@@ -42,10 +41,10 @@ class SettingsPage extends React.Component<IProps> {
     }
 
     return (
-      <React.Fragment>
+      <>
         <Navbar
           authenticationIsValid={authentication.isValid}
-          exit={exit}
+          exit={exitAccount}
         />
 
         <Button
@@ -56,7 +55,7 @@ class SettingsPage extends React.Component<IProps> {
           Delete Account
         </Button>
 
-      </React.Fragment>
+      </>
     )
   }
 }
@@ -67,8 +66,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  deleteAccount: (url) => dispatch(deleteAccount()),
-  exit: () => dispatch(exit()),
+  deleteAccount: () => dispatch(deleteAccount()),
+  exitAccount: () => dispatch(exitAccount()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsPage)

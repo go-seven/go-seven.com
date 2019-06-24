@@ -3,10 +3,10 @@ import {
   AUTHENTICATION,
   CHECK_AUTHENTICATION,
   DELETE_ACCOUNT,
-  EXIT,
+  EXIT_ACCOUNT,
 } from "../reducers/account"
 
-export default function localStorageMiddleware(store) {
+export default function localStorageMiddleware() {
    return (next) => (action) => {
      switch (action.type) {
        case AUTHENTICATION.SUCCESS:
@@ -80,10 +80,11 @@ export default function localStorageMiddleware(store) {
        case DELETE_ACCOUNT.SUCCESS:
          localStorage.removeItem("authentication")
 
-       case EXIT:
+       case EXIT_ACCOUNT:
          localStorage.removeItem("authentication")
 
-       default: return next(action)
+       default:
+         return next(action)
      }
    }
 }

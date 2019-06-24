@@ -5,7 +5,7 @@ export const AUTHENTICATION = asyncActions("AUTHENTICATION")
 export const CHECK_AUTHENTICATION = "CHECK_AUTHENTICATION"
 export const CREATE_ACCOUNT = asyncActions("CREATE_ACCOUNT")
 export const DELETE_ACCOUNT = asyncActions("DELETE_ACCOUNT")
-export const EXIT = "EXIT"
+export const EXIT_ACCOUNT = "EXIT_ACCOUNT"
 const RESET_AUTHENTICATION_ERROR = "RESET_AUTHENTICATION_ERROR"
 const SEND_PASSWORD_RESET = asyncActions("SEND_PASSWORD_RESET")
 export const SEND_VERIFICATION = asyncActions("SEND_VERIFICATION")
@@ -51,7 +51,7 @@ export interface IAccountState {
 export function createAccount(credentials: ICredentials) {
   const { FAILURE, SUCCESS, REQUEST } = CREATE_ACCOUNT
 
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({ type: REQUEST })
 
     client.post("/account", credentials).then(
@@ -81,7 +81,7 @@ export function deleteAccount() {
 export function enter(credentials: ICredentials) {
   const { FAILURE, SUCCESS, REQUEST } = AUTHENTICATION
 
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({ type: REQUEST })
 
     client.post("/enter", credentials).then(
@@ -91,14 +91,14 @@ export function enter(credentials: ICredentials) {
   }
 }
 
-export function exit() { return { type: EXIT } }
+export function exitAccount() { return { type: EXIT_ACCOUNT } }
 
 export function resetAuthenticationError() { return { type: RESET_AUTHENTICATION_ERROR } }
 
 export function sendPasswordReset(email) {
   const { FAILURE, SUCCESS, REQUEST } = SEND_PASSWORD_RESET
 
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({ type: REQUEST })
 
     client.post("/reset-password", { email }).then(
@@ -111,7 +111,7 @@ export function sendPasswordReset(email) {
 export function sendVerification(email) {
   const { FAILURE, SUCCESS, REQUEST } = SEND_VERIFICATION
 
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({ type: REQUEST })
 
     client.post("/send-verification", { email }).then(
@@ -209,7 +209,7 @@ export default function(state = initialState, action) {
         isDeleting: false,
       }
 
-    case EXIT:
+    case EXIT_ACCOUNT:
       return initialState
 
     case RESET_AUTHENTICATION_ERROR:

@@ -18,9 +18,7 @@ import {
 import * as apiError from "../apiErrors"
 
 import EmailField from "../components/EmailField"
-import Footer from "../components/Footer"
 import Logo from "../components/Logo"
-import Navbar from "../components/Navbar"
 
 import UrlCollectionPage from "./UrlCollectionPage"
 

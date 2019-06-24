@@ -11,7 +11,6 @@ import {
   Content,
   Control,
   Field,
-  Image,
   Media,
   Message,
   Modal,
@@ -32,7 +31,6 @@ import {
   ICredentials,
 } from "../reducers/account"
 
-import HomePage from "./HomePage"
 import PrivacyPolicyPage from "./PrivacyPolicyPage"
 import TermsOfServicePage from "./TermsOfServicePage"
 
@@ -82,21 +80,11 @@ class CreateAccountPage extends React.Component<IProps, IState> {
   }
 
   onChangeCheckbox = (event) => {
-    const {
-      clientIsRobot
-    } = this.state
-
     this.setState({
       clientAgrees: event.target.checked
       }, () => {
         this.loadAntiSpam()
       })
-  }
-
-  onClickLogo = (event) => {
-    this.setState({
-      redirect: HomePage.path
-    })
   }
 
   onSubmit = (event) => {
@@ -143,7 +131,7 @@ class CreateAccountPage extends React.Component<IProps, IState> {
             <Box>
               <Media>
                 <Media.Left>
-                  <Image onClick={this.onClickLogo} width="28" height="28" src="media/logo.svg" />
+                  <Logo />
                 </Media.Left>
 
                 <Media.Content>

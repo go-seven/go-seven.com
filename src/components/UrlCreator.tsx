@@ -96,10 +96,6 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
       domain
     } = this.props
 
-    const {
-      wantedUrlId
-    } = this.state
-
     const prefix = `${domain}/`
 
     let urlId = this.urlIdRef.current && this.urlIdRef.current.value
@@ -261,7 +257,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
             </Field>
 
             {showOptions && (
-              <React.Fragment>
+              <>
                 <Field>
                   <Label>
                     Title
@@ -306,7 +302,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
                     </Field>
                   </Column>
                 </Columns>
-              </React.Fragment>
+              </>
             )}
 
             <Field>

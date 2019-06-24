@@ -6,11 +6,12 @@ import UrlCollection, { IUrlCollectionProps } from "../components/UrlCollection"
 import UrlCreator, { IUrlCreatorProps } from "../components/UrlCreator"
 
 import {
-  exit,
+  exitAccount,
   IAuthentication,
 } from "../reducers/account"
 import {
   createUrl,
+  deleteUrl,
   fetchCollectionIfNeeded,
   setWantedUrl,
   ICollectionsState,
@@ -21,8 +22,10 @@ interface IProps {
   checkingIfUrlIdExists: ICollectionsState["checkingIfUrlIdExists"]
   collection: ICollectionsState["current"]
   createUrl: IUrlCreatorProps["createUrl"]
+  deleteUrl: IUrlCollectionProps["deleteUrl"]
+  deletingUrlId: IUrlCollectionProps["deletingUrlId"]
   creatingUrl: ICollectionsState["creatingUrl"]
-  exit: () => void
+  exitAccount: () => void
   fetchCollection: IUrlCollectionProps["fetchCollection"]
   fetchingUrlMetadata: ICollectionsState["fetchingUrlMetadata"]
   setWantedUrl: IUrlCreatorProps["setWantedUrl"]
@@ -39,7 +42,9 @@ class UrlCollectionPage extends React.Component<IProps> {
       authentication,
       collection,
       createUrl,
-      exit,
+      deleteUrl,
+      deletingUrlId,
+      exitAccount,
       fetchCollection,
       checkingIfUrlIdExists,
       creatingUrl,
@@ -55,10 +60,10 @@ class UrlCollectionPage extends React.Component<IProps> {
     }
 
     return (
-      <React.Fragment>
+      <>
         <Navbar
           authenticationIsValid={authentication.isValid}
-          exit={exit}
+          exit={exitAccount}
         />
 
         <UrlCreator
@@ -74,9 +79,11 @@ class UrlCollectionPage extends React.Component<IProps> {
 
         <UrlCollection
           collection={collection}
+          deleteUrl={deleteUrl}
+          deletingUrlId={deletingUrlId}
           fetchCollection={fetchCollection}
         />
-      </React.Fragment>
+      </>
     )
   }
 }
@@ -86,6 +93,7 @@ const mapStateToProps = (state) => ({
   checkingIfUrlIdExists: state.collections.checkingIfUrlIdExists,
   collection: state.collections.current,
   creatingUrl: state.collections.creatingUrl,
+  deletingUrlId: state.collections.deletingUrlId,
   fetchingUrlMetadata: state.collections.fetchingUrlMetadata,
   wantedUrl: state.collections.wantedUrl,
   wantedUrlHrefIsValid: state.collections.wantedUrlHrefIsValid,
@@ -94,7 +102,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   createUrl: (url) => dispatch(createUrl(url)),
-  exit: () => dispatch(exit()),
+  deleteUrl: (id) => dispatch(deleteUrl(id)),
+  exitAccount: () => dispatch(exitAccount()),
   fetchCollection: () => dispatch(fetchCollectionIfNeeded()),
   setWantedUrl: (url) => dispatch(setWantedUrl(url)),
 })

@@ -67,13 +67,13 @@ export default class PasswordField extends React.Component<IProps, IState> {
     }
   }
 
-  onChange = (event) => {
+  onChange = () => {
     const passwordCheck = this.checkPasswordPolicy()
 
     this.setState({ passwordCheck })
   }
 
-  onClickForgotPassword = (event) => {
+  onClickForgotPassword = () => {
     this.setState({
       redirect: PasswordResetPage.path
     })

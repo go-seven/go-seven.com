@@ -7,6 +7,7 @@ import asyncActions from "../asyncActions"
 import * as client from "../client"
 
 const CREATE_URL = asyncActions("CREATE_URL")
+const DELETE_URL = asyncActions("DELETE_URL")
 const FETCH_COLLECTION = asyncActions("FETCH_COLLECTION")
 const FETCH_URL_METADATA = asyncActions("FETCH_URL_METADATA")
 const SET_WANTED_URL = "SET_WANTED_URL"
@@ -35,6 +36,7 @@ export interface ICollectionsState {
   selected: string
   checkingIfUrlIdExists: boolean
   creatingUrl: boolean
+  deletingUrlId: string | null
   fetchingUrlMetadata: boolean
   wantedUrl: IUrl | null
   wantedUrlHrefIsValid: boolean | null
@@ -45,6 +47,7 @@ export const initialState: ICollectionsState = {
   checkingIfUrlIdExists: false,
   creatingUrl: false,
   current: null,
+  deletingUrlId: null,
   fetchingUrlMetadata: false,
   selected: "default",
   wantedUrl: null,
@@ -74,10 +77,29 @@ export function createUrl(url: IUrl) {
   }
 }
 
+export function deleteUrl(id: string) {
+  const { FAILURE, SUCCESS, REQUEST } = DELETE_URL
+
+  return (dispatch, getState) => {
+    const {
+      account
+    } = getState()
+
+    const { token } = account.authentication
+
+    dispatch({ data: { id }, type: REQUEST })
+
+    client.del(`/url/${id}`, token).then(
+      () => dispatch({ type: SUCCESS }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
+    )
+  }
+}
+
 function fetchCollection(token, id) {
   const { FAILURE, SUCCESS, REQUEST } = FETCH_COLLECTION
 
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({ id, type: REQUEST })
 
     client.get(`/url-collection/${id}`, token).then(
@@ -151,7 +173,7 @@ export function setWantedUrl(url: IUrl) {
         dispatch({ type: URL_ID_EXISTS.REQUEST })
 
         client.get(`/url/${url.id}`, token).then(
-          (data) => dispatch({ data: true, type: URL_ID_EXISTS.SUCCESS }),
+          () => dispatch({ data: true, type: URL_ID_EXISTS.SUCCESS }),
             (error) => {
             const { code, message } = client.parseError(error)
 
@@ -194,6 +216,24 @@ export default function(state = initialState, action) {
       return {
         ...state,
         creatingUrl: false,
+      }
+
+    case DELETE_URL.FAILURE:
+      return {
+        ...state,
+        deletingUrlId: null,
+      }
+
+    case DELETE_URL.REQUEST:
+      return {
+        ...state,
+        deletingUrlId: action.data.id,
+      }
+
+    case DELETE_URL.SUCCESS:
+      return {
+        ...state,
+        deletingUrlId: null,
       }
 
     case FETCH_COLLECTION.FAILURE:
