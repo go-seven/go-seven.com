@@ -1,14 +1,14 @@
-// A Collection is a set of URLs. Every collection has an identifier and a name.
 // User can organize its URLs into collections.
-// If no collection is selected there is always a "default" collection which includes all URLs.
+// Every collection has an identifier and a name.
+// If no URL collection is selected there is always a "default" collection.
 import * as urlRegex from "regex-weburl"
 
 import asyncActions from "../asyncActions"
 import * as client from "../client"
 
 const CREATE_URL = asyncActions("CREATE_URL")
-const DELETE_URL = asyncActions("DELETE_URL")
-const FETCH_COLLECTION = asyncActions("FETCH_COLLECTION")
+const REMOVE_URL_FROM_COLLECTION = asyncActions("REMOVE_URL_FROM_COLLECTION")
+const FETCH_URL_COLLECTION = asyncActions("FETCH_URL_COLLECTION")
 const FETCH_URL_METADATA = asyncActions("FETCH_URL_METADATA")
 const SET_WANTED_URL = "SET_WANTED_URL"
 const URL_ID_EXISTS = asyncActions("URL_ID_EXISTS")
@@ -25,31 +25,31 @@ export interface IUrl {
   title?: string
 }
 
-export interface ICollection {
+export interface IUrlCollection {
   id: string
   name: string
   urls: IUrl[]
 }
 
-export interface ICollectionsState {
-  current: ICollection | null
-  selected: string
+export interface IUrlCollectionsState {
   checkingIfUrlIdExists: boolean
   creatingUrl: boolean
-  deletingUrlId: string | null
+  currentUrlCollection: IUrlCollection | null
   fetchingUrlMetadata: boolean
+  removingUrlId: string | null
+  selectedUrlCollectionId: string
   wantedUrl: IUrl | null
   wantedUrlHrefIsValid: boolean | null
   wantedUrlIdExists: boolean | null
 }
 
-export const initialState: ICollectionsState = {
+export const initialState: IUrlCollectionsState = {
   checkingIfUrlIdExists: false,
   creatingUrl: false,
-  current: null,
-  deletingUrlId: null,
+  currentUrlCollection: null,
   fetchingUrlMetadata: false,
-  selected: "default",
+  removingUrlId: null,
+  selectedUrlCollectionId: "default",
   wantedUrl: null,
   wantedUrlHrefIsValid: null,
   wantedUrlIdExists: null,
@@ -66,19 +66,19 @@ export function createUrl(url: IUrl) {
 
     const { token } = account.authentication
 
-    const collectionId = collections.selected
+    const urlCollectionId = collections.selectedUrlCollectionId
 
     dispatch({ type: REQUEST })
 
-    client.post("/url", { collectionId, url }, token).then(
+    client.post("/url", { urlCollectionId, url }, token).then(
       (data) => dispatch({ data, type: SUCCESS }),
       (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
   }
 }
 
-export function deleteUrl(id: string) {
-  const { FAILURE, SUCCESS, REQUEST } = DELETE_URL
+export function removeUrlFromCollection(urlCollectionId: string, urlId: string) {
+  const { FAILURE, SUCCESS, REQUEST } = REMOVE_URL_FROM_COLLECTION
 
   return (dispatch, getState) => {
     const {
@@ -87,20 +87,20 @@ export function deleteUrl(id: string) {
 
     const { token } = account.authentication
 
-    dispatch({ data: { id }, type: REQUEST })
+    dispatch({ data: { removingUrlId: urlId }, type: REQUEST })
 
-    client.del(`/url/${id}`, token).then(
+    client.del(`/url-collection/${urlCollectionId}/${urlId}`, token).then(
       () => dispatch({ type: SUCCESS }),
       (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
   }
 }
 
-function fetchCollection(token, id) {
-  const { FAILURE, SUCCESS, REQUEST } = FETCH_COLLECTION
+function fetchUrlCollection(token, id) {
+  const { FAILURE, SUCCESS, REQUEST } = FETCH_URL_COLLECTION
 
   return (dispatch) => {
-    dispatch({ id, type: REQUEST })
+    dispatch({ type: REQUEST })
 
     client.get(`/url-collection/${id}`, token).then(
       (data) => dispatch({ data, type: SUCCESS }),
@@ -110,22 +110,22 @@ function fetchCollection(token, id) {
 
 }
 
-export function fetchCollectionIfNeeded() {
+export function fetchUrlCollectionIfNeeded() {
   return (dispatch, getState) => {
     const {
       account,
-      collections,
+      urlCollections,
     } = getState()
 
     const { token } = account.authentication
 
     const {
-      current,
-      selected,
-    } = collections
+      currentUrlCollection,
+      selectedUrlCollectionId,
+    } = urlCollections
 
-    if (shouldFetchCollection({ current, selected })) {
-      return dispatch(fetchCollection(token, selected))
+    if (shouldFetchUrlCollection({ currentUrlCollection, selectedUrlCollectionId })) {
+      return dispatch(fetchUrlCollection(token, selectedUrlCollectionId))
     }
   }
 }
@@ -189,11 +189,11 @@ export function setWantedUrl(url: IUrl) {
   }
 }
 
-function shouldFetchCollection({ current, selected }) {
-  if (current === null) {
+function shouldFetchUrlCollection({ currentUrlCollection, selectedUrlCollectionId }) {
+  if (currentUrlCollection === null) {
     return true
   } else {
-    return current.id === selected
+    return currentUrlCollection.id === selectedUrlCollectionId
   }
 }
 
@@ -218,38 +218,38 @@ export default function(state = initialState, action) {
         creatingUrl: false,
       }
 
-    case DELETE_URL.FAILURE:
+    case REMOVE_URL_FROM_COLLECTION.FAILURE:
       return {
         ...state,
-        deletingUrlId: null,
+        removingUrlId: null,
       }
 
-    case DELETE_URL.REQUEST:
+    case REMOVE_URL_FROM_COLLECTION.REQUEST:
       return {
         ...state,
-        deletingUrlId: action.data.id,
+        removingUrlId: action.data.removingUrlId,
       }
 
-    case DELETE_URL.SUCCESS:
+    case REMOVE_URL_FROM_COLLECTION.SUCCESS:
       return {
         ...state,
-        deletingUrlId: null,
+        removingUrlId: null,
       }
 
-    case FETCH_COLLECTION.FAILURE:
-      return {
-        ...state,
-      }
-
-    case FETCH_COLLECTION.REQUEST:
+    case FETCH_URL_COLLECTION.FAILURE:
       return {
         ...state,
       }
 
-    case FETCH_COLLECTION.SUCCESS:
+    case FETCH_URL_COLLECTION.REQUEST:
       return {
         ...state,
-        current: action.data
+      }
+
+    case FETCH_URL_COLLECTION.SUCCESS:
+      return {
+        ...state,
+        currentUrlCollection: action.data
       }
 
     case FETCH_URL_METADATA.FAILURE:

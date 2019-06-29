@@ -11,27 +11,27 @@ import {
 } from "../reducers/account"
 import {
   createUrl,
-  deleteUrl,
-  fetchCollectionIfNeeded,
+  fetchUrlCollectionIfNeeded,
+  removeUrlFromCollection,
   setWantedUrl,
-  ICollectionsState,
-} from "../reducers/collections"
+  IUrlCollectionsState,
+} from "../reducers/urlCollections"
 
 interface IProps {
   authentication: IAuthentication
-  checkingIfUrlIdExists: ICollectionsState["checkingIfUrlIdExists"]
-  collection: ICollectionsState["current"]
+  checkingIfUrlIdExists: IUrlCollectionsState["checkingIfUrlIdExists"]
   createUrl: IUrlCreatorProps["createUrl"]
-  deleteUrl: IUrlCollectionProps["deleteUrl"]
-  deletingUrlId: IUrlCollectionProps["deletingUrlId"]
-  creatingUrl: ICollectionsState["creatingUrl"]
+  removingUrlId: IUrlCollectionProps["removingUrlId"]
+  creatingUrl: IUrlCollectionsState["creatingUrl"]
   exitAccount: () => void
-  fetchCollection: IUrlCollectionProps["fetchCollection"]
-  fetchingUrlMetadata: ICollectionsState["fetchingUrlMetadata"]
+  fetchUrlCollection: IUrlCollectionProps["fetchUrlCollection"]
+  fetchingUrlMetadata: IUrlCollectionsState["fetchingUrlMetadata"]
   setWantedUrl: IUrlCreatorProps["setWantedUrl"]
-  wantedUrl: ICollectionsState["wantedUrl"]
-  wantedUrlHrefIsValid: ICollectionsState["wantedUrlHrefIsValid"]
-  wantedUrlIdExists: ICollectionsState["wantedUrlIdExists"]
+  removeUrlFromCollection: (urlCollectionId: string) => (urlId: string) => () => void,
+  urlCollection: IUrlCollectionsState["currentUrlCollection"]
+  wantedUrl: IUrlCollectionsState["wantedUrl"]
+  wantedUrlHrefIsValid: IUrlCollectionsState["wantedUrlHrefIsValid"]
+  wantedUrlIdExists: IUrlCollectionsState["wantedUrlIdExists"]
 }
 
 class UrlCollectionPage extends React.Component<IProps> {
@@ -40,16 +40,16 @@ class UrlCollectionPage extends React.Component<IProps> {
   render() {
     const {
       authentication,
-      collection,
       createUrl,
-      deleteUrl,
-      deletingUrlId,
       exitAccount,
-      fetchCollection,
+      fetchingUrlMetadata,
+      fetchUrlCollection,
       checkingIfUrlIdExists,
       creatingUrl,
-      fetchingUrlMetadata,
+      removeUrlFromCollection,
+      removingUrlId,
       setWantedUrl,
+      urlCollection,
       wantedUrl,
       wantedUrlHrefIsValid,
       wantedUrlIdExists,
@@ -77,12 +77,14 @@ class UrlCollectionPage extends React.Component<IProps> {
           wantedUrlHrefIsValid={wantedUrlHrefIsValid}
         />
 
-        <UrlCollection
-          collection={collection}
-          deleteUrl={deleteUrl}
-          deletingUrlId={deletingUrlId}
-          fetchCollection={fetchCollection}
-        />
+        {urlCollection && (
+          <UrlCollection
+            urlCollection={urlCollection}
+            removeUrl={removeUrlFromCollection(urlCollection.id)}
+            removingUrlId={removingUrlId}
+            fetchUrlCollection={fetchUrlCollection}
+          />
+        )}
       </>
     )
   }
@@ -91,10 +93,10 @@ class UrlCollectionPage extends React.Component<IProps> {
 const mapStateToProps = (state) => ({
   authentication: state.account.authentication,
   checkingIfUrlIdExists: state.collections.checkingIfUrlIdExists,
-  collection: state.collections.current,
   creatingUrl: state.collections.creatingUrl,
-  deletingUrlId: state.collections.deletingUrlId,
   fetchingUrlMetadata: state.collections.fetchingUrlMetadata,
+  removingUrlId: state.collections.removingUrlId,
+  urlCollection: state.collections.currentUrlCollection,
   wantedUrl: state.collections.wantedUrl,
   wantedUrlHrefIsValid: state.collections.wantedUrlHrefIsValid,
   wantedUrlIdExists: state.collections.wantedUrlIdExists,
@@ -102,9 +104,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   createUrl: (url) => dispatch(createUrl(url)),
-  deleteUrl: (urlId) => () => dispatch(deleteUrl(urlId)),
   exitAccount: () => dispatch(exitAccount()),
-  fetchCollection: () => dispatch(fetchCollectionIfNeeded()),
+  fetchUrlCollection: () => dispatch(fetchUrlCollectionIfNeeded()),
+  removeUrlFromCollection: (urlCollectionId) => (urlId) => () => dispatch(removeUrlFromCollection(urlCollectionId, urlId)),
   setWantedUrl: (url) => dispatch(setWantedUrl(url)),
 })
 

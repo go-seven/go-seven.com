@@ -15,21 +15,21 @@ import {
 } from "trunx"
 
 import {
-  ICollectionsState,
   IUrl,
-} from "../reducers/collections"
+  IUrlCollectionsState,
+} from "../reducers/urlCollections"
 
 export interface IUrlCreatorProps {
   createUrl: (IUrl) => void
   domain: string
-  checkingIfUrlIdExists: ICollectionsState["checkingIfUrlIdExists"]
-  creatingUrl: ICollectionsState["creatingUrl"]
-  fetchingUrlMetadata: ICollectionsState["fetchingUrlMetadata"]
+  checkingIfUrlIdExists: IUrlCollectionsState["checkingIfUrlIdExists"]
+  creatingUrl: IUrlCollectionsState["creatingUrl"]
+  fetchingUrlMetadata: IUrlCollectionsState["fetchingUrlMetadata"]
   setWantedUrlTimeout: number
   setWantedUrl: (IUrl) => void
-  wantedUrl: ICollectionsState["wantedUrl"]
-  wantedUrlHrefIsValid: ICollectionsState["wantedUrlHrefIsValid"]
-  wantedUrlIdExists: ICollectionsState["wantedUrlIdExists"]
+  wantedUrl: IUrlCollectionsState["wantedUrl"]
+  wantedUrlHrefIsValid: IUrlCollectionsState["wantedUrlHrefIsValid"]
+  wantedUrlIdExists: IUrlCollectionsState["wantedUrlIdExists"]
 }
 
 interface IState {

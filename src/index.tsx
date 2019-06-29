@@ -6,11 +6,11 @@ import configureStore from "./store/configureStore"
 import Root from "./Root"
 
 import { initialState as account } from "./reducers/account"
-import { initialState as collections } from "./reducers/collections"
+import { initialState as urlCollections } from "./reducers/urlCollections"
 
 const initialState = {
   account,
-  collections,
+  urlCollections,
 }
 
 window.addEventListener("load", () => {

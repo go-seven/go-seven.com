@@ -1,9 +1,9 @@
 import { combineReducers } from "redux"
 
 import account from "./account"
-import collections from "./collections"
+import urlCollections from "./urlCollections"
 
 export default combineReducers({
   account,
-  collections,
+  urlCollections,
 })

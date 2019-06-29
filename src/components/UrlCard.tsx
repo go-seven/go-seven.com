@@ -16,57 +16,57 @@ import {
 } from "trunx"
 
 export interface IUrlCardProps {
-  deleteUrl: () => void
-  deletingUrl: boolean
+  removeUrl: () => void
+  removingUrl: boolean
   url
 }
 
 interface IState {
-  askingDeletionConfirmation: boolean
+  askingRemovalConfirmation: boolean
   editingUrl: boolean
   highlighted: boolean
 }
 
 export default class UrlCard extends React.Component<IUrlCardProps, IState> {
   state: IState = {
-    askingDeletionConfirmation: false,
+    askingRemovalConfirmation: false,
     editingUrl: false,
     highlighted: false,
   }
 
-  askUrlDeletionConfirmation = () => {
+  askUrlRemovalConfirmation = () => {
     this.setState({
-      askingDeletionConfirmation: true,
+      askingRemovalConfirmation: true,
       editingUrl: false,
     })
   }
 
   closeUrlEditor = () => {
     this.setState({
-      askingDeletionConfirmation: false,
+      askingRemovalConfirmation: false,
       editingUrl: false,
     })
   }
 
-  onClickDeleteUrl = () => {
+  onClickRemoveUrl = () => {
     this.setState({
-      askingDeletionConfirmation: false,
+      askingRemovalConfirmation: false,
       editingUrl: false,
     }, () => {
-      this.props.deleteUrl()
+      this.props.removeUrl()
     })
   }
 
   onClickEdit = () => {
     this.setState({
-      askingDeletionConfirmation: false,
+      askingRemovalConfirmation: false,
       editingUrl: true,
     })
   }
 
   onClickCard = () => {
     this.setState({
-      askingDeletionConfirmation: false,
+      askingRemovalConfirmation: false,
       editingUrl: true,
       highlighted: false,
     })
@@ -90,24 +90,24 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
 
   render() {
     const {
-      deletingUrl,
+      removingUrl,
       url,
     } = this.props
 
     const {
-      askingDeletionConfirmation,
+      askingRemovalConfirmation,
       editingUrl,
       highlighted,
     } = this.state
 
     return (
       <>
-        {askingDeletionConfirmation && (
+        {askingRemovalConfirmation && (
           <Modal isActive>
             <Modal.Background onClick={this.closeUrlEditor} />
 
             <Notification isWarning>
-              Are you sure you want to delete it?
+              Are you sure you want to remove it?
             </Notification>
 
             <Buttons>
@@ -118,9 +118,9 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
               <Button
                 isDanger
                 isOutlined
-                onClick={this.onClickDeleteUrl}
+                onClick={this.onClickRemoveUrl}
               >
-                Delete
+                Remove
               </Button>
             </Buttons>
           </Modal>
@@ -158,9 +158,9 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
               <Modal.Card.Foot>
                 <Button
                   isDanger
-                  onClick={this.askUrlDeletionConfirmation}
+                  onClick={this.askUrlRemovalConfirmation}
                 >
-                  Delete
+                  Remove
                 </Button>
 
                 <Button
@@ -187,8 +187,8 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
             <Card.Header.Title>
               <Tag
                 href={url.href}
-                isLink={!deletingUrl}
-                isWarning={deletingUrl}
+                isLink={!removingUrl}
+                isWarning={removingUrl}
                 onClick={this.onClickLink}
                 target="_blank"
               >
@@ -197,7 +197,7 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
             </Card.Header.Title>
 
             <Card.Header.Icon>
-              {deletingUrl ? (null) : (
+              {removingUrl ? (null) : (
                 highlighted && (
                   <Icon onClick={this.onClickEdit}>
                     <Icon.Svg

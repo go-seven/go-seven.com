@@ -8,47 +8,49 @@ import {
 import UrlCard from "./UrlCard"
 
 import {
-  ICollection,
-  ICollectionsState,
-} from "../reducers/collections"
+  IUrlCollection,
+  IUrlCollectionsState,
+} from "../reducers/urlCollections"
 
 export interface IUrlCollectionProps {
-  collection: ICollection | null
-  deletingUrlId: ICollectionsState["deletingUrlId"]
-  deleteUrl: (urlId?: string) => () => void
-  fetchCollection: () => void
+  fetchUrlCollection: () => void
+  removeUrl: (urlId: string) => () => void
+  removingUrlId: IUrlCollectionsState["removingUrlId"]
+  urlCollection: IUrlCollection | null
 }
 
 export default class UrlCollection extends React.Component<IUrlCollectionProps> {
   componentDidMount() {
-    this.props.fetchCollection()
+    this.props.fetchUrlCollection()
   }
 
   render() {
     const {
-      collection,
-      deleteUrl,
-      deletingUrlId,
+      removeUrl,
+      removingUrlId,
+      urlCollection,
     } = this.props
 
-    if (collection === null) {
+    if (urlCollection === null) {
       return null
     }
 
     const {
       urls,
-    } = collection
+    } = urlCollection
 
     return (
       <Section>
         <Columns isMultiline>
           {urls.map((url, i) => (
             <Column key={i} isOneQuarter>
-              <UrlCard
-                deleteUrl={deleteUrl(url.id)}
-                deletingUrl={deletingUrlId === url.id}
-                url={url}
-              />
+              {typeof url.id === "string" && (
+                <UrlCard
+                  removeUrl={removeUrl(url.id)}
+                  removingUrl={removingUrlId === url.id}
+                  url={url}
+                />
+              )}
             </Column>
           ))}
         </Columns>
