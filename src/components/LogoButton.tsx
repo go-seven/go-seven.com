@@ -12,7 +12,7 @@ interface IState {
   redirect?: string
 }
 
-export default class Logo extends React.Component<IProps, IState> {
+export default class LogoButton extends React.Component<IProps, IState> {
   state: IState = {
   }
 
@@ -34,13 +34,15 @@ export default class Logo extends React.Component<IProps, IState> {
     }
 
     return (
-      <Image
-        alt=""
-        height="28"
-        onClick={this.onClickLogo}
-        src="media/logo.svg"
-        width="28"
-      />
+      <div className="logo-button">
+        <Image
+          alt=""
+          height="28"
+          onClick={this.onClickLogo}
+          src="media/logo.svg"
+          width="28"
+        />
+      </div>
     )
   }
 }

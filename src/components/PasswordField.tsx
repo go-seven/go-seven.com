@@ -3,7 +3,7 @@ import * as eyeSlash from "fa-svg-icon/regular/eye-slash"
 import * as lock from "fa-svg-icon/solid/lock"
 import * as pdsp from "pdsp"
 import * as React from "react"
-import { Redirect } from "react-router-dom"
+import { FormattedMessage } from "react-intl"
 import {
   Control,
   Field,
@@ -35,7 +35,6 @@ interface IPasswordPolicyChecks {
 interface IState {
   passwordIsVisible: boolean
   passwordCheck: IPasswordPolicyChecks
-  redirect?: string
 }
 
 export default class PasswordField extends React.Component<IProps, IState> {
@@ -73,12 +72,6 @@ export default class PasswordField extends React.Component<IProps, IState> {
     this.setState({ passwordCheck })
   }
 
-  onClickForgotPassword = () => {
-    this.setState({
-      redirect: PasswordResetPage.path
-    })
-  }
-
   togglePasswordVisibility = (event) => {
     pdsp(event)
 
@@ -100,7 +93,6 @@ export default class PasswordField extends React.Component<IProps, IState> {
     const {
       passwordCheck,
       passwordIsVisible,
-      redirect,
     } = this.state
 
     const {
@@ -110,12 +102,6 @@ export default class PasswordField extends React.Component<IProps, IState> {
       isLongEnough,
     } = passwordCheck
 
-    if (redirect) {
-      return (
-        <Redirect push to={redirect} />
-      )
-    }
-
     return (
       <Field>
         <Label>
@@ -124,9 +110,9 @@ export default class PasswordField extends React.Component<IProps, IState> {
           {showForgotPassword && (
             <a
               className="is-pulled-right"
-              onClick={this.onClickForgotPassword}
+              href={PasswordResetPage.path}
             >
-              Forgot password?
+              <FormattedMessage id="PasswordField.forgot-password.message"/>
             </a>
           )}
         </Label>

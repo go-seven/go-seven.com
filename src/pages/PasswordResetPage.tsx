@@ -1,5 +1,6 @@
 import * as pdsp from "pdsp"
 import * as React from "react"
+import InjectIntl from "react-intl-inject"
 import { connect } from "react-redux"
 import { Redirect } from "react-router-dom"
 import {
@@ -15,21 +16,19 @@ import {
   Title,
 } from "trunx"
 
-import * as apiError from "../apiErrors"
-
 import EmailField from "../components/EmailField"
-import Logo from "../components/Logo"
+import LogoButton from "../components/LogoButton"
 
 import UrlCollectionPage from "./UrlCollectionPage"
 
 import {
   sendPasswordReset,
-  IAuthentication,
 } from "../reducers/account"
 
 interface IProps {
-  authentication: IAuthentication
+  authenticationIsValid: boolean
   isSendingPasswordReset: boolean
+  errorMessage?: string
   passwordResetEmailSent: boolean
   sendPasswordReset: (email: string) => void
 }
@@ -55,20 +54,17 @@ class PasswordResetPage extends React.Component<IProps, IState> {
 
   render() {
     const {
-      authentication,
+      authenticationIsValid,
       isSendingPasswordReset,
+      errorMessage,
       passwordResetEmailSent,
     } = this.props
 
-    if (authentication.isValid) {
+    if (authenticationIsValid) {
       return (
         <Redirect push to={UrlCollectionPage.path} />
       )
     }
-
-    const error = authentication.error || { code: "", message: "" }
-
-    const emailFieldError = error.code === apiError.AccountNotFoundError ? error.message : undefined
 
     return (
       <Modal isActive>
@@ -79,7 +75,7 @@ class PasswordResetPage extends React.Component<IProps, IState> {
             <Box>
               <Media>
                 <Media.Left>
-                  <Logo />
+                  <LogoButton />
                 </Media.Left>
 
                 <Media.Content>
@@ -108,18 +104,22 @@ class PasswordResetPage extends React.Component<IProps, IState> {
                   onSubmit={this.onSubmit}
                 >
                   <EmailField
-                    errorMessage={emailFieldError}
+                    errorMessage={errorMessage}
                     inputRef={this.emailRef}
                   />
 
                   <Field>
                     <Control>
-                      <Button
-                        isLoading={isSendingPasswordReset}
-                        isSuccess
-                        type="submit"
-                        value="Send password reset email"
-                      />
+                      <InjectIntl>
+                        {({ intl }) => (
+                          <Button
+                            isLoading={isSendingPasswordReset}
+                            isSuccess
+                            type="submit"
+                            value={intl.formatMessage({ id: "PasswordResetPage.send" })}
+                          />
+                        )}
+                      </InjectIntl>
                     </Control>
                   </Field>
                 </form>
@@ -132,11 +132,29 @@ class PasswordResetPage extends React.Component<IProps, IState> {
   }
 }
 
-const mapStateToProps = (state) => ({
-  authentication: state.account.authentication,
-  isSendingPasswordReset: state.account.isSendingPasswordReset,
-  passwordResetEmailSent: state.account.passwordResetEmailSent,
-})
+const mapStateToProps = (state) => {
+  const {
+    account,
+  } = state
+
+  const {
+    authentication,
+    isSendingPasswordReset,
+    passwordResetEmailSent,
+  } = account
+
+  const authenticationIsValid = authentication === null ? false : authentication.isValid
+
+  const authenticationError = authentication && authentication.error
+  const errorMessage = authenticationError && authenticationError.message
+
+  return {
+    authenticationIsValid,
+    errorMessage,
+    isSendingPasswordReset,
+    passwordResetEmailSent,
+  }
+}
 
 const mapDispatchToProps = (dispatch) => ({
   sendPasswordReset: (email) => dispatch(sendPasswordReset(email)),

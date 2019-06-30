@@ -29,7 +29,7 @@
     "browserify:shim:react-dom": "browserify -r ./src/libs/react-dom.js:react-dom -o public/libs/react-dom.js",
     "browserify:shim:react-router-dom": "browserify -r ./src/libs/react-router-dom.js:react-router-dom -o public/libs/react-router-dom.js",
     "browserify:shim:redux": "browserify -r ./src/libs/redux.js:redux -o public/libs/redux.js",
-    "build": "npm run browserify; npm run node-sass",
+    "build": "npm run browserify; npm run sass",
     "budo": "budo src/index.tsx --live --pushstate --dir public --serve js/bundle.v${npm_package_version}.js --open -- -p tsify $npm_package_config_browserify_exclude",
     "deploy": "npm run aws_s3_sync",
     "get_js_libs": "run-s get_js_libs:*",
@@ -37,15 +37,16 @@
     "get_js_libs:react-dom": "wget https://unpkg.com/react-dom@${npm_package_config_versions_react_dom}/umd/react-dom.production.min.js -O public/libs/react-dom.v${npm_package_config_versions_react_dom}.min.js",
     "get_js_libs:react-router-dom": "wget https://unpkg.com/react-router-dom@${npm_package_config_versions_react_router_dom}/umd/react-router-dom.min.js -O public/libs/react-router-dom.v${npm_package_config_versions_react_router_dom}.min.js",
     "get_js_libs:redux": "wget https://unpkg.com/redux@${npm_package_config_versions_redux}/dist/redux.min.js -O public/libs/redux.v${npm_package_config_versions_redux}.min.js",
-    "node-sass": "run-s node-sass:*",
-    "node-sass:app": "node-sass --include-path node_modules src/sass/app.scss --output-style compressed > public/css/app.v${npm_package_version}.css",
     "postbuild": "npm test",
     "postget_js_libs:react": "npm run browserify:shim:react",
     "postget_js_libs:react-dom": "npm run browserify:shim:react-dom",
     "postget_js_libs:react-router-dom": "npm run browserify:shim:react-router-dom",
     "postget_js_libs:redux": "npm run browserify:shim:redux",
     "postinstall": "npm run get_js_libs",
+    "prebudo": "rimraf public/js/bundle.v${npm_package_version}.js",
     "predeploy": "npm run build",
+    "sass": "run-s sass:*",
+    "sass:app": "node-sass --include-path node_modules src/sass/app.scss --output-style compressed > public/css/app.v${npm_package_version}.css",
     "standa": "standa test.js src/*.js",
     "start": "npm run budo",
     "test": "node test.js",
@@ -84,6 +85,7 @@
     "pdsp": "^0.1.0",
     "pre-commit": "^1.2.2",
     "react-intl": "^2.9.0",
+    "react-intl-inject": "^0.1.2",
     "react-redux": "^7.1.0",
     "redux-thunk": "^2.3.0",
     "regex-weburl": "^1.0.0",
@@ -95,6 +97,7 @@
     "typescript": "^3.5.2"
   },
   "devDependencies": {
-    "redux": "^4.0.1"
+    "redux": "^4.0.1",
+    "rimraf": "^2.6.3"
   }
 }

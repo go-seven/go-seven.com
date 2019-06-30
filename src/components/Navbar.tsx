@@ -1,3 +1,4 @@
+import * as pdsp from "pdsp"
 import * as React from "react"
 import { Redirect } from "react-router-dom"
 import {
@@ -6,7 +7,7 @@ import {
   Navbar,
 } from "trunx"
 
-import Logo from "./Logo"
+import LogoButton from "./LogoButton"
 
 import CreateAccountPage from "../pages/CreateAccountPage"
 import EnterPage from "../pages/EnterPage"
@@ -16,9 +17,10 @@ import UrlCollectionPage from "../pages/UrlCollectionPage"
 
 interface IProps {
   authenticationIsValid?: boolean
-  exit: () => void
+  exit?: () => void
   locationPath?: string
   noMenu?: boolean
+  showCreateAccountButton?: boolean
 }
 
 interface IState {
@@ -27,10 +29,6 @@ interface IState {
 }
 
 export default class Nav extends React.Component<IProps, IState> {
-  static defaultProps = {
-    exit: Function.prototype
-  }
-
   state: IState = {
     expanded: false
   }
@@ -53,11 +51,17 @@ export default class Nav extends React.Component<IProps, IState> {
     })
   }
 
-  onClickExit = () => {
+  onClickExit = (event) => {
+    pdsp(event)
+
+    const { exit } = this.props
+
     this.setState({
       redirect: HomePage.path
     }, () => {
-      this.props.exit()
+      if (typeof exit === "function") {
+        exit()
+      }
     })
   }
 
@@ -82,6 +86,7 @@ export default class Nav extends React.Component<IProps, IState> {
       authenticationIsValid,
       locationPath,
       noMenu,
+      showCreateAccountButton,
     } = this.props
 
     const {
@@ -104,7 +109,7 @@ export default class Nav extends React.Component<IProps, IState> {
       >
         <Navbar.Brand>
           <Navbar.Item>
-            <Logo />
+            <LogoButton />
           </Navbar.Item>
 
           {noMenu || (
@@ -153,11 +158,13 @@ export default class Nav extends React.Component<IProps, IState> {
                       Enter
                     </Button>
 
-                    <Button
-                      onClick={this.onClickCreateAccount}
-                    >
-                      Create Account
-                    </Button>
+                    {showCreateAccountButton && (
+                      <Button
+                        onClick={this.onClickCreateAccount}
+                      >
+                        Create Account
+                      </Button>
+                    )}
                   </Buttons>
                 )}
               </Navbar.Item>

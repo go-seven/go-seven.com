@@ -15,10 +15,12 @@ import Pricing from "../components/Pricing"
 
 import {
   exitAccount,
+  IAccountState,
 } from "../reducers/account"
 
 interface IProps {
   authenticationIsValid: boolean
+  email: IAccountState["email"]
   exitAccount: () => void
   location: history.Location
 }
@@ -30,14 +32,18 @@ class HomePage extends React.Component<IProps> {
     const {
       authenticationIsValid,
       exitAccount,
+      email,
     } = this.props
+
+    const showCreateAccountButton = typeof email !== "string"
 
     return (
       <>
         <Navbar
           authenticationIsValid={authenticationIsValid}
-          locationPath={this.props.location.pathname}
           exit={exitAccount}
+          locationPath={this.props.location.pathname}
+          showCreateAccountButton={showCreateAccountButton}
         />
 
         <Hero isPrimary>
@@ -66,12 +72,14 @@ const mapStateToProps = (state) => {
 
   const {
     authentication,
+    storedEmail,
   } = account
 
   const authenticationIsValid = authentication === null ? false : authentication.isValid
 
   return {
     authenticationIsValid,
+    storedEmail,
   }
 }
 

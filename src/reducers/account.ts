@@ -7,7 +7,7 @@ export const CREATE_ACCOUNT = asyncActions("CREATE_ACCOUNT")
 export const DELETE_ACCOUNT = asyncActions("DELETE_ACCOUNT")
 export const EXIT_ACCOUNT = "EXIT_ACCOUNT"
 const RESET_AUTHENTICATION_ERROR = "RESET_AUTHENTICATION_ERROR"
-const SEND_PASSWORD_RESET = asyncActions("SEND_PASSWORD_RESET")
+export const SEND_PASSWORD_RESET = asyncActions("SEND_PASSWORD_RESET")
 export const SEND_VERIFICATION = asyncActions("SEND_VERIFICATION")
 
 export const initialState: IAccountState = {
@@ -40,6 +40,7 @@ export interface IAuthentication {
 
 export interface IAccountState {
   authentication: IAuthentication | null
+  email?: string | null
   emailVerificationSent: boolean
   isCreating: boolean
   isDeleting: boolean
@@ -55,7 +56,7 @@ export function createAccount(credentials: ICredentials) {
     dispatch({ type: REQUEST })
 
     client.post("/account", credentials).then(
-      () => dispatch({ type: SUCCESS }),
+      () => dispatch({ data: { email: credentials.email }, type: SUCCESS }),
       (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
   }
@@ -78,14 +79,18 @@ export function deleteAccount() {
   }
 }
 
-export function enter(credentials: ICredentials) {
+export function enterAccount(credentials: ICredentials) {
   const { FAILURE, SUCCESS, REQUEST } = AUTHENTICATION
 
   return (dispatch) => {
     dispatch({ type: REQUEST })
 
     client.post("/enter", credentials).then(
-      (data) => dispatch({ data, type: SUCCESS }),
+      (authentication) => {
+        const { email } = credentials
+
+        dispatch({ data: { authentication, email }, type: SUCCESS })
+      },
       (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
   }
@@ -102,7 +107,7 @@ export function sendPasswordReset(email) {
     dispatch({ type: REQUEST })
 
     client.post("/reset-password", { email }).then(
-      (data) => dispatch({ data, type: SUCCESS }),
+      () => dispatch({ data: { email }, type: SUCCESS }),
       (error) => dispatch({ error: client.parseError(error), type: FAILURE })
     )
   }
@@ -147,18 +152,17 @@ export default function(state = initialState, action) {
       return {
         ...state,
         authentication: {
-          ...action.data,
+          ...action.data.authentication,
           isValid: true,
         },
+        email: action.data.email,
         isEntering: false,
       }
 
     case CHECK_AUTHENTICATION:
       return {
         ...state,
-        authentication: {
-          ...action.data
-        }
+        ...action.data,
       }
 
     case CREATE_ACCOUNT.FAILURE:
@@ -175,7 +179,6 @@ export default function(state = initialState, action) {
       return {
         ...state,
         authentication: {
-          error: null,
           isValid: false,
         },
         isCreating: true,
@@ -185,9 +188,9 @@ export default function(state = initialState, action) {
       return {
         ...state,
         authentication: {
-          error: null,
           isValid: false,
         },
+        email: action.data.email,
         isCreating: false,
       }
 

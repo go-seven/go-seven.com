@@ -239,7 +239,6 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
                 isLoading={fetchingUrlMetadata}
               >
                 <Input
-                  autoFocus
                   inputRef={this.urlHrefRef}
                   isDanger={wantedUrlHref !== "" && wantedUrlHrefIsValid === false}
                   isSuccess={wantedUrlHref !== "" && wantedUrlHrefIsValid === true}

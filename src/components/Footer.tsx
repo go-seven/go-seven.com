@@ -36,7 +36,7 @@ export default function() {
                 href={PrivacyPolicyPage.path}
                 target="_blank"
               >
-                <FormattedMessage id={"PrivacyPolicyPage.title"} />
+                <FormattedMessage id="PrivacyPolicyPage.title" />
               </Tag>
 
               <Tag
@@ -44,7 +44,7 @@ export default function() {
                 href={TermsOfServicePage.path}
                 target="_blank"
               >
-                <FormattedMessage id={"TermsOfServicePage.title"} />
+                <FormattedMessage id="TermsOfServicePage.title" />
               </Tag>
             </Tags>
           </Column>

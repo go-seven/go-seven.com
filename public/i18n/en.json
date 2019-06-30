@@ -1,8 +1,12 @@
 {
   "locale": "en",
   "messages": {
+    "EnterPage.email.AccountNotFoundError": "Account not found",
+    "EnterPage.password.InvalidPasswordError": "Invalid password",
     "Footer.sugar-free.message": "This website does <strong>not</strong> use cookies.",
+    "PasswordField.forgot-password.message": "Forgot password?",
     "PrivacyPolicyPage.title": "Privacy Policy",
+    "PasswordResetPage.send": "Send new password",
     "TermsOfServicePage.title": "Terms of Service"
   }
 }

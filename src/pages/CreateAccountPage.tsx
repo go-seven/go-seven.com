@@ -14,6 +14,7 @@ import {
   Media,
   Message,
   Modal,
+  P,
   Section,
   Title,
 } from "trunx"
@@ -21,7 +22,7 @@ import {
 import * as apiError from "../apiErrors"
 
 import EmailField from "../components/EmailField"
-import Logo from "../components/Logo"
+import LogoButton from "../components/LogoButton"
 import PasswordField from "../components/PasswordField"
 
 import {
@@ -131,7 +132,7 @@ class CreateAccountPage extends React.Component<IProps, IState> {
             <Box>
               <Media>
                 <Media.Left>
-                  <Logo />
+                  <LogoButton />
                 </Media.Left>
 
                 <Media.Content>
@@ -192,15 +193,15 @@ class CreateAccountPage extends React.Component<IProps, IState> {
                 >
                   <Message isMedium>
                     <Message.Header>
-                      <p>
+                      <P>
                         Are you a <strong>robot</strong>?
-                      </p>
+                      </P>
                     </Message.Header>
 
                     <Message.Body>
-                      <p className="has-text-centered">
+                      <P hasTextCentered>
                         Play <em>tic tac toe</em> !
-                      </p>
+                      </P>
 
                       <div ref={this.antispamRef} />
                     </Message.Body>

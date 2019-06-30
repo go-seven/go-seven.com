@@ -2,8 +2,10 @@
 import {
   AUTHENTICATION,
   CHECK_AUTHENTICATION,
+  CREATE_ACCOUNT,
   DELETE_ACCOUNT,
   EXIT_ACCOUNT,
+  SEND_PASSWORD_RESET,
 } from "../reducers/account"
 
 export default function localStorageMiddleware() {
@@ -11,12 +13,18 @@ export default function localStorageMiddleware() {
      switch (action.type) {
        case AUTHENTICATION.SUCCESS:
          try {
-           localStorage.setItem("authentication", JSON.stringify(action.data))
+           localStorage.setItem("authentication", JSON.stringify(action.data.authentication))
+
+           localStorage.setItem("email", action.data.email)
          } catch (ignore) {
            return next(action)
          }
 
+         return next(action)
+
        case CHECK_AUTHENTICATION:
+         const email = localStorage.getItem("email")
+
          try {
            const storedAuthentication = localStorage.getItem("authentication")
 
@@ -44,10 +52,13 @@ export default function localStorageMiddleware() {
                return next({
                  ...action,
                  data: {
-                   expiresAt,
-                   hasExpired,
-                   isValid: true,
-                   token,
+                   authentication: {
+                     expiresAt,
+                     hasExpired,
+                     isValid: true,
+                     token,
+                   },
+                   email,
                  }
                })
              } else {
@@ -55,8 +66,11 @@ export default function localStorageMiddleware() {
                return next({
                  ...action,
                  data: {
-                   hasExpired: true,
-                   isValid: false,
+                   authentication: {
+                     hasExpired: true,
+                     isValid: false,
+                   },
+                   email,
                  }
                })
              }
@@ -64,7 +78,10 @@ export default function localStorageMiddleware() {
             return next({
               ...action,
               data: {
-                isValid: false,
+                authentication: {
+                  isValid: false,
+                },
+                email,
               }
             })
            }
@@ -72,19 +89,39 @@ export default function localStorageMiddleware() {
            return next({
              ...action,
              data: {
-               isValid: false,
+               authentication: {
+                 isValid: false,
+               },
+               email,
              }
            })
          }
 
+         return next(action)
+
+       case CREATE_ACCOUNT.SUCCESS:
+         localStorage.setItem("email", action.data.email)
+
+         return next(action)
+
        case DELETE_ACCOUNT.SUCCESS:
          localStorage.removeItem("authentication")
+
+         localStorage.removeItem("email")
+
+         return next(action)
 
        case EXIT_ACCOUNT:
          localStorage.removeItem("authentication")
 
-       default:
          return next(action)
+
+       case SEND_PASSWORD_RESET.SUCCESS:
+         localStorage.setItem("email", action.data.email)
+
+         return next(action)
+
+       default: return next(action)
      }
    }
 }

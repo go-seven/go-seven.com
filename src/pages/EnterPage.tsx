@@ -1,5 +1,6 @@
 import * as pdsp from "pdsp"
 import * as React from "react"
+import InjectIntl from "react-intl-inject"
 import { connect } from "react-redux"
 import { Redirect } from "react-router-dom"
 import {
@@ -18,11 +19,11 @@ import {
 import * as apiError from "../apiErrors"
 
 import EmailField from "../components/EmailField"
-import Logo from "../components/Logo"
+import LogoButton from "../components/LogoButton"
 import PasswordField from "../components/PasswordField"
 
 import {
-  enter,
+  enterAccount,
   resetAuthenticationError,
   sendVerification,
   IAuthentication,
@@ -35,7 +36,7 @@ import UrlCollectionPage from "./UrlCollectionPage"
 interface IProps {
   authentication: IAuthentication
   emailVericationSent: boolean
-  enter: (ICredentials) => void
+  enterAccount: (ICredentials) => void
   isEnteringAccount: boolean
   isSendingVerification: boolean
   resetAuthenticationError: () => void
@@ -88,7 +89,7 @@ class EnterPage extends React.Component<IProps, IState> {
     const email = this.emailRef.current && this.emailRef.current.value
     const password = this.passwordRef.current && this.passwordRef.current.value
 
-    this.props.enter({ email, password })
+    this.props.enterAccount({ email, password })
   }
 
   render() {
@@ -119,11 +120,11 @@ class EnterPage extends React.Component<IProps, IState> {
       )
     }
 
-    const error = authentication.error || { code: "", message: "" }
+    const errorCode = authentication.error && authentication.error.code
 
-    const emailFieldError = error.code === apiError.AccountNotFoundError ? error.message : undefined
-    const passwordFieldError = error.code === apiError.InvalidPasswordError ? error.message : undefined
-    const accountNotVerifiedError = error.code === apiError.AccountNotVerifiedError
+    const emailFieldErrorCode = errorCode === apiError.AccountNotFoundError ? errorCode : null
+    const passwordFieldErrorCode = errorCode === apiError.InvalidPasswordError ? errorCode : null
+    const accountNotVerifiedError = errorCode === apiError.AccountNotVerifiedError
 
     return (
       <Modal isActive>
@@ -134,7 +135,7 @@ class EnterPage extends React.Component<IProps, IState> {
             <Box>
               <Media>
                 <Media.Left>
-                  <Logo />
+                  <LogoButton />
                 </Media.Left>
 
                 <Media.Content>
@@ -148,16 +149,24 @@ class EnterPage extends React.Component<IProps, IState> {
                 autoComplete="on"
                 onSubmit={this.onSubmit}
               >
-                <EmailField
-                  errorMessage={emailFieldError}
-                  inputRef={this.emailRef}
-                />
+                <InjectIntl>
+                  {({ intl }) => (
+                    <EmailField
+                      errorMessage={emailFieldErrorCode && intl.formatMessage({ id: `EnterPage.email.${errorCode}` })}
+                      inputRef={this.emailRef}
+                    />
+                  )}
+                </InjectIntl>
 
-                <PasswordField
-                  errorMessage={passwordFieldError}
-                  inputRef={this.passwordRef}
-                  showForgotPassword
-                />
+                <InjectIntl>
+                  {({ intl }) => (
+                    <PasswordField
+                      errorMessage={passwordFieldErrorCode && intl.formatMessage({ id: `EnterPage.password.${errorCode}` })}
+                      inputRef={this.passwordRef}
+                      showForgotPassword
+                    />
+                  )}
+                </InjectIntl>
 
                 <Field>
                   <Control>
@@ -246,7 +255,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  enter: (credentials) => dispatch(enter(credentials)),
+  enterAccount: (credentials) => dispatch(enterAccount(credentials)),
   resetAuthenticationError: () => dispatch(resetAuthenticationError()),
   sendVerification: (email) => dispatch(sendVerification(email)),
 })
