@@ -156,7 +156,6 @@ class CreateAccountPage extends React.Component<IProps, IState> {
 
                   <PasswordField
                     autoComplete="new-password"
-                    canShowPassword
                     errorMessage={passwordFieldError}
                     inputRef={this.passwordRef}
                     showPasswordPolicy

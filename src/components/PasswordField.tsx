@@ -1,7 +1,4 @@
-import * as eye from "fa-svg-icon/regular/eye"
-import * as eyeSlash from "fa-svg-icon/regular/eye-slash"
 import * as lock from "fa-svg-icon/solid/lock"
-import * as pdsp from "pdsp"
 import * as React from "react"
 import { FormattedMessage } from "react-intl"
 import {
@@ -18,7 +15,6 @@ import PasswordResetPage from "../pages/PasswordResetPage"
 
 interface IProps {
   autoComplete?: string
-  canShowPassword?: boolean
   errorMessage?: string,
   inputRef: React.RefObject<HTMLInputElement>
   showForgotPassword?: boolean
@@ -33,7 +29,6 @@ interface IPasswordPolicyChecks {
 }
 
 interface IState {
-  passwordIsVisible: boolean
   passwordCheck: IPasswordPolicyChecks
 }
 
@@ -47,7 +42,6 @@ export default class PasswordField extends React.Component<IProps, IState> {
       hasUppercase: false,
       isLongEnough: false,
     },
-    passwordIsVisible: false,
   }
 
   checkPasswordPolicy(): IPasswordPolicyChecks {
@@ -72,18 +66,9 @@ export default class PasswordField extends React.Component<IProps, IState> {
     this.setState({ passwordCheck })
   }
 
-  togglePasswordVisibility = (event) => {
-    pdsp(event)
-
-    this.setState({
-      passwordIsVisible: !this.state.passwordIsVisible
-    })
-  }
-
   render() {
     const {
       autoComplete,
-      canShowPassword,
       errorMessage,
       inputRef,
       showForgotPassword,
@@ -92,7 +77,6 @@ export default class PasswordField extends React.Component<IProps, IState> {
 
     const {
       passwordCheck,
-      passwordIsVisible,
     } = this.state
 
     const {
@@ -117,33 +101,19 @@ export default class PasswordField extends React.Component<IProps, IState> {
           )}
         </Label>
 
-        <Control hasIconsLeft hasIconsRight={canShowPassword}>
+        <Control hasIconsLeft>
           <Input
             autoComplete={autoComplete}
             inputRef={inputRef}
             isDanger={!!errorMessage}
-            isWarning={passwordIsVisible}
             onChange={this.onChange}
             required
-            type={passwordIsVisible ? "text" : "password"}
+            type="password"
           />
 
           <Icon hasTextGrey isLeft>
             <Icon.Svg icon={lock} />
           </Icon>
-
-          {canShowPassword && (
-            <Icon
-              hasBackgroundWhiteTer={!passwordIsVisible}
-              hasBackgroundWarning={passwordIsVisible}
-              hasTextLight={passwordIsVisible}
-              hasTextGrey={!passwordIsVisible}
-              isRight
-              onClick={this.togglePasswordVisibility}
-            >
-              <Icon.Svg icon={passwordIsVisible ? eyeSlash : eye} />
-            </Icon>
-          )}
 
           {errorMessage && (
             <Help>
