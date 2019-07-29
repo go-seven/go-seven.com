@@ -2,6 +2,7 @@ import asyncActions from "../asyncActions"
 import * as client from "../client"
 
 export const AUTHENTICATION = asyncActions("AUTHENTICATION")
+export const CHANGE_PASSWORD = asyncActions("CHANGE_PASSWORD")
 export const CHECK_AUTHENTICATION = "CHECK_AUTHENTICATION"
 export const CREATE_ACCOUNT = asyncActions("CREATE_ACCOUNT")
 export const DELETE_ACCOUNT = asyncActions("DELETE_ACCOUNT")
@@ -13,6 +14,7 @@ export const SEND_VERIFICATION = asyncActions("SEND_VERIFICATION")
 export const initialState: IAccountState = {
   authentication: null,
   emailVerificationSent: false,
+  isChangingPassword: false,
   isCreating: false,
   isDeleting: false,
   isEntering: false,
@@ -42,11 +44,25 @@ export interface IAccountState {
   authentication: IAuthentication | null
   email?: string | null
   emailVerificationSent: boolean
+  isChangingPassword: boolean
   isCreating: boolean
   isDeleting: boolean
   isEntering: boolean
   isSendingPasswordReset: boolean
   isSendingVerification: boolean
+}
+
+export function changePassword(password) {
+  const { FAILURE, SUCCESS, REQUEST } = CHANGE_PASSWORD
+
+  return (dispatch) => {
+    dispatch({ type: REQUEST })
+
+    client.post("/change-password", { password }).then(
+      () => dispatch({ type: SUCCESS }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
+    )
+  }
 }
 
 export function createAccount(credentials: ICredentials) {
@@ -157,6 +173,24 @@ export default function(state = initialState, action) {
         },
         email: action.data.email,
         isEntering: false,
+      }
+
+    case CHANGE_PASSWORD.FAILURE:
+      return {
+        ...state,
+        isChangingPassword: false,
+      }
+
+    case CHANGE_PASSWORD.REQUEST:
+      return {
+        ...state,
+        isChangingPassword: true,
+      }
+
+    case CHANGE_PASSWORD.SUCCESS:
+      return {
+        ...state,
+        isChangingPassword: false,
       }
 
     case CHECK_AUTHENTICATION:

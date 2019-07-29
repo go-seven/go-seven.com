@@ -120,7 +120,7 @@ class CreateAccountPage extends React.Component<IProps, IState> {
     }
 
     const error = authentication.error || { code: "", message: "" }
-    const emailFieldError = error.code === apiError.AccountNotFoundError ? error.message : undefined
+    const emailFieldError = error.code === apiError.EmailNotFoundError ? error.message : undefined
     const passwordFieldError = error.code === apiError.InvalidPasswordError ? error.message : undefined
 
     return (

@@ -31,7 +31,7 @@ import {
 } from "../reducers/account"
 
 import CreateAccountPage from "./CreateAccountPage"
-import UrlCollectionPage from "./UrlCollectionPage"
+import MyUrlsPage from "./MyUrlsPage"
 
 interface IProps {
   authentication: IAuthentication
@@ -110,7 +110,7 @@ class EnterPage extends React.Component<IProps, IState> {
 
     if (authentication.isValid) {
       return (
-        <Redirect push to={UrlCollectionPage.path} />
+        <Redirect push to={MyUrlsPage.path} />
       )
     }
 
@@ -122,9 +122,9 @@ class EnterPage extends React.Component<IProps, IState> {
 
     const errorCode = authentication.error && authentication.error.code
 
-    const emailFieldErrorCode = errorCode === apiError.AccountNotFoundError ? errorCode : null
+    const emailFieldErrorCode = errorCode === apiError.EmailNotFoundError ? errorCode : null
     const passwordFieldErrorCode = errorCode === apiError.InvalidPasswordError ? errorCode : null
-    const accountNotVerifiedError = errorCode === apiError.AccountNotVerifiedError
+    const emailNotVerifiedError = errorCode === apiError.EmailNotVerifiedError
 
     return (
       <Modal isActive>
@@ -181,7 +181,7 @@ class EnterPage extends React.Component<IProps, IState> {
               </form>
             </Box>
 
-            {accountNotVerifiedError && (
+            {emailNotVerifiedError && (
               <>
                 {emailVericationSent ? (
                   <Message isSuccess>

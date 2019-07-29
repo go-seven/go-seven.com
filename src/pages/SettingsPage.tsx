@@ -5,9 +5,11 @@ import {
   Button,
 } from "trunx"
 
+import ChangePasswordForm from "../components/ChangePasswordForm"
 import Navbar from "../components/Navbar"
 
 import {
+  changePassword,
   deleteAccount,
   exitAccount,
   IAuthentication,
@@ -17,6 +19,7 @@ interface IProps {
   authentication: IAuthentication
   deleteAccount: () => void
   exitAccount: () => void
+  isChangingPassword: boolean
   isDeletingAccount: boolean
 }
 
@@ -33,6 +36,7 @@ class SettingsPage extends React.Component<IProps> {
     const {
       authentication,
       exitAccount,
+      isChangingPassword,
       isDeletingAccount,
     } = this.props
 
@@ -45,6 +49,10 @@ class SettingsPage extends React.Component<IProps> {
         <Navbar
           authenticationIsValid={authentication.isValid}
           exit={exitAccount}
+        />
+
+        <ChangePasswordForm
+          isChangingPassword={isChangingPassword}
         />
 
         <Button
@@ -60,12 +68,14 @@ class SettingsPage extends React.Component<IProps> {
   }
 }
 
-const mapStateToProps = (state) => ({
-  authentication: state.account.authentication,
-  isDeletingAccount: state.account.isDeleteing,
+const mapStateToProps = ({ account }) => ({
+  authentication: account.authentication,
+  isChangingPassword: account.isChangingPassword,
+  isDeletingAccount: account.isDeleting,
 })
 
 const mapDispatchToProps = (dispatch) => ({
+  changePassword: (password) => dispatch(changePassword(password)),
   deleteAccount: () => dispatch(deleteAccount()),
   exitAccount: () => dispatch(exitAccount()),
 })

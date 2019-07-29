@@ -14,11 +14,11 @@ import i18nConfig from "./i18nConfig"
 import CreateAccountPage from "./pages/CreateAccountPage"
 import EnterPage from "./pages/EnterPage"
 import HomePage from "./pages/HomePage"
+import MyUrlsPage from "./pages/MyUrlsPage"
 import PasswordResetPage from "./pages/PasswordResetPage"
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage"
 import SettingsPage from "./pages/SettingsPage"
 import TermsOfServicePage from "./pages/TermsOfServicePage"
-import UrlCollectionPage from "./pages/UrlCollectionPage"
 
 import {
   CHECK_AUTHENTICATION,
@@ -51,6 +51,8 @@ export default class Root extends React.Component<IProps> {
 
               <Route component={HomePage} exact path={HomePage.path} />
 
+              <Route component={MyUrlsPage} exact path={MyUrlsPage.path} />
+
               <Route component={PasswordResetPage} exact path={PasswordResetPage.path} />
 
               <Route component={PrivacyPolicyPage} exact path={PrivacyPolicyPage.path} />
@@ -58,8 +60,6 @@ export default class Root extends React.Component<IProps> {
               <Route component={SettingsPage} exact path={SettingsPage.path} />
 
               <Route component={TermsOfServicePage} exact path={TermsOfServicePage.path} />
-
-              <Route component={UrlCollectionPage} exact path={UrlCollectionPage.path} />
 
               <Redirect from="*" to={HomePage.path} />
             </Switch>

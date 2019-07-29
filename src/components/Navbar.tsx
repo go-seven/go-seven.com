@@ -12,8 +12,8 @@ import LogoButton from "./LogoButton"
 import CreateAccountPage from "../pages/CreateAccountPage"
 import EnterPage from "../pages/EnterPage"
 import HomePage from "../pages/HomePage"
+import MyUrlsPage from "../pages/MyUrlsPage"
 import SettingsPage from "../pages/SettingsPage"
-import UrlCollectionPage from "../pages/UrlCollectionPage"
 
 interface IProps {
   authenticationIsValid?: boolean
@@ -74,9 +74,9 @@ export default class Nav extends React.Component<IProps, IState> {
   }
 
   onClickUrlCollection = () => {
-    if (this.props.locationPath !== UrlCollectionPage.path) {
+    if (this.props.locationPath !== MyUrlsPage.path) {
       this.setState({
-        redirect: UrlCollectionPage.path
+        redirect: MyUrlsPage.path
       })
     }
   }
@@ -125,10 +125,10 @@ export default class Nav extends React.Component<IProps, IState> {
             {authenticationIsValid && (
               <Navbar.Start>
                 <Navbar.Item
-                  isActive={locationPath === UrlCollectionPage.path}
+                  isActive={locationPath === MyUrlsPage.path}
                   onClick={this.onClickUrlCollection}
                 >
-                  URL Collection
+                  My URLs
                 </Navbar.Item>
 
                 <Navbar.Item

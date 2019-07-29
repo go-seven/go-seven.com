@@ -33,8 +33,8 @@ interface IProps {
   wantedUrlIdExists: IUrlCollectionsState["wantedUrlIdExists"]
 }
 
-class UrlCollectionPage extends React.Component<IProps> {
-  static path = "/url-collection"
+class MyUrlsPage extends React.Component<IProps> {
+  static path = "/my-urls"
 
   render() {
     const {
@@ -133,4 +133,4 @@ const mapDispatchToProps = (dispatch) => ({
   setWantedUrl: (url) => dispatch(setWantedUrl(url)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(UrlCollectionPage)
+export default connect(mapStateToProps, mapDispatchToProps)(MyUrlsPage)

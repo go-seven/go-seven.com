@@ -19,7 +19,7 @@ import {
 import EmailField from "../components/EmailField"
 import LogoButton from "../components/LogoButton"
 
-import UrlCollectionPage from "./UrlCollectionPage"
+import MyUrlsPage from "./MyUrlsPage"
 
 import {
   sendPasswordReset,
@@ -62,7 +62,7 @@ class PasswordResetPage extends React.Component<IProps, IState> {
 
     if (authenticationIsValid) {
       return (
-        <Redirect push to={UrlCollectionPage.path} />
+        <Redirect push to={MyUrlsPage.path} />
       )
     }
 
