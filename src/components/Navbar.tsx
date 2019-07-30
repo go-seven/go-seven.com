@@ -10,6 +10,7 @@ import {
 import LogoButton from "./LogoButton"
 
 import CreateAccountPage from "../pages/CreateAccountPage"
+import CreateUrlPage from "../pages/CreateUrlPage"
 import EnterPage from "../pages/EnterPage"
 import HomePage from "../pages/HomePage"
 import MyUrlsPage from "../pages/MyUrlsPage"
@@ -18,7 +19,7 @@ import SettingsPage from "../pages/SettingsPage"
 interface IProps {
   authenticationIsValid?: boolean
   exit?: () => void
-  locationPath?: string
+  locationPath: string
   noMenu?: boolean
   showCreateAccountButton?: boolean
 }
@@ -42,6 +43,12 @@ export default class Nav extends React.Component<IProps, IState> {
   onClickCreateAccount = () => {
     this.setState({
       redirect: CreateAccountPage.path
+    })
+  }
+
+  onClickCreateUrl = () => {
+    this.setState({
+      redirect: CreateUrlPage.path
     })
   }
 
@@ -129,6 +136,13 @@ export default class Nav extends React.Component<IProps, IState> {
                   onClick={this.onClickMyUrls}
                 >
                   My URLs
+                </Navbar.Item>
+
+                <Navbar.Item
+                  isActive={locationPath === CreateUrlPage.path}
+                  onClick={this.onClickCreateUrl}
+                >
+                  Create URL
                 </Navbar.Item>
 
                 <Navbar.Item

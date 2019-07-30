@@ -22,6 +22,7 @@ interface IProps {
   authenticationIsValid: boolean
   email: IAccountState["email"]
   exitAccount: () => void
+  hasNoEmail: boolean
   location: history.Location
 }
 
@@ -32,10 +33,8 @@ class HomePage extends React.Component<IProps> {
     const {
       authenticationIsValid,
       exitAccount,
-      email,
+      hasNoEmail
     } = this.props
-
-    const showCreateAccountButton = typeof email !== "string"
 
     return (
       <>
@@ -43,7 +42,7 @@ class HomePage extends React.Component<IProps> {
           authenticationIsValid={authenticationIsValid}
           exit={exitAccount}
           locationPath={this.props.location.pathname}
-          showCreateAccountButton={showCreateAccountButton}
+          showCreateAccountButton={hasNoEmail}
         />
 
         <Hero isPrimary>
@@ -65,21 +64,17 @@ class HomePage extends React.Component<IProps> {
   }
 }
 
-const mapStateToProps = (state) => {
-  const {
-    account,
-  } = state
-
-  const {
+const mapStateToProps = ({
+  account: {
     authentication,
-    storedEmail,
-  } = account
-
+    email,
+  }
+}) => {
   const authenticationIsValid = authentication === null ? false : authentication.isValid
 
   return {
     authenticationIsValid,
-    storedEmail,
+    hasNoEmail: email === "",
   }
 }
 

@@ -12,6 +12,7 @@ import { Store } from "redux"
 import i18nConfig from "./i18nConfig"
 
 import CreateAccountPage from "./pages/CreateAccountPage"
+import CreateUrlPage from "./pages/CreateUrlPage"
 import EnterPage from "./pages/EnterPage"
 import HomePage from "./pages/HomePage"
 import MyUrlsPage from "./pages/MyUrlsPage"
@@ -46,6 +47,8 @@ export default class Root extends React.Component<IProps> {
           <BrowserRouter>
             <Switch>
               <Route component={CreateAccountPage} exact path={CreateAccountPage.path} />
+
+              <Route component={CreateUrlPage} exact path={CreateUrlPage.path} />
 
               <Route component={EnterPage} exact path={EnterPage.path} />
 

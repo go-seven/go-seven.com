@@ -2,16 +2,15 @@ import * as pdsp from "pdsp"
 import * as React from "react"
 import {
   Button,
-  Checkbox,
   Column,
   Columns,
   Container,
   Control,
   Field,
   Help,
-  Hero,
   Input,
   Label,
+  Section,
 } from "trunx"
 
 import {
@@ -35,7 +34,6 @@ export interface IUrlCreatorProps {
 interface IState {
   canSetWantedUrlHref: boolean
   canSetWantedUrlId: boolean
-  showOptions: boolean
   wantedUrlHref: string
   wantedUrlId: string
 }
@@ -49,7 +47,6 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
   state = {
     canSetWantedUrlHref: true,
     canSetWantedUrlId: true,
-    showOptions: false,
     wantedUrlHref: "",
     wantedUrlId: "",
   }
@@ -189,12 +186,6 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
     }
   }
 
-  onChangeOptionsVisibility = (event) => {
-    this.setState({
-        showOptions: event.target.checked
-    })
-  }
-
   onClickSave = (event) => {
     pdsp(event)
 
@@ -219,7 +210,6 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
     } = this.props
 
     const {
-      showOptions,
       wantedUrlHref,
       wantedUrlId,
     } = this.state
@@ -227,107 +217,92 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
     const saveButtonDisabled = wantedUrlIdExists === true || wantedUrlHrefIsValid !== true || fetchingUrlMetadata || checkingIfUrlIdExists
 
     return (
-      <Hero isPrimary>
-        <Hero.Body>
-            <Container>
-            <Field>
-              <Label>
-                Your long URL
-              </Label>
+      <Section>
+        <Container>
+          <Field>
+            <Label>
+              Your long URL
+            </Label>
 
-              <Control
-                isLoading={fetchingUrlMetadata}
-              >
-                <Input
-                  inputRef={this.urlHrefRef}
-                  isDanger={wantedUrlHref !== "" && wantedUrlHrefIsValid === false}
-                  isSuccess={wantedUrlHref !== "" && wantedUrlHrefIsValid === true}
-                  onChange={this.onChangeUrlHref}
-                  placeholder="Paste or write your URL here"
-                  readOnly={creatingUrl}
-                  type="text"
-                  value={wantedUrlHref}
-                />
-              </Control>
+            <Control
+              isLoading={fetchingUrlMetadata}
+            >
+              <Input
+                inputRef={this.urlHrefRef}
+                isDanger={wantedUrlHref !== "" && wantedUrlHrefIsValid === false}
+                isSuccess={wantedUrlHref !== "" && wantedUrlHrefIsValid === true}
+                onChange={this.onChangeUrlHref}
+                placeholder="Paste or write your URL here"
+                readOnly={creatingUrl}
+                type="text"
+                value={wantedUrlHref}
+              />
+            </Control>
 
-              <Help isDanger={wantedUrlHrefIsValid === false}>
-                {wantedUrlHrefIsValid === false && "Invalid URL"}
-              </Help>
-            </Field>
+            <Help isDanger={wantedUrlHrefIsValid === false}>
+              {wantedUrlHrefIsValid === false && "Invalid URL"}
+            </Help>
+          </Field>
 
-            {showOptions && (
-              <>
-                <Field>
-                  <Label>
-                    Title
-                  </Label>
+          <Field>
+            <Label>
+              Title
+            </Label>
 
-                  <Control
-                    isLoading={fetchingUrlMetadata}
-                  >
-                    <Input
-                      readOnly
-                      type="text"
-                      value={wantedUrl && wantedUrl.title || ""}
-                    />
-                  </Control>
-                </Field>
+            <Control
+              isLoading={fetchingUrlMetadata}
+            >
+              <Input
+                readOnly
+                type="text"
+                value={wantedUrl && wantedUrl.title || ""}
+              />
+            </Control>
+          </Field>
 
-                <Columns isDesktop>
-                  <Column isHalf>
-                    <Field>
-                      <Label>
-                        Short URL
-                      </Label>
+          <Columns isDesktop>
+            <Column isHalf>
+              <Field>
+                <Label>
+                  Short URL
+                </Label>
 
-                      <Control
-                        isLoading={checkingIfUrlIdExists}
-                      >
-                        <Input
-                          inputRef={this.urlIdRef}
-                          isDanger={wantedUrlId !== "" && wantedUrlIdExists === true}
-                          isSuccess={wantedUrlId !== "" && wantedUrlIdExists === false}
-                          onChange={this.onChangeUrlId}
-                          placeholder="go7.li/"
-                          readOnly={creatingUrl}
-                          type="text"
-                          value={`go7.li/${wantedUrlId}`}
-                        />
-                      </Control>
-
-                      <Help isDanger={wantedUrlIdExists === true}>
-                        {wantedUrlIdExists === true && "Not available"}
-                      </Help>
-                    </Field>
-                  </Column>
-                </Columns>
-              </>
-            )}
-
-            <Field>
-              <Checkbox
-                checked={showOptions}
-                onClick={this.onChangeOptionsVisibility}
-              >
-                {showOptions ? "Hide Options" : "Show Options"}
-              </Checkbox>
-            </Field>
-
-            <Field>
-              <Control>
-                <Button
-                  disabled={saveButtonDisabled}
-                  isLoading={creatingUrl}
-                  isSuccess={wantedUrlHrefIsValid === true}
-                  onClick={this.onClickSave}
+                <Control
+                  isLoading={checkingIfUrlIdExists}
                 >
-                  Save
-                </Button>
-              </Control>
-            </Field>
-          </Container>
-        </Hero.Body>
-      </Hero>
+                  <Input
+                    inputRef={this.urlIdRef}
+                    isDanger={wantedUrlId !== "" && wantedUrlIdExists === true}
+                    isSuccess={wantedUrlId !== "" && wantedUrlIdExists === false}
+                    onChange={this.onChangeUrlId}
+                    placeholder="go7.li/"
+                    readOnly={creatingUrl}
+                    type="text"
+                    value={`go7.li/${wantedUrlId}`}
+                  />
+                </Control>
+
+                <Help isDanger={wantedUrlIdExists === true}>
+                  {wantedUrlIdExists === true && "Not available"}
+                </Help>
+              </Field>
+            </Column>
+          </Columns>
+
+          <Field>
+            <Control>
+              <Button
+                disabled={saveButtonDisabled}
+                isLoading={creatingUrl}
+                isSuccess={wantedUrlHrefIsValid === true}
+                onClick={this.onClickSave}
+              >
+                Save
+              </Button>
+            </Control>
+          </Field>
+        </Container>
+      </Section>
     )
   }
 }

@@ -3,39 +3,45 @@ import * as React from "react"
 import { connect } from "react-redux"
 
 import Navbar from "../components/Navbar"
-import UrlCollection, { IUrlCollectionProps } from "../components/UrlCollection"
+import UrlCreator, { IUrlCreatorProps } from "../components/UrlCreator"
 
 import {
   exitAccount,
 } from "../reducers/account"
 import {
-  fetchUrlCollectionIfNeeded,
-  removeUrlFromCollection,
+  createUrl,
+  setWantedUrl,
   IUrlCollectionsState,
 } from "../reducers/urlCollections"
 
 interface IProps {
   authenticationIsValid: null | boolean
+  checkingIfUrlIdExists: IUrlCollectionsState["checkingIfUrlIdExists"]
+  creatingUrl: IUrlCollectionsState["creatingUrl"]
+  createUrl: IUrlCreatorProps["createUrl"]
   exitAccount: () => void
-  location: history.Location
-  fetchUrlCollection: IUrlCollectionProps["fetchUrlCollection"]
   fetchingUrlMetadata: IUrlCollectionsState["fetchingUrlMetadata"]
-  removeUrlFromCollection: (urlCollectionId: string) => (urlId: string) => () => void,
-  removingUrlId: IUrlCollectionProps["removingUrlId"]
-  urlCollection: IUrlCollectionsState["currentUrlCollection"]
+  location: history.Location
+  setWantedUrl: IUrlCreatorProps["setWantedUrl"]
+  wantedUrl: IUrlCollectionsState["wantedUrl"]
+  wantedUrlHrefIsValid: IUrlCollectionsState["wantedUrlHrefIsValid"]
+  wantedUrlIdExists: IUrlCollectionsState["wantedUrlIdExists"]
 }
 
 class MyUrlsPage extends React.Component<IProps> {
-  static path = "/my-urls"
+  static path = "/create-url"
 
   render() {
     const {
       authenticationIsValid,
-      exitAccount,
-      fetchUrlCollection,
-      removeUrlFromCollection,
-      removingUrlId,
-      urlCollection,
+      checkingIfUrlIdExists,
+      createUrl,
+      creatingUrl,
+      fetchingUrlMetadata,
+      setWantedUrl,
+      wantedUrl,
+      wantedUrlHrefIsValid,
+      wantedUrlIdExists,
     } = this.props
 
     if (authenticationIsValid === null) {
@@ -46,18 +52,21 @@ class MyUrlsPage extends React.Component<IProps> {
       <>
         <Navbar
           authenticationIsValid={authenticationIsValid}
-          exit={exitAccount}
           locationPath={this.props.location.pathname}
+          exit={exitAccount}
         />
 
-        {urlCollection && (
-          <UrlCollection
-            urlCollection={urlCollection}
-            removeUrl={removeUrlFromCollection(urlCollection.id)}
-            removingUrlId={removingUrlId}
-            fetchUrlCollection={fetchUrlCollection}
-          />
-        )}
+        <UrlCreator
+          createUrl={createUrl}
+          checkingIfUrlIdExists={checkingIfUrlIdExists}
+          creatingUrl={creatingUrl}
+          fetchingUrlMetadata={fetchingUrlMetadata}
+          setWantedUrl={setWantedUrl}
+          wantedUrl={wantedUrl}
+          wantedUrlIdExists={wantedUrlIdExists}
+          wantedUrlHrefIsValid={wantedUrlHrefIsValid}
+        />
+
       </>
     )
   }
@@ -68,10 +77,9 @@ const mapStateToProps = ({
     authentication,
   },
   urlCollections: {
+    checkingIfUrlIdExists,
     creatingUrl,
-    currentUrlCollection,
     fetchingUrlMetadata,
-    removingUrlId,
     wantedUrl,
     wantedUrlHrefIsValid,
     wantedUrlIdExists,
@@ -81,10 +89,9 @@ const mapStateToProps = ({
 
   return {
     authenticationIsValid,
+    checkingIfUrlIdExists,
     creatingUrl,
     fetchingUrlMetadata,
-    removingUrlId,
-    urlCollection: currentUrlCollection,
     wantedUrl,
     wantedUrlHrefIsValid,
     wantedUrlIdExists,
@@ -92,9 +99,9 @@ const mapStateToProps = ({
 }
 
 const mapDispatchToProps = (dispatch) => ({
+  createUrl: (url) => dispatch(createUrl(url)),
   exitAccount: () => dispatch(exitAccount()),
-  fetchUrlCollection: () => dispatch(fetchUrlCollectionIfNeeded()),
-  removeUrlFromCollection: (urlCollectionId) => (urlId) => () => dispatch(removeUrlFromCollection(urlCollectionId, urlId)),
+  setWantedUrl: (url) => dispatch(setWantedUrl(url)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyUrlsPage)

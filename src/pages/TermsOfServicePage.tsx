@@ -1,3 +1,4 @@
+import * as history from "history"
 import * as React from "react"
 import { FormattedMessage } from "react-intl"
 import {
@@ -9,13 +10,20 @@ import {
 import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 
-export default class TermsOfServicePage extends React.Component {
+interface IProps {
+  location: history.Location
+}
+
+export default class TermsOfServicePage extends React.Component<IProps> {
   static path = "/terms-of-service"
 
   render() {
     return (
       <>
-        <Navbar noMenu />
+        <Navbar
+          locationPath={this.props.location.pathname}
+          noMenu
+        />
 
         <Section>
           <Container>

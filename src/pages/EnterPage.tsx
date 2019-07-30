@@ -43,7 +43,6 @@ interface IProps {
   emailVericationSent: boolean
   enterAccount: (ICredentials) => void
   errorCode?: string
-  hasNoEmail: boolean
   isEntering: boolean
   isSendingVerification: boolean
   sendVerification: (email: string) => void
@@ -99,7 +98,6 @@ class EnterPage extends React.Component<IProps, IState> {
       authentication,
       emailVericationSent,
       errorCode,
-      hasNoEmail,
       isEntering,
       isSendingVerification,
     } = this.props
@@ -239,20 +237,16 @@ class EnterPage extends React.Component<IProps, IState> {
               </>
             )}
 
-            {hasNoEmail && (
-              <>
-                {emailNotVerifiedError ? null : (
-                  <Box>
-                    <P hasTextCentered>
-                      <FormattedMessage id="EnterPage.new-user.message" /> &nbsp;
+            {emailNotVerifiedError ? null : (
+              <Box>
+                <P hasTextCentered>
+                  <FormattedMessage id="EnterPage.new-user.message" /> &nbsp;
 
-                      <A onClick={this.onClickCreateAccount}>
-                        <FormattedMessage id="EnterPage.new-user.action" />
-                      </A>
-                    </P>
-                  </Box>
-                )}
-              </>
+                  <A onClick={this.onClickCreateAccount}>
+                    <FormattedMessage id="EnterPage.new-user.action" />
+                  </A>
+                </P>
+              </Box>
             )}
           </Column>
         </Modal.Content>

@@ -1,3 +1,4 @@
+import * as history from "history"
 import * as React from "react"
 import { FormattedMessage } from "react-intl"
 import {
@@ -10,13 +11,20 @@ import {
 import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 
-export default class PrivacyPolicyPage extends React.Component {
+interface IProps {
+  location: history.Location
+}
+
+export default class PrivacyPolicyPage extends React.Component<IProps> {
   static path = "/privacy-policy"
 
   render() {
     return (
       <>
-        <Navbar noMenu />
+        <Navbar
+          locationPath={this.props.location.pathname}
+          noMenu
+        />
 
         <Section>
           <Container>
