@@ -1,12 +1,19 @@
 {
   "locale": "en",
   "messages": {
-    "EnterPage.email.AccountNotFoundError": "Account not found",
+    "CreateAccountPage.email.EmailExists": "Email already registered",
+    "CreateAccountPage.password.InvalidPasswordError": "Password is not secure",
+    "EnterPage.email.EmailNotFoundError": "Email not registered",
+    "EnterPage.new-user.action": "Create an account",
+    "EnterPage.new-user.message": "New to GoSeven?",
     "EnterPage.password.InvalidPasswordError": "Invalid password",
+    "EnterPage.title": "Enter GoSeven",
     "Footer.sugar-free.message": "This website does <strong>not</strong> use cookies.",
     "PasswordField.forgot-password.message": "Forgot password?",
     "PrivacyPolicyPage.title": "Privacy Policy",
+    "PasswordResetPage.email.EmailNotFoundError": "Email not registered",
     "PasswordResetPage.send": "Send new password",
+    "PasswordResetPage.title": "Reset your password",
     "TermsOfServicePage.title": "Terms of Service"
   }
 }

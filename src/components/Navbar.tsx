@@ -65,19 +65,19 @@ export default class Nav extends React.Component<IProps, IState> {
     })
   }
 
-  onClickSettings = () => {
-    if (this.props.locationPath !== SettingsPage.path) {
-      this.setState({
-        redirect: SettingsPage.path
-      })
+  onClickMyUrls = () => {
+    if (this.props.locationPath === MyUrlsPage.path) {
+      this.setState({ expanded: false })
+    } else {
+      this.setState({ redirect: MyUrlsPage.path })
     }
   }
 
-  onClickUrlCollection = () => {
-    if (this.props.locationPath !== MyUrlsPage.path) {
-      this.setState({
-        redirect: MyUrlsPage.path
-      })
+  onClickSettings = () => {
+    if (this.props.locationPath === SettingsPage.path) {
+      this.setState({ expanded: false })
+    } else {
+      this.setState({ redirect: SettingsPage.path })
     }
   }
 
@@ -126,7 +126,7 @@ export default class Nav extends React.Component<IProps, IState> {
               <Navbar.Start>
                 <Navbar.Item
                   isActive={locationPath === MyUrlsPage.path}
-                  onClick={this.onClickUrlCollection}
+                  onClick={this.onClickMyUrls}
                 >
                   My URLs
                 </Navbar.Item>

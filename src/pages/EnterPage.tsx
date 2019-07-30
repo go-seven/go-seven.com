@@ -1,9 +1,12 @@
 import * as pdsp from "pdsp"
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import InjectIntl from "react-intl-inject"
 import { connect } from "react-redux"
 import { Redirect } from "react-router-dom"
 import {
+  A,
+  B,
   Box,
   Button,
   Column,
@@ -13,6 +16,7 @@ import {
   Media,
   Message,
   Modal,
+  P,
   Title,
 } from "trunx"
 
@@ -23,8 +27,8 @@ import LogoButton from "../components/LogoButton"
 import PasswordField from "../components/PasswordField"
 
 import {
+  cleanupAuthenticationError,
   enterAccount,
-  resetAuthenticationError,
   sendVerification,
   IAuthentication,
   ICredentials,
@@ -35,11 +39,13 @@ import MyUrlsPage from "./MyUrlsPage"
 
 interface IProps {
   authentication: IAuthentication
+  cleanupAuthenticationError: () => void
   emailVericationSent: boolean
   enterAccount: (ICredentials) => void
-  isEnteringAccount: boolean
+  errorCode?: string
+  hasNoEmail: boolean
+  isEntering: boolean
   isSendingVerification: boolean
-  resetAuthenticationError: () => void
   sendVerification: (email: string) => void
 }
 
@@ -56,11 +62,7 @@ class EnterPage extends React.Component<IProps, IState> {
   private passwordRef = React.createRef<HTMLInputElement>()
 
   componentDidMount() {
-    const {
-      resetAuthenticationError,
-    } = this.props
-
-    resetAuthenticationError()
+    this.props.cleanupAuthenticationError()
   }
 
   onClickCreateAccount = () => {
@@ -96,7 +98,9 @@ class EnterPage extends React.Component<IProps, IState> {
     const {
       authentication,
       emailVericationSent,
-      isEnteringAccount,
+      errorCode,
+      hasNoEmail,
+      isEntering,
       isSendingVerification,
     } = this.props
 
@@ -120,10 +124,8 @@ class EnterPage extends React.Component<IProps, IState> {
       )
     }
 
-    const errorCode = authentication.error && authentication.error.code
-
-    const emailFieldErrorCode = errorCode === apiError.EmailNotFoundError ? errorCode : null
-    const passwordFieldErrorCode = errorCode === apiError.InvalidPasswordError ? errorCode : null
+    const emailFieldError = errorCode === apiError.EmailNotFoundError
+    const passwordFieldError = errorCode === apiError.InvalidPasswordError
     const emailNotVerifiedError = errorCode === apiError.EmailNotVerifiedError
 
     return (
@@ -132,54 +134,58 @@ class EnterPage extends React.Component<IProps, IState> {
 
         <Modal.Content>
           <Column>
-            <Box>
-              <Media>
-                <Media.Left>
-                  <LogoButton />
-                </Media.Left>
+            {emailNotVerifiedError ? null : (
+              <Box>
+                <Media>
+                  <Media.Left>
+                    <LogoButton />
+                  </Media.Left>
 
-                <Media.Content>
-                  <Content hasTextCentered>
-                    <Title is4 hasTextGrey>Enter GoSeven</Title>
-                  </Content>
-                </Media.Content>
-              </Media>
+                  <Media.Content>
+                    <Content hasTextCentered>
+                      <Title is4 hasTextGrey>
+                        <FormattedMessage id={"EnterPage.title"} />
+                      </Title>
+                    </Content>
+                  </Media.Content>
+                </Media>
 
-              <form
-                autoComplete="on"
-                onSubmit={this.onSubmit}
-              >
-                <InjectIntl>
-                  {({ intl }) => (
-                    <EmailField
-                      errorMessage={emailFieldErrorCode && intl.formatMessage({ id: `EnterPage.email.${errorCode}` })}
-                      inputRef={this.emailRef}
-                    />
-                  )}
-                </InjectIntl>
+                <form
+                  autoComplete="on"
+                  onSubmit={this.onSubmit}
+                >
+                  <InjectIntl>
+                    {({ intl }) => (
+                      <EmailField
+                        errorMessage={emailFieldError && intl.formatMessage({ id: `EnterPage.email.${errorCode}` })}
+                        inputRef={this.emailRef}
+                      />
+                    )}
+                  </InjectIntl>
 
-                <InjectIntl>
-                  {({ intl }) => (
-                    <PasswordField
-                      errorMessage={passwordFieldErrorCode && intl.formatMessage({ id: `EnterPage.password.${errorCode}` })}
-                      inputRef={this.passwordRef}
-                      showForgotPassword
-                    />
-                  )}
-                </InjectIntl>
+                  <InjectIntl>
+                    {({ intl }) => (
+                      <PasswordField
+                        errorMessage={passwordFieldError && intl.formatMessage({ id: `EnterPage.password.${errorCode}` })}
+                        inputRef={this.passwordRef}
+                        showForgotPassword
+                      />
+                    )}
+                  </InjectIntl>
 
-                <Field>
-                  <Control>
-                    <Button
-                      isLoading={isEnteringAccount}
-                      isSuccess
-                      type="submit"
-                      value="Enter"
-                    />
-                  </Control>
-                </Field>
-              </form>
-            </Box>
+                  <Field>
+                    <Control>
+                      <Button
+                        isLoading={isEntering}
+                        isSuccess
+                        type="submit"
+                        value="Enter"
+                      />
+                    </Control>
+                  </Field>
+                </form>
+              </Box>
+            )}_
 
             {emailNotVerifiedError && (
               <>
@@ -190,26 +196,28 @@ class EnterPage extends React.Component<IProps, IState> {
                     </Message.Header>
 
                     <Message.Body>
-                      <p>
+                      <P>
                         <b>Verification email</b> was sent successfully.
                         Please check your email inbox and also your <em>spam</em> folder.
-                      </p>
+                      </P>
 
                     </Message.Body>
                   </Message>
                 ) : (
                   <>
-                    <Message>
+                    <Message isWarning>
                       <Message.Header>
                         Account not verified.
                       </Message.Header>
 
                       <Message.Body>
-                        <p>
+                        <P>
                           Account was not verified yet.
-                          Please check your email inbox and also your <em>spam</em> folder.
-                          Look for <b>verification email</b>, if not found you can try to resend it.
-                        </p>
+                          <br />
+                          Please check your email inbox, look for <B hasTextSuccess>verification email</B>.
+                          <br />
+                          If not found you can try to resend it.
+                        </P>
 
                       </Message.Body>
                     </Message>
@@ -218,6 +226,7 @@ class EnterPage extends React.Component<IProps, IState> {
                       <Control>
                         <Button
                           isLoading={isSendingVerification}
+                          isOutlined
                           isWarning
                           onClick={this.onClickSendVerificationEmail}
                         >
@@ -230,16 +239,21 @@ class EnterPage extends React.Component<IProps, IState> {
               </>
             )}
 
-            <Box>
-              <p>
-                New to GoSeven?
-                &nbsp;
+            {hasNoEmail && (
+              <>
+                {emailNotVerifiedError ? null : (
+                  <Box>
+                    <P hasTextCentered>
+                      <FormattedMessage id="EnterPage.new-user.message" /> &nbsp;
 
-                <a onClick={this.onClickCreateAccount}>
-                  Create an account.
-                </a>
-              </p>
-            </Box>
+                      <A onClick={this.onClickCreateAccount}>
+                        <FormattedMessage id="EnterPage.new-user.action" />
+                      </A>
+                    </P>
+                  </Box>
+                )}
+              </>
+            )}
           </Column>
         </Modal.Content>
       </Modal>
@@ -247,16 +261,27 @@ class EnterPage extends React.Component<IProps, IState> {
   }
 }
 
-const mapStateToProps = (state) => ({
-  authentication: state.account.authentication,
-  emailVericationSent: state.account.emailVericationSent,
-  isEnteringAccount: state.account.isEntering,
-  isSendingVerification: state.account.isSendingVerification,
+const mapStateToProps = ({
+  account: {
+    authentication,
+    email,
+    emailVericationSent,
+    error,
+    isEntering,
+    isSendingVerification,
+  }
+}) => ({
+  authentication,
+  emailVericationSent,
+  errorCode: error && error.code,
+  hasNoEmail: email === "",
+  isEntering,
+  isSendingVerification,
 })
 
 const mapDispatchToProps = (dispatch) => ({
+  cleanupAuthenticationError: () => dispatch(cleanupAuthenticationError()),
   enterAccount: (credentials) => dispatch(enterAccount(credentials)),
-  resetAuthenticationError: () => dispatch(resetAuthenticationError()),
   sendVerification: (email) => dispatch(sendVerification(email)),
 })
 

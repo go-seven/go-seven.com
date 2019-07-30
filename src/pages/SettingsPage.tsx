@@ -1,8 +1,11 @@
+import * as history from "history"
 import * as pdsp from "pdsp"
 import * as React from "react"
 import { connect } from "react-redux"
 import {
+  Box,
   Button,
+  Section,
 } from "trunx"
 
 import ChangePasswordForm from "../components/ChangePasswordForm"
@@ -21,6 +24,7 @@ interface IProps {
   exitAccount: () => void
   isChangingPassword: boolean
   isDeletingAccount: boolean
+  location: history.Location
 }
 
 class SettingsPage extends React.Component<IProps> {
@@ -48,21 +52,27 @@ class SettingsPage extends React.Component<IProps> {
       <>
         <Navbar
           authenticationIsValid={authentication.isValid}
+          locationPath={this.props.location.pathname}
           exit={exitAccount}
         />
 
-        <ChangePasswordForm
-          isChangingPassword={isChangingPassword}
-        />
+        <Section>
+          <Box>
+            <ChangePasswordForm
+              isChangingPassword={isChangingPassword}
+            />
+          </Box>
+        </Section>
 
-        <Button
-          isDanger
-          isLoading={isDeletingAccount}
-          onClick={this.onClickDeleteAccount}
-        >
-          Delete Account
-        </Button>
-
+        <Section>
+          <Button
+            isDanger
+            isLoading={isDeletingAccount}
+            onClick={this.onClickDeleteAccount}
+          >
+            Delete Account
+          </Button>
+        </Section>
       </>
     )
   }

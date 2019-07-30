@@ -23,7 +23,7 @@ export default function localStorageMiddleware() {
          return next(action)
 
        case CHECK_AUTHENTICATION:
-         const email = localStorage.getItem("email")
+         const email = localStorage.getItem("email") || ""
 
          try {
            const storedAuthentication = localStorage.getItem("authentication")

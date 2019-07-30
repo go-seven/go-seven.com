@@ -4,10 +4,10 @@ import * as client from "../client"
 export const AUTHENTICATION = asyncActions("AUTHENTICATION")
 export const CHANGE_PASSWORD = asyncActions("CHANGE_PASSWORD")
 export const CHECK_AUTHENTICATION = "CHECK_AUTHENTICATION"
+const CLEANUP_AUTHENTICATION_ERROR = "RESET_AUTHENTICATION_ERROR"
 export const CREATE_ACCOUNT = asyncActions("CREATE_ACCOUNT")
 export const DELETE_ACCOUNT = asyncActions("DELETE_ACCOUNT")
 export const EXIT_ACCOUNT = "EXIT_ACCOUNT"
-const RESET_AUTHENTICATION_ERROR = "RESET_AUTHENTICATION_ERROR"
 export const SEND_PASSWORD_RESET = asyncActions("SEND_PASSWORD_RESET")
 export const SEND_VERIFICATION = asyncActions("SEND_VERIFICATION")
 
@@ -29,12 +29,10 @@ export interface ICredentials {
 
 interface IError {
   code: string
-  message: string
 }
 
 export interface IAuthentication {
   expiresAt?: string
-  error?: IError
   hasExpired?: boolean
   isValid: boolean
   token?: string
@@ -44,6 +42,7 @@ export interface IAccountState {
   authentication: IAuthentication | null
   email?: string | null
   emailVerificationSent: boolean
+  error?: IError
   isChangingPassword: boolean
   isCreating: boolean
   isDeleting: boolean
@@ -64,6 +63,8 @@ export function changePassword(password) {
     )
   }
 }
+
+export function cleanupAuthenticationError() { return { type: CLEANUP_AUTHENTICATION_ERROR } }
 
 export function createAccount(credentials: ICredentials) {
   const { FAILURE, SUCCESS, REQUEST } = CREATE_ACCOUNT
@@ -114,8 +115,6 @@ export function enterAccount(credentials: ICredentials) {
 
 export function exitAccount() { return { type: EXIT_ACCOUNT } }
 
-export function resetAuthenticationError() { return { type: RESET_AUTHENTICATION_ERROR } }
-
 export function sendPasswordReset(email) {
   const { FAILURE, SUCCESS, REQUEST } = SEND_PASSWORD_RESET
 
@@ -147,20 +146,14 @@ export default function(state = initialState, action) {
     case AUTHENTICATION.FAILURE:
       return {
         ...state,
-        authentication: {
-          ...state.authentication,
-          error: action.error,
-        },
+        error: action.error,
         isEntering: false,
       }
 
     case AUTHENTICATION.REQUEST:
       return {
         ...state,
-        authentication: {
-          ...state.authentication,
-          error: null,
-        },
+        error: null,
         isEntering: true,
       }
 
@@ -178,12 +171,14 @@ export default function(state = initialState, action) {
     case CHANGE_PASSWORD.FAILURE:
       return {
         ...state,
+        error: action.error,
         isChangingPassword: false,
       }
 
     case CHANGE_PASSWORD.REQUEST:
       return {
         ...state,
+        error: null,
         isChangingPassword: true,
       }
 
@@ -199,13 +194,19 @@ export default function(state = initialState, action) {
         ...action.data,
       }
 
+    case CLEANUP_AUTHENTICATION_ERROR:
+      return {
+        ...state,
+        error: null,
+      }
+
     case CREATE_ACCOUNT.FAILURE:
       return {
         ...state,
         authentication: {
-          error: action.error,
           isValid: false,
         },
+        error: action.error,
         isCreating: false,
       }
 
@@ -215,6 +216,7 @@ export default function(state = initialState, action) {
         authentication: {
           isValid: false,
         },
+        error: null,
         isCreating: true,
       }
 
@@ -231,6 +233,7 @@ export default function(state = initialState, action) {
     case DELETE_ACCOUNT.FAILURE:
       return {
         ...state,
+        error: action.error,
         isDeleting: false,
       }
 
@@ -249,24 +252,17 @@ export default function(state = initialState, action) {
     case EXIT_ACCOUNT:
       return initialState
 
-    case RESET_AUTHENTICATION_ERROR:
-      return {
-        ...state,
-        authentication: {
-          ...state.authentication,
-          error: null,
-        }
-      }
-
     case SEND_PASSWORD_RESET.FAILURE:
       return {
         ...state,
+        error: action.error,
         isSendingPasswordReset: false,
       }
 
     case SEND_PASSWORD_RESET.REQUEST:
       return {
         ...state,
+        error: null,
         isSendingPasswordReset: true,
       }
 

@@ -2,6 +2,7 @@ import * as lock from "fa-svg-icon/solid/lock"
 import * as React from "react"
 import { FormattedMessage } from "react-intl"
 import {
+  A,
   Control,
   Field,
   Help,
@@ -92,12 +93,12 @@ export default class PasswordField extends React.Component<IProps, IState> {
           Password
 
           {showForgotPassword && (
-            <a
-              className="is-pulled-right"
+            <A
               href={PasswordResetPage.path}
+              isPulledRight
             >
               <FormattedMessage id="PasswordField.forgot-password.message"/>
-            </a>
+            </A>
           )}
         </Label>
 

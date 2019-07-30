@@ -1,5 +1,6 @@
 import * as pdsp from "pdsp"
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import InjectIntl from "react-intl-inject"
 import { connect } from "react-redux"
 import { Redirect } from "react-router-dom"
@@ -16,6 +17,8 @@ import {
   Title,
 } from "trunx"
 
+import * as apiError from "../apiErrors"
+
 import EmailField from "../components/EmailField"
 import LogoButton from "../components/LogoButton"
 
@@ -28,7 +31,7 @@ import {
 interface IProps {
   authenticationIsValid: boolean
   isSendingPasswordReset: boolean
-  errorMessage?: string
+  errorCode?: string
   passwordResetEmailSent: boolean
   sendPasswordReset: (email: string) => void
 }
@@ -56,7 +59,7 @@ class PasswordResetPage extends React.Component<IProps, IState> {
     const {
       authenticationIsValid,
       isSendingPasswordReset,
-      errorMessage,
+      errorCode,
       passwordResetEmailSent,
     } = this.props
 
@@ -65,6 +68,8 @@ class PasswordResetPage extends React.Component<IProps, IState> {
         <Redirect push to={MyUrlsPage.path} />
       )
     }
+
+    const emailFieldError = errorCode === apiError.EmailNotFoundError
 
     return (
       <Modal isActive>
@@ -80,7 +85,9 @@ class PasswordResetPage extends React.Component<IProps, IState> {
 
                 <Media.Content>
                   <Content hasTextCentered>
-                    <Title is4 hasTextGrey>Reset your password</Title>
+                    <Title is4 hasTextGrey>
+                      <FormattedMessage id={"PasswordResetPage.title"} />
+                    </Title>
                   </Content>
                 </Media.Content>
               </Media>
@@ -103,11 +110,14 @@ class PasswordResetPage extends React.Component<IProps, IState> {
                 <form
                   onSubmit={this.onSubmit}
                 >
-                  <EmailField
-                    errorMessage={errorMessage}
-                    inputRef={this.emailRef}
-                  />
-
+                  <InjectIntl>
+                    {({ intl }) => (
+                      <EmailField
+                        errorMessage={emailFieldError && intl.formatMessage({ id: `PasswordResetPage.email.${errorCode}` })}
+                        inputRef={this.emailRef}
+                      />
+                    )}
+                  </InjectIntl>
                   <Field>
                     <Control>
                       <InjectIntl>
