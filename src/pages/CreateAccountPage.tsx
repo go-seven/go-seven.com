@@ -47,6 +47,7 @@ interface IProps {
 interface IState {
   clientAgrees: boolean
   clientIsRobot: boolean
+  passwordIsValid: boolean
   redirect?: string
 }
 
@@ -56,6 +57,7 @@ class CreateAccountPage extends React.Component<IProps, IState> {
   state: IState = {
     clientAgrees: false,
     clientIsRobot: true,
+    passwordIsValid: false,
   }
 
   private antispamRef = React.createRef<HTMLInputElement>()
@@ -89,8 +91,8 @@ class CreateAccountPage extends React.Component<IProps, IState> {
   onSubmit = (event) => {
     pdsp(event)
 
-    const email = this.emailRef.current && this.emailRef.current.value
-    const password = this.passwordRef.current && this.passwordRef.current.value
+    const email = this.emailRef.current!.value
+    const password = this.passwordRef.current!.value
 
     this.props.createAccount({ email, password })
   }
@@ -105,6 +107,7 @@ class CreateAccountPage extends React.Component<IProps, IState> {
     const {
       clientAgrees,
       clientIsRobot,
+      passwordIsValid,
       redirect,
     } = this.state
 
@@ -162,6 +165,7 @@ class CreateAccountPage extends React.Component<IProps, IState> {
                         autoComplete="new-password"
                         errorMessage={passwordFieldError && intl.formatMessage({ id: `CreateAccountPage.password.${errorCode}` })}
                         inputRef={this.passwordRef}
+                        setPasswordIsValid={this.setPasswordIsValid}
                         showPasswordPolicy
                       />
                     )}
@@ -179,7 +183,7 @@ class CreateAccountPage extends React.Component<IProps, IState> {
                   <Field>
                     <Control>
                       <Button
-                        disabled={!clientAgrees}
+                        disabled={!clientAgrees || !passwordIsValid}
                         isLoading={isCreating}
                         isSuccess
                         isSrOnly={clientIsRobot}
@@ -218,6 +222,13 @@ class CreateAccountPage extends React.Component<IProps, IState> {
       </Modal>
     )
   }
+
+  setPasswordIsValid = (passwordIsValid) => {
+    this.setState({
+      passwordIsValid
+    })
+  }
+
 }
 
 const mapStateToProps = ({

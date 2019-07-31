@@ -8,7 +8,7 @@ import {
   Section,
 } from "trunx"
 
-import ChangePasswordForm from "../components/ChangePasswordForm"
+import ChangePasswordForm, { IChangePasswordFormProps } from "../components/ChangePasswordForm"
 import Navbar from "../components/Navbar"
 
 import {
@@ -20,6 +20,7 @@ import {
 
 interface IProps {
   authentication: IAuthentication
+  changePassword: IChangePasswordFormProps["changePassword"]
   deleteAccount: () => void
   exitAccount: () => void
   isChangingPassword: boolean
@@ -39,6 +40,7 @@ class SettingsPage extends React.Component<IProps> {
   render() {
     const {
       authentication,
+      changePassword,
       exitAccount,
       isChangingPassword,
       isDeletingAccount,
@@ -59,6 +61,7 @@ class SettingsPage extends React.Component<IProps> {
         <Section>
           <Box>
             <ChangePasswordForm
+              changePassword={changePassword}
               isChangingPassword={isChangingPassword}
             />
           </Box>

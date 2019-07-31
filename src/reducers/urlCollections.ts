@@ -60,13 +60,9 @@ export function createUrl(url: IUrl) {
 
   return (dispatch, getState) => {
     const {
-      account,
-      collections,
+      account: { authentication: { token } },
+      urlCollections: { selectedUrlCollectionId: urlCollectionId }
     } = getState()
-
-    const { token } = account.authentication
-
-    const urlCollectionId = collections.selectedUrlCollectionId
 
     dispatch({ type: REQUEST })
 
@@ -81,11 +77,7 @@ export function removeUrlFromCollection(urlCollectionId: string, urlId: string) 
   const { FAILURE, SUCCESS, REQUEST } = REMOVE_URL_FROM_COLLECTION
 
   return (dispatch, getState) => {
-    const {
-      account
-    } = getState()
-
-    const { token } = account.authentication
+    const { account: { authentication: { token } } } = getState()
 
     dispatch({ data: { removingUrlId: urlId }, type: REQUEST })
 
@@ -113,16 +105,12 @@ function fetchUrlCollection(token, id) {
 export function fetchUrlCollectionIfNeeded() {
   return (dispatch, getState) => {
     const {
-      account,
-      urlCollections,
+      account: { authentication: { token } },
+      urlCollections: {
+        currentUrlCollection,
+        selectedUrlCollectionId,
+      },
     } = getState()
-
-    const { token } = account.authentication
-
-    const {
-      currentUrlCollection,
-      selectedUrlCollectionId,
-    } = urlCollections
 
     if (shouldFetchUrlCollection({ currentUrlCollection, selectedUrlCollectionId })) {
       return dispatch(fetchUrlCollection(token, selectedUrlCollectionId))
@@ -133,11 +121,9 @@ export function fetchUrlCollectionIfNeeded() {
 export function setWantedUrl(url: IUrl) {
   return (dispatch, getState) => {
     const {
-      account,
+      account: { authentication: { token } },
       wantedUrl,
     } = getState()
-
-    const { token } = account.authentication
 
     const urlHrefChanged = wantedUrl ? (wantedUrl.href !== url.href) : typeof url.href === "string"
     const urlHrefIsEmpty = url.href === ""

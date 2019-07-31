@@ -48,7 +48,7 @@ class PasswordResetPage extends React.Component<IProps, IState> {
   onSubmit = (event) => {
     pdsp(event)
 
-    const email = this.emailRef.current && this.emailRef.current.value
+    const email = this.emailRef.current!.value
 
     if (typeof email === "string") {
       this.props.sendPasswordReset(email)

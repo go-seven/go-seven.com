@@ -59,7 +59,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
       wantedUrlHref
     } = this.state
 
-    let urlHref = this.urlHrefRef.current && this.urlHrefRef.current.value
+    let urlHref = this.urlHrefRef.current!.value
 
     if (urlHref === "" || urlHref === null) {
       return ""
@@ -95,7 +95,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
 
     const prefix = `${domain}/`
 
-    let urlId = this.urlIdRef.current && this.urlIdRef.current.value
+    let urlId = this.urlIdRef.current!.value
 
     if (urlId === null) {
       return ""

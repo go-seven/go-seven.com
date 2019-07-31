@@ -7,6 +7,7 @@
     "EnterPage.new-user.action": "Create an account",
     "EnterPage.new-user.message": "New to GoSeven?",
     "EnterPage.password.InvalidPasswordError": "Invalid password",
+    "EnterPage.submit": "Enter",
     "EnterPage.title": "Enter GoSeven",
     "Footer.sugar-free.message": "This website does <strong>not</strong> use cookies.",
     "PasswordField.forgot-password.message": "Forgot password?",

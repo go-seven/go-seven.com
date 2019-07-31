@@ -18,8 +18,10 @@ interface IProps {
   autoComplete?: string
   errorMessage?: string,
   inputRef: React.RefObject<HTMLInputElement>
+  setPasswordIsValid: (passwordIsValid: boolean) => void
   showForgotPassword?: boolean
   showPasswordPolicy?: boolean
+  visible: boolean
 }
 
 interface IPasswordPolicyChecks {
@@ -34,6 +36,11 @@ interface IState {
 }
 
 export default class PasswordField extends React.Component<IProps, IState> {
+  static defaultProps = {
+    setPasswordIsValid: Function.prototype,
+    visible: false,
+  }
+
   static minLenght = 8
 
   state: IState = {
@@ -52,6 +59,8 @@ export default class PasswordField extends React.Component<IProps, IState> {
     const hasNumber = /[0-9]/.test(password)
     const hasUppercase = /[A-Z]/.test(password)
     const isLongEnough = password.length >= PasswordField.minLenght
+
+    this.props.setPasswordIsValid(hasLowercase && hasNumber && hasUppercase && isLongEnough)
 
     return {
       hasLowercase,
@@ -74,18 +83,17 @@ export default class PasswordField extends React.Component<IProps, IState> {
       inputRef,
       showForgotPassword,
       showPasswordPolicy,
+      visible,
     } = this.props
 
     const {
-      passwordCheck,
+      passwordCheck: {
+        hasLowercase,
+        hasNumber,
+        hasUppercase,
+        isLongEnough,
+      },
     } = this.state
-
-    const {
-      hasLowercase,
-      hasNumber,
-      hasUppercase,
-      isLongEnough,
-    } = passwordCheck
 
     return (
       <Field>
@@ -109,7 +117,7 @@ export default class PasswordField extends React.Component<IProps, IState> {
             isDanger={!!errorMessage}
             onChange={this.onChange}
             required
-            type="password"
+            type={visible ? "text" : "password"}
           />
 
           <Icon hasTextGrey isLeft>

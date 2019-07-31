@@ -54,10 +54,12 @@ export interface IAccountState {
 export function changePassword(password) {
   const { FAILURE, SUCCESS, REQUEST } = CHANGE_PASSWORD
 
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch({ type: REQUEST })
 
-    client.post("/change-password", { password }).then(
+    const { account: { authentication: { token } } } = getState()
+
+    client.post("/change-password", { password }, token).then(
       () => dispatch({ type: SUCCESS }),
       (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
@@ -83,9 +85,7 @@ export function deleteAccount() {
   const { FAILURE, SUCCESS, REQUEST } = DELETE_ACCOUNT
 
   return (dispatch, getState) => {
-    const { account } = getState()
-
-    const { token } = account.authentication
+    const { account: { authentication: { token } } } = getState()
 
     dispatch({ type: REQUEST })
 

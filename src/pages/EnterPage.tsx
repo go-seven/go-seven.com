@@ -77,7 +77,7 @@ class EnterPage extends React.Component<IProps, IState> {
       sendVerification
     } = this.props
 
-    const email = this.emailRef.current && this.emailRef.current.value
+    const email = this.emailRef.current!.value
 
     if (typeof email === "string") {
       sendVerification(email)
@@ -87,8 +87,8 @@ class EnterPage extends React.Component<IProps, IState> {
   onSubmit = (event) => {
     pdsp(event)
 
-    const email = this.emailRef.current && this.emailRef.current.value
-    const password = this.passwordRef.current && this.passwordRef.current.value
+    const email = this.emailRef.current!.value
+    const password = this.passwordRef.current!.value
 
     this.props.enterAccount({ email, password })
   }
@@ -171,16 +171,20 @@ class EnterPage extends React.Component<IProps, IState> {
                     )}
                   </InjectIntl>
 
-                  <Field>
-                    <Control>
-                      <Button
-                        isLoading={isEntering}
-                        isSuccess
-                        type="submit"
-                        value="Enter"
-                      />
-                    </Control>
-                  </Field>
+                  <InjectIntl>
+                    {({ intl }) => (
+                      <Field>
+                        <Control>
+                          <Button
+                            isLoading={isEntering}
+                            isSuccess
+                            type="submit"
+                            value={intl.formatMessage({ id: "EnterPage.submit" })}
+                          />
+                        </Control>
+                      </Field>
+                    )}
+                  </InjectIntl>
                 </form>
               </Box>
             )}_
