@@ -1,6 +1,9 @@
 import * as history from "history"
 import * as React from "react"
 import { connect } from "react-redux"
+import { Redirect } from "react-router-dom"
+
+import HomePage from "./HomePage"
 
 import Navbar from "../components/Navbar"
 import UrlCollection, { IUrlCollectionProps } from "../components/UrlCollection"
@@ -15,13 +18,14 @@ import {
 } from "../reducers/urlCollections"
 
 interface IProps {
-  authenticationIsValid: null | boolean
+  authenticationIsValid: boolean
   exitAccount: () => void
   location: history.Location
   fetchUrlCollection: IUrlCollectionProps["fetchUrlCollection"]
   fetchingUrlMetadata: IUrlCollectionsState["fetchingUrlMetadata"]
   removeUrlFromCollection: (urlCollectionId: string) => (urlId: string) => () => void,
   removingUrlId: IUrlCollectionProps["removingUrlId"]
+  selectedUrlCollectionId: string
   urlCollection: IUrlCollectionsState["currentUrlCollection"]
 }
 
@@ -35,11 +39,14 @@ class MyUrlsPage extends React.Component<IProps> {
       fetchUrlCollection,
       removeUrlFromCollection,
       removingUrlId,
+      selectedUrlCollectionId,
       urlCollection,
     } = this.props
 
-    if (authenticationIsValid === null) {
-      return null
+    if (authenticationIsValid === false) {
+      return (
+        <Redirect push to={HomePage.path}/>
+      )
     }
 
     return (
@@ -50,14 +57,12 @@ class MyUrlsPage extends React.Component<IProps> {
           locationPath={this.props.location.pathname}
         />
 
-        {urlCollection && (
           <UrlCollection
             urlCollection={urlCollection}
-            removeUrl={removeUrlFromCollection(urlCollection.id)}
+            removeUrl={removeUrlFromCollection(selectedUrlCollectionId)}
             removingUrlId={removingUrlId}
             fetchUrlCollection={fetchUrlCollection}
           />
-        )}
       </>
     )
   }
@@ -72,18 +77,20 @@ const mapStateToProps = ({
     currentUrlCollection,
     fetchingUrlMetadata,
     removingUrlId,
+    selectedUrlCollectionId,
     wantedUrl,
     wantedUrlHrefIsValid,
     wantedUrlIdExists,
   },
 }) => {
-  const authenticationIsValid = authentication === null ? null : authentication.isValid
+  const authenticationIsValid = authentication === null ? false : authentication.isValid
 
   return {
     authenticationIsValid,
     creatingUrl,
     fetchingUrlMetadata,
     removingUrlId,
+    selectedUrlCollectionId,
     urlCollection: currentUrlCollection,
     wantedUrl,
     wantedUrlHrefIsValid,

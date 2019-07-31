@@ -6,7 +6,6 @@ import { connect } from "react-redux"
 import { Redirect } from "react-router-dom"
 import {
   A,
-  B,
   Box,
   Button,
   Column,
@@ -25,6 +24,7 @@ import * as apiError from "../apiErrors"
 import EmailField from "../components/EmailField"
 import LogoButton from "../components/LogoButton"
 import PasswordField from "../components/PasswordField"
+import PleaseLookForVerificationEmail from "../components/PleaseLookForVerificationEmail"
 
 import {
   cleanupAuthenticationError,
@@ -209,16 +209,12 @@ class EnterPage extends React.Component<IProps, IState> {
                   <>
                     <Message isWarning>
                       <Message.Header>
-                        Account not verified.
+                        <FormattedMessage id="EnterPage.account-not-verified.title" />
                       </Message.Header>
 
                       <Message.Body>
                         <P>
-                          Account was not verified yet.
-                          <br />
-                          Please check your email inbox, look for <B hasTextSuccess>verification email</B>.
-                          <br />
-                          If not found you can try to resend it.
+                          <PleaseLookForVerificationEmail />
                         </P>
 
                       </Message.Body>
@@ -232,7 +228,7 @@ class EnterPage extends React.Component<IProps, IState> {
                           isWarning
                           onClick={this.onClickSendVerificationEmail}
                         >
-                          Resend Email
+                          <FormattedMessage id="EnterPage.account-not-verified.resend-email" />
                         </Button>
                       </Control>
                     </Field>

@@ -1,6 +1,7 @@
 import { ticTacToe } from "i-am-not-a-robot"
 import * as pdsp from "pdsp"
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import InjectIntl from "react-intl-inject"
 import { connect } from "react-redux"
 import { Redirect } from "react-router-dom"
@@ -25,6 +26,7 @@ import * as apiError from "../apiErrors"
 import EmailField from "../components/EmailField"
 import LogoButton from "../components/LogoButton"
 import PasswordField from "../components/PasswordField"
+import PleaseLookForVerificationEmail from "../components/PleaseLookForVerificationEmail"
 
 import {
   cleanupAuthenticationError,
@@ -42,6 +44,7 @@ interface IProps {
   createAccount: (ICredentials) => void
   errorCode?: string
   isCreating: boolean
+  justCreated: boolean
 }
 
 interface IState {
@@ -102,6 +105,7 @@ class CreateAccountPage extends React.Component<IProps, IState> {
       authentication,
       errorCode,
       isCreating,
+      justCreated,
     } = this.props
 
     const {
@@ -123,6 +127,26 @@ class CreateAccountPage extends React.Component<IProps, IState> {
 
     const emailFieldError = errorCode === apiError.EmailExistsError
     const passwordFieldError = errorCode === apiError.InvalidPasswordError
+
+    if (justCreated) {
+      return (
+      <Modal isActive>
+        <Modal.Background />
+
+        <Modal.Content>
+          <Message isSuccess>
+            <Message.Header>
+              <FormattedMessage id="CreateAccountPage.account-created" />
+            </Message.Header>
+
+            <Message.Body>
+              <PleaseLookForVerificationEmail />
+            </Message.Body>
+          </Message>
+        </Modal.Content>
+      </Modal>
+      )
+    }
 
     return (
       <Modal isActive>
@@ -236,11 +260,13 @@ const mapStateToProps = ({
     authentication,
     error,
     isCreating,
+    justCreated,
   }
 }) => ({
   authentication,
   errorCode: error && error.code,
   isCreating,
+  justCreated,
 })
 
 const mapDispatchToProps = (dispatch) => ({

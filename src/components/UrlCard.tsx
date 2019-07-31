@@ -4,6 +4,7 @@ import {
   Button,
   Buttons,
   Card,
+  Column,
   Control,
   Delete,
   Field,
@@ -106,23 +107,29 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
           <Modal isActive>
             <Modal.Background onClick={this.closeUrlEditor} />
 
-            <Notification isWarning>
-              Are you sure you want to remove it?
-            </Notification>
+            <Modal.Close isLarge />
 
-            <Buttons>
-              <Button onClick={this.closeUrlEditor}>
-                Cancel
-              </Button>
+            <Modal.Content>
+              <Column>
+                <Notification isWarning>
+                  Are you sure you want to remove it?
+                </Notification>
 
-              <Button
-                isDanger
-                isOutlined
-                onClick={this.onClickRemoveUrl}
-              >
-                Remove
-              </Button>
-            </Buttons>
+                <Buttons>
+                  <Button onClick={this.closeUrlEditor}>
+                    Cancel
+                  </Button>
+
+                  <Button
+                    isDanger
+                    isOutlined
+                    onClick={this.onClickRemoveUrl}
+                  >
+                    Remove
+                  </Button>
+                </Buttons>
+              </Column>
+            </Modal.Content>
           </Modal>
         )}
 

@@ -1,6 +1,9 @@
 import * as history from "history"
 import * as React from "react"
 import { connect } from "react-redux"
+import { Redirect } from "react-router-dom"
+
+import HomePage from "./HomePage"
 
 import Navbar from "../components/Navbar"
 import UrlCreator, { IUrlCreatorProps } from "../components/UrlCreator"
@@ -15,7 +18,7 @@ import {
 } from "../reducers/urlCollections"
 
 interface IProps {
-  authenticationIsValid: null | boolean
+  authenticationIsValid: boolean
   checkingIfUrlIdExists: IUrlCollectionsState["checkingIfUrlIdExists"]
   creatingUrl: IUrlCollectionsState["creatingUrl"]
   createUrl: IUrlCreatorProps["createUrl"]
@@ -44,8 +47,10 @@ class MyUrlsPage extends React.Component<IProps> {
       wantedUrlIdExists,
     } = this.props
 
-    if (authenticationIsValid === null) {
-      return null
+    if (authenticationIsValid === false) {
+      return (
+        <Redirect push to={HomePage.path}/>
+      )
     }
 
     return (
@@ -85,7 +90,7 @@ const mapStateToProps = ({
     wantedUrlIdExists,
   },
 }) => {
-  const authenticationIsValid = authentication === null ? null : authentication.isValid
+  const authenticationIsValid = authentication === null ? false : authentication.isValid
 
   return {
     authenticationIsValid,

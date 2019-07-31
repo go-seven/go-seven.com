@@ -1,12 +1,18 @@
 import * as history from "history"
-import * as pdsp from "pdsp"
 import * as React from "react"
 import { connect } from "react-redux"
+import { Redirect } from "react-router-dom"
 import {
   Box,
   Button,
+  Buttons,
+  Column,
+  Modal,
+  Notification,
   Section,
 } from "trunx"
+
+import HomePage from "./HomePage"
 
 import ChangePasswordForm, { IChangePasswordFormProps } from "../components/ChangePasswordForm"
 import Navbar from "../components/Navbar"
@@ -15,45 +21,115 @@ import {
   changePassword,
   deleteAccount,
   exitAccount,
-  IAuthentication,
 } from "../reducers/account"
 
 interface IProps {
-  authentication: IAuthentication
+  authenticationIsValid: boolean
   changePassword: IChangePasswordFormProps["changePassword"]
   deleteAccount: () => void
   exitAccount: () => void
   isChangingPassword: boolean
   isDeletingAccount: boolean
+  justDeletedAccount: boolean
   location: history.Location
+}
+
+interface IState {
+  askingAccountDeletionConfirmation: boolean
 }
 
 class SettingsPage extends React.Component<IProps> {
   static path = "/settings"
 
-  onClickDeleteAccount = (event) => {
-    pdsp(event)
+  state: IState = {
+    askingAccountDeletionConfirmation: false
+  }
 
+  closeAccountDeletionConfirmation = () => {
+    this.setState({
+      askingAccountDeletionConfirmation: false
+    })
+  }
+
+  onClickDeleteAccount = () => {
+    this.setState({
+      askingAccountDeletionConfirmation: true
+    })
+  }
+
+  onClickConfirmAccountDeletion = () => {
     this.props.deleteAccount()
   }
 
   render() {
     const {
-      authentication,
+      authenticationIsValid,
       changePassword,
       exitAccount,
       isChangingPassword,
       isDeletingAccount,
+      justDeletedAccount,
     } = this.props
 
-    if (authentication === null) {
-      return null
+    const {
+      askingAccountDeletionConfirmation
+    } = this.state
+
+    if (justDeletedAccount) {
+      return (
+        <Modal isActive>
+          <Modal.Background />
+
+          <Notification>
+            Your account was deleted.
+          </Notification>
+        </Modal>
+      )
+    }
+
+    if (authenticationIsValid === false) {
+      return (
+        <Redirect push to={HomePage.path}/>
+      )
+    }
+
+    if (askingAccountDeletionConfirmation) {
+      return (
+        <Modal isActive>
+          <Modal.Background onClick={this.closeAccountDeletionConfirmation} />
+
+          <Modal.Close isLarge />
+
+          <Modal.Content>
+            <Column>
+              <Notification isDanger>
+                Are you sure you want to delete your account?
+              </Notification>
+
+              <Buttons>
+                <Button onClick={this.closeAccountDeletionConfirmation}>
+                  Cancel
+                </Button>
+
+                <Button
+                  isDanger
+                  isLoading={isDeletingAccount}
+                  isOutlined
+                  onClick={this.onClickConfirmAccountDeletion}
+                >
+                  Delete my account
+                </Button>
+              </Buttons>
+            </Column>
+          </Modal.Content>
+        </Modal>
+      )
     }
 
     return (
       <>
         <Navbar
-          authenticationIsValid={authentication.isValid}
+          authenticationIsValid={authenticationIsValid}
           locationPath={this.props.location.pathname}
           exit={exitAccount}
         />
@@ -81,11 +157,18 @@ class SettingsPage extends React.Component<IProps> {
   }
 }
 
-const mapStateToProps = ({ account }) => ({
-  authentication: account.authentication,
-  isChangingPassword: account.isChangingPassword,
-  isDeletingAccount: account.isDeleting,
-})
+const mapStateToProps = ({ account }) => {
+  const { authentication } = account
+
+  const authenticationIsValid = authentication === null ? false : authentication.isValid
+
+  return {
+    authenticationIsValid,
+    isChangingPassword: account.isChangingPassword,
+    isDeletingAccount: account.isDeleting,
+    justDeletedAccount: account.justDeleted,
+  }
+}
 
 const mapDispatchToProps = (dispatch) => ({
   changePassword: (password) => dispatch(changePassword(password)),

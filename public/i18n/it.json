@@ -1,8 +1,11 @@
 {
   "locale": "it",
   "messages": {
+    "CreateAccountPage.account-created": "Utenza creata",
     "CreateAccountPage.email.EmailExists": "Email già registrata",
     "CreateAccountPage.password.InvalidPasswordError": "Password non sicura",
+    "EnterPage.account-not-verified.title": "Utenza non verificata",
+    "EnterPage.account-not-verified.resend-email": "Reinvia la email",
     "EnterPage.email.EmailNotFoundError": "Email non registrata",
     "EnterPage.new-user.action": "Registrati",
     "EnterPage.new-user.message": "Sei un nuovo utente?",
@@ -15,6 +18,8 @@
     "PasswordResetPage.email.EmailNotFoundError": "Email non registrata",
     "PasswordResetPage.send": "Invia la nuova password",
     "PasswordResetPage.title": "Recupera la password",
+    "PleaseLookForVerificationEmail.message": "Controlla la tua casella di posta, cerca la",
+    "PleaseLookForVerificationEmail.email-verification": "email di verifica",
     "TermsOfServicePage.title": "Condizioni di Utilizzo"
   }
 }

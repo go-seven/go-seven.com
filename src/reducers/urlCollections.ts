@@ -37,7 +37,7 @@ export interface IUrlCollectionsState {
   currentUrlCollection: IUrlCollection | null
   fetchingUrlMetadata: boolean
   removingUrlId: string | null
-  selectedUrlCollectionId: string
+  selectedUrlCollectionId: string | null
   wantedUrl: IUrl | null
   wantedUrlHrefIsValid: boolean | null
   wantedUrlIdExists: boolean | null
@@ -49,7 +49,7 @@ export const initialState: IUrlCollectionsState = {
   currentUrlCollection: null,
   fetchingUrlMetadata: false,
   removingUrlId: null,
-  selectedUrlCollectionId: "default",
+  selectedUrlCollectionId: null,
   wantedUrl: null,
   wantedUrlHrefIsValid: null,
   wantedUrlIdExists: null,
@@ -60,11 +60,16 @@ export function createUrl(url: IUrl) {
 
   return (dispatch, getState) => {
     const {
-      account: { authentication: { token } },
-      urlCollections: { selectedUrlCollectionId: urlCollectionId }
+      account: {
+        authentication: { token },
+        id: accountId,
+      },
+      urlCollections: { selectedUrlCollectionId }
     } = getState()
 
     dispatch({ type: REQUEST })
+
+    const urlCollectionId = fallbackToDefaultUrlCollectionId(selectedUrlCollectionId, accountId)
 
     client.post("/url", { urlCollectionId, url }, token).then(
       (data) => dispatch({ data, type: SUCCESS }),
@@ -73,18 +78,11 @@ export function createUrl(url: IUrl) {
   }
 }
 
-export function removeUrlFromCollection(urlCollectionId: string, urlId: string) {
-  const { FAILURE, SUCCESS, REQUEST } = REMOVE_URL_FROM_COLLECTION
-
-  return (dispatch, getState) => {
-    const { account: { authentication: { token } } } = getState()
-
-    dispatch({ data: { removingUrlId: urlId }, type: REQUEST })
-
-    client.del(`/url-collection/${urlCollectionId}/${urlId}`, token).then(
-      () => dispatch({ type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
-    )
+function fallbackToDefaultUrlCollectionId(selectedUrlCollectionId, accountId) {
+  if (typeof selectedUrlCollectionId === "string") {
+    return selectedUrlCollectionId
+  } else {
+    return accountId.replace(/^a-/, "c-")
   }
 }
 
@@ -105,16 +103,36 @@ function fetchUrlCollection(token, id) {
 export function fetchUrlCollectionIfNeeded() {
   return (dispatch, getState) => {
     const {
-      account: { authentication: { token } },
+      account: {
+        authentication: { token },
+        id: accountId,
+      },
       urlCollections: {
         currentUrlCollection,
         selectedUrlCollectionId,
       },
     } = getState()
 
-    if (shouldFetchUrlCollection({ currentUrlCollection, selectedUrlCollectionId })) {
+    const urlCollectionId = fallbackToDefaultUrlCollectionId(selectedUrlCollectionId, accountId)
+
+    if (shouldFetchUrlCollection(currentUrlCollection, urlCollectionId)) {
       return dispatch(fetchUrlCollection(token, selectedUrlCollectionId))
     }
+  }
+}
+
+export function removeUrlFromCollection(urlCollectionId: string, urlId: string) {
+  const { FAILURE, SUCCESS, REQUEST } = REMOVE_URL_FROM_COLLECTION
+
+  return (dispatch, getState) => {
+    const { account: { authentication: { token } } } = getState()
+
+    dispatch({ data: { removingUrlId: urlId }, type: REQUEST })
+
+    client.del(`/url-collection/${urlCollectionId}/${urlId}`, token).then(
+      () => dispatch({ type: SUCCESS }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
+    )
   }
 }
 
@@ -175,7 +193,7 @@ export function setWantedUrl(url: IUrl) {
   }
 }
 
-function shouldFetchUrlCollection({ currentUrlCollection, selectedUrlCollectionId }) {
+function shouldFetchUrlCollection(currentUrlCollection, selectedUrlCollectionId) {
   if (currentUrlCollection === null) {
     return true
   } else {

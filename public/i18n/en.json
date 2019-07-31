@@ -1,8 +1,11 @@
 {
   "locale": "en",
   "messages": {
+    "CreateAccountPage.account-created": "Account created",
     "CreateAccountPage.email.EmailExists": "Email already registered",
     "CreateAccountPage.password.InvalidPasswordError": "Password is not secure",
+    "EnterPage.account-not-verified.title": "Account not verified",
+    "EnterPage.account-not-verified.resend-email": "Resend email",
     "EnterPage.email.EmailNotFoundError": "Email not registered",
     "EnterPage.new-user.action": "Create an account",
     "EnterPage.new-user.message": "New to GoSeven?",
@@ -15,6 +18,8 @@
     "PasswordResetPage.email.EmailNotFoundError": "Email not registered",
     "PasswordResetPage.send": "Send new password",
     "PasswordResetPage.title": "Reset your password",
+    "PleaseLookForVerificationEmail.message": "Please check your email inbox, look for",
+    "PleaseLookForVerificationEmail.email-verification": "verification email",
     "TermsOfServicePage.title": "Terms of Service"
   }
 }

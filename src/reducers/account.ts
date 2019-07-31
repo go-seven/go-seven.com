@@ -1,12 +1,12 @@
 import asyncActions from "../asyncActions"
 import * as client from "../client"
 
-export const AUTHENTICATION = asyncActions("AUTHENTICATION")
 export const CHANGE_PASSWORD = asyncActions("CHANGE_PASSWORD")
 export const CHECK_AUTHENTICATION = "CHECK_AUTHENTICATION"
 const CLEANUP_AUTHENTICATION_ERROR = "RESET_AUTHENTICATION_ERROR"
 export const CREATE_ACCOUNT = asyncActions("CREATE_ACCOUNT")
 export const DELETE_ACCOUNT = asyncActions("DELETE_ACCOUNT")
+export const ENTER_ACCOUNT = asyncActions("ENTER_ACCOUNT")
 export const EXIT_ACCOUNT = "EXIT_ACCOUNT"
 export const SEND_PASSWORD_RESET = asyncActions("SEND_PASSWORD_RESET")
 export const SEND_VERIFICATION = asyncActions("SEND_VERIFICATION")
@@ -43,12 +43,15 @@ export interface IAccountState {
   email?: string | null
   emailVerificationSent: boolean
   error?: IError
+  id?: string,
   isChangingPassword: boolean
   isCreating: boolean
   isDeleting: boolean
   isEntering: boolean
   isSendingPasswordReset: boolean
   isSendingVerification: boolean
+  justCreated?: boolean
+  justDeleted?: boolean
 }
 
 export function changePassword(password) {
@@ -97,16 +100,23 @@ export function deleteAccount() {
 }
 
 export function enterAccount(credentials: ICredentials) {
-  const { FAILURE, SUCCESS, REQUEST } = AUTHENTICATION
+  const { FAILURE, SUCCESS, REQUEST } = ENTER_ACCOUNT
 
   return (dispatch) => {
     dispatch({ type: REQUEST })
 
     client.post("/enter", credentials).then(
-      (authentication) => {
+      ({ accountId, token, expiresAt }) => {
         const { email } = credentials
 
-        dispatch({ data: { authentication, email }, type: SUCCESS })
+        dispatch({
+          data: {
+            authentication: { token, expiresAt },
+            email,
+            id: accountId,
+          },
+          type: SUCCESS
+        })
       },
       (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
@@ -143,31 +153,6 @@ export function sendVerification(email) {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case AUTHENTICATION.FAILURE:
-      return {
-        ...state,
-        error: action.error,
-        isEntering: false,
-      }
-
-    case AUTHENTICATION.REQUEST:
-      return {
-        ...state,
-        error: null,
-        isEntering: true,
-      }
-
-    case AUTHENTICATION.SUCCESS:
-      return {
-        ...state,
-        authentication: {
-          ...action.data.authentication,
-          isValid: true,
-        },
-        email: action.data.email,
-        isEntering: false,
-      }
-
     case CHANGE_PASSWORD.FAILURE:
       return {
         ...state,
@@ -208,6 +193,7 @@ export default function(state = initialState, action) {
         },
         error: action.error,
         isCreating: false,
+        justCreated: false,
       }
 
     case CREATE_ACCOUNT.REQUEST:
@@ -218,6 +204,7 @@ export default function(state = initialState, action) {
         },
         error: null,
         isCreating: true,
+        justCreated: false,
       }
 
     case CREATE_ACCOUNT.SUCCESS:
@@ -228,6 +215,7 @@ export default function(state = initialState, action) {
         },
         email: action.data.email,
         isCreating: false,
+        justCreated: true,
       }
 
     case DELETE_ACCOUNT.FAILURE:
@@ -235,22 +223,53 @@ export default function(state = initialState, action) {
         ...state,
         error: action.error,
         isDeleting: false,
+        justDeleted: false,
       }
 
     case DELETE_ACCOUNT.REQUEST:
       return {
         ...state,
         isDeleting: true,
+        justDeleted: false,
       }
 
     case DELETE_ACCOUNT.SUCCESS:
       return {
+        ...initialState,
+        justDeleted: true,
+      }
+
+    case ENTER_ACCOUNT.FAILURE:
+      return {
         ...state,
-        isDeleting: false,
+        error: action.error,
+        isEntering: false,
+      }
+
+    case ENTER_ACCOUNT.REQUEST:
+      return {
+        ...state,
+        error: null,
+        isEntering: true,
+      }
+
+    case ENTER_ACCOUNT.SUCCESS:
+      return {
+        ...state,
+        authentication: {
+          ...action.data.authentication,
+          isValid: true,
+        },
+        email: action.data.email,
+        id: action.data.id,
+        isEntering: false,
       }
 
     case EXIT_ACCOUNT:
-      return initialState
+      return {
+        ...initialState,
+        email: state.email
+      }
 
     case SEND_PASSWORD_RESET.FAILURE:
       return {

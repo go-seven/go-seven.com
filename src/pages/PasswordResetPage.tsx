@@ -63,7 +63,7 @@ class PasswordResetPage extends React.Component<IProps, IState> {
       passwordResetEmailSent,
     } = this.props
 
-    if (authenticationIsValid) {
+    if (authenticationIsValid === false) {
       return (
         <Redirect push to={MyUrlsPage.path} />
       )

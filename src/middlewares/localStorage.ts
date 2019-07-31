@@ -1,9 +1,9 @@
 /* global localStorage */
 import {
-  AUTHENTICATION,
   CHECK_AUTHENTICATION,
   CREATE_ACCOUNT,
   DELETE_ACCOUNT,
+  ENTER_ACCOUNT,
   EXIT_ACCOUNT,
   SEND_PASSWORD_RESET,
 } from "../reducers/account"
@@ -11,18 +11,8 @@ import {
 export default function localStorageMiddleware() {
    return (next) => (action) => {
      switch (action.type) {
-       case AUTHENTICATION.SUCCESS:
-         try {
-           localStorage.setItem("authentication", JSON.stringify(action.data.authentication))
-
-           localStorage.setItem("email", action.data.email)
-         } catch (ignore) {
-           return next(action)
-         }
-
-         return next(action)
-
        case CHECK_AUTHENTICATION:
+         const accountId = localStorage.getItem("accountId") || ""
          const email = localStorage.getItem("email") || ""
 
          try {
@@ -59,6 +49,7 @@ export default function localStorageMiddleware() {
                      token,
                    },
                    email,
+                   id: accountId,
                  }
                })
              } else {
@@ -71,6 +62,7 @@ export default function localStorageMiddleware() {
                      isValid: false,
                    },
                    email,
+                   id: accountId,
                  }
                })
              }
@@ -92,7 +84,6 @@ export default function localStorageMiddleware() {
                authentication: {
                  isValid: false,
                },
-               email,
              }
            })
          }
@@ -100,14 +91,26 @@ export default function localStorageMiddleware() {
          return next(action)
 
        case CREATE_ACCOUNT.SUCCESS:
+         localStorage.setItem("accountId", action.data.accountId)
          localStorage.setItem("email", action.data.email)
 
          return next(action)
 
        case DELETE_ACCOUNT.SUCCESS:
+         localStorage.removeItem("accountId")
          localStorage.removeItem("authentication")
-
          localStorage.removeItem("email")
+
+         return next(action)
+
+       case ENTER_ACCOUNT.SUCCESS:
+         try {
+           localStorage.setItem("accountId", action.data.accountId)
+           localStorage.setItem("authentication", JSON.stringify(action.data.authentication))
+           localStorage.setItem("email", action.data.email)
+         } catch (ignore) {
+           return next(action)
+         }
 
          return next(action)
 
