@@ -178,15 +178,15 @@ export function setWantedUrl(url: IUrl) {
       } else {
         dispatch({ type: URL_ID_EXISTS.REQUEST })
 
-        client.get(`/url/${url.id}`, token).then(
-          () => dispatch({ data: true, type: URL_ID_EXISTS.SUCCESS }),
-            (error) => {
-            const { code, message } = client.parseError(error)
+        client.get(`/url-exists/${url.id}`, token).then(
+          (data) => dispatch({ data, type: URL_ID_EXISTS.SUCCESS }),
+          (error) => {
+            const { code } = client.parseError(error)
 
             if (code === "UrlDoesNotExistError") {
-              dispatch({ data: false, type: URL_ID_EXISTS.SUCCESS })
+              dispatch({ data: { exists: false }, type: URL_ID_EXISTS.SUCCESS })
             } else {
-              dispatch({ error: { code, message }, type: URL_ID_EXISTS.FAILURE })
+              dispatch({ error: { code }, type: URL_ID_EXISTS.FAILURE })
             }
           }
         )
@@ -313,7 +313,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         checkingIfUrlIdExists: false,
-        wantedUrlIdExists: action.data,
+        wantedUrlIdExists: action.data.exists,
       }
 
     default: return state
