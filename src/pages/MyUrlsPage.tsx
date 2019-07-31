@@ -23,6 +23,7 @@ interface IProps {
   location: history.Location
   fetchUrlCollection: IUrlCollectionProps["fetchUrlCollection"]
   fetchingUrlMetadata: IUrlCollectionsState["fetchingUrlMetadata"]
+  isFetchingUrlCollection: boolean
   removeUrlFromCollection: (urlCollectionId: string) => (urlId: string) => () => void,
   removingUrlId: IUrlCollectionProps["removingUrlId"]
   selectedUrlCollectionId: string
@@ -37,6 +38,7 @@ class MyUrlsPage extends React.Component<IProps> {
       authenticationIsValid,
       exitAccount,
       fetchUrlCollection,
+      isFetchingUrlCollection,
       removeUrlFromCollection,
       removingUrlId,
       selectedUrlCollectionId,
@@ -57,12 +59,13 @@ class MyUrlsPage extends React.Component<IProps> {
           locationPath={this.props.location.pathname}
         />
 
-          <UrlCollection
-            urlCollection={urlCollection}
-            removeUrl={removeUrlFromCollection(selectedUrlCollectionId)}
-            removingUrlId={removingUrlId}
-            fetchUrlCollection={fetchUrlCollection}
-          />
+        <UrlCollection
+          fetchUrlCollection={fetchUrlCollection}
+          isFetchingUrlCollection={isFetchingUrlCollection}
+          removeUrl={removeUrlFromCollection(selectedUrlCollectionId)}
+          removingUrlId={removingUrlId}
+          urlCollection={urlCollection}
+        />
       </>
     )
   }
@@ -76,6 +79,7 @@ const mapStateToProps = ({
     creatingUrl,
     currentUrlCollection,
     fetchingUrlMetadata,
+    isFetchingUrlCollection,
     removingUrlId,
     selectedUrlCollectionId,
     wantedUrl,
@@ -89,6 +93,7 @@ const mapStateToProps = ({
     authenticationIsValid,
     creatingUrl,
     fetchingUrlMetadata,
+    isFetchingUrlCollection,
     removingUrlId,
     selectedUrlCollectionId,
     urlCollection: currentUrlCollection,

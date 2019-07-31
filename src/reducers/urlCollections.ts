@@ -36,6 +36,7 @@ export interface IUrlCollectionsState {
   creatingUrl: boolean
   currentUrlCollection: IUrlCollection | null
   fetchingUrlMetadata: boolean
+  isFetchingUrlCollection: boolean
   removingUrlId: string | null
   selectedUrlCollectionId: string | null
   wantedUrl: IUrl | null
@@ -48,6 +49,7 @@ export const initialState: IUrlCollectionsState = {
   creatingUrl: false,
   currentUrlCollection: null,
   fetchingUrlMetadata: false,
+  isFetchingUrlCollection: false,
   removingUrlId: null,
   selectedUrlCollectionId: null,
   wantedUrl: null,
@@ -116,7 +118,7 @@ export function fetchUrlCollectionIfNeeded() {
     const urlCollectionId = fallbackToDefaultUrlCollectionId(selectedUrlCollectionId, accountId)
 
     if (shouldFetchUrlCollection(currentUrlCollection, urlCollectionId)) {
-      return dispatch(fetchUrlCollection(token, selectedUrlCollectionId))
+      return dispatch(fetchUrlCollection(token, urlCollectionId))
     }
   }
 }
@@ -222,38 +224,23 @@ export default function(state = initialState, action) {
         creatingUrl: false,
       }
 
-    case REMOVE_URL_FROM_COLLECTION.FAILURE:
-      return {
-        ...state,
-        removingUrlId: null,
-      }
-
-    case REMOVE_URL_FROM_COLLECTION.REQUEST:
-      return {
-        ...state,
-        removingUrlId: action.data.removingUrlId,
-      }
-
-    case REMOVE_URL_FROM_COLLECTION.SUCCESS:
-      return {
-        ...state,
-        removingUrlId: null,
-      }
-
     case FETCH_URL_COLLECTION.FAILURE:
       return {
         ...state,
+        isFetchingUrlCollection: false,
       }
 
     case FETCH_URL_COLLECTION.REQUEST:
       return {
         ...state,
+        isFetchingUrlCollection: true,
       }
 
     case FETCH_URL_COLLECTION.SUCCESS:
       return {
         ...state,
-        currentUrlCollection: action.data
+        currentUrlCollection: action.data,
+        isFetchingUrlCollection: false,
       }
 
     case FETCH_URL_METADATA.FAILURE:
@@ -279,6 +266,24 @@ export default function(state = initialState, action) {
           metadata: action.data.metadata,
           title: action.data.metadata.title,
         }
+      }
+
+    case REMOVE_URL_FROM_COLLECTION.FAILURE:
+      return {
+        ...state,
+        removingUrlId: null,
+      }
+
+    case REMOVE_URL_FROM_COLLECTION.REQUEST:
+      return {
+        ...state,
+        removingUrlId: action.data.removingUrlId,
+      }
+
+    case REMOVE_URL_FROM_COLLECTION.SUCCESS:
+      return {
+        ...state,
+        removingUrlId: null,
       }
 
     case SET_WANTED_URL:

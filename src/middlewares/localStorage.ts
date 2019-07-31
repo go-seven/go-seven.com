@@ -105,7 +105,7 @@ export default function localStorageMiddleware() {
 
        case ENTER_ACCOUNT.SUCCESS:
          try {
-           localStorage.setItem("accountId", action.data.accountId)
+           localStorage.setItem("accountId", action.data.id)
            localStorage.setItem("authentication", JSON.stringify(action.data.authentication))
            localStorage.setItem("email", action.data.email)
          } catch (ignore) {
@@ -115,6 +115,7 @@ export default function localStorageMiddleware() {
          return next(action)
 
        case EXIT_ACCOUNT:
+         localStorage.removeItem("accountId")
          localStorage.removeItem("authentication")
 
          return next(action)
