@@ -1,6 +1,10 @@
+/* Font */
+
 $family-sans-serif: "Roboto", BlinkMacSystemFont, -apple-system, "Helvetica", "Arial", sans-serif;
+$body-size: 17px;
 
 /* Colors */
+
 $azure: hsl(180, 100%, 97%);
 $limegreen: hsl(120, 61%, 50%);
 $skyblue: hsl(197, 71%, 73%);
@@ -17,4 +21,5 @@ $warning: hsl(48, 89%, 60%);
 $danger: $tomato;
 
 /* Section */
+
 $section-padding: 2rem 1rem;
