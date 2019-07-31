@@ -29,3 +29,9 @@
 
 /* Import components */
 @import "components/logo-button";
+
+/* Overrides */
+
+.hero {
+  background-image: linear-gradient(#89cfeb, #f0ffff);
+}
