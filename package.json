@@ -46,7 +46,7 @@
     "prebudo": "rimraf public/js/bundle.v${npm_package_version}.js",
     "predeploy": "npm run build",
     "sass": "run-s sass:*",
-    "sass:app": "node-sass --include-path node_modules src/sass/app.scss --output-style compressed > public/css/app.v${npm_package_version}.css",
+    "sass:app": "node-sass --include-path node_modules src/sass/app.scss --output-style compressed | postcss --no-map --use autoprefixer --output public/css/app.v${npm_package_version}.css",
     "standa": "standa test.js src/*.js",
     "start": "npm run budo",
     "test": "node test.js",
@@ -97,6 +97,8 @@
     "typescript": "^3.5.2"
   },
   "devDependencies": {
+    "autoprefixer": "^9.6.1",
+    "postcss-cli": "^6.1.3",
     "redux": "^4.0.1",
     "rimraf": "^2.6.3"
   }
