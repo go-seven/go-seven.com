@@ -1,8 +1,11 @@
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import { Redirect } from "react-router-dom"
 import {
+  Button,
   Column,
   Columns,
+  Notification,
   Progress,
   Section
 } from "trunx"
@@ -24,9 +27,21 @@ export interface IUrlCollectionProps {
   urlCollection: IUrlCollection | null
 }
 
+interface IState {
+  redirect?: string
+}
+
 export default class UrlCollection extends React.Component<IUrlCollectionProps> {
+  state: IState = {}
+
   componentDidMount() {
     this.props.fetchUrlCollection()
+  }
+
+  onClickCreateUrl = () => {
+    this.setState({
+      redirect: CreateUrlPage.path
+    })
   }
 
   render() {
@@ -37,8 +52,18 @@ export default class UrlCollection extends React.Component<IUrlCollectionProps> 
       urlCollection,
     } = this.props
 
+    const {
+      redirect,
+    } = this.state
+
     if (urlCollection === null) {
       return null
+    }
+
+    if (redirect) {
+      return (
+        <Redirect push to={redirect} />
+      )
     }
 
     const {
@@ -52,7 +77,20 @@ export default class UrlCollection extends React.Component<IUrlCollectionProps> 
         ) : (
           <>
             {urls.length === 0 ? (
-              <Redirect push to={CreateUrlPage.path} />
+              <Columns>
+                <Column>
+                  <Notification>
+                    <FormattedMessage id="UrlCollection.is-empty.message" />.
+                  </Notification>
+
+                  <Button
+                    isPrimary
+                    onClick={this.onClickCreateUrl}
+                  >
+                    <FormattedMessage id="UrlCollection.is-empty.action" />
+                  </Button>
+                </Column>
+              </Columns>
             ) : (
               <Columns isMultiline>
                 {urls.map((url, i) => (

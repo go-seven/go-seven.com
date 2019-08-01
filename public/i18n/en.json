@@ -20,6 +20,8 @@
     "PasswordResetPage.title": "Reset your password",
     "PleaseLookForVerificationEmail.message": "Please check your email inbox, look for",
     "PleaseLookForVerificationEmail.email-verification": "verification email",
-    "TermsOfServicePage.title": "Terms of Service"
+    "TermsOfServicePage.title": "Terms of Service",
+    "UrlCollection.is-empty.action": "Create URL",
+    "UrlCollection.is-empty.message": "No URL was created yet"
   }
 }

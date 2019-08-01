@@ -20,6 +20,8 @@
     "PasswordResetPage.title": "Recupera la password",
     "PleaseLookForVerificationEmail.message": "Controlla la tua casella di posta, cerca la",
     "PleaseLookForVerificationEmail.email-verification": "email di verifica",
-    "TermsOfServicePage.title": "Condizioni di Utilizzo"
+    "TermsOfServicePage.title": "Condizioni di Utilizzo",
+    "UrlCollection.is-empty.action": "Crea una URL",
+    "UrlCollection.is-empty.message": "Non ci sono URL già create"
   }
 }
