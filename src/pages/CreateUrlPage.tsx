@@ -18,7 +18,7 @@ import {
 } from "../reducers/urlCollections"
 
 interface IProps {
-  authenticationIsValid: boolean
+  authenticationIsValid: boolean | null
   checkingIfUrlIdExists: IUrlCollectionsState["checkingIfUrlIdExists"]
   creatingUrl: IUrlCollectionsState["creatingUrl"]
   createUrl: IUrlCreatorProps["createUrl"]
@@ -46,6 +46,10 @@ class MyUrlsPage extends React.Component<IProps> {
       wantedUrlHrefIsValid,
       wantedUrlIdExists,
     } = this.props
+
+    if (authenticationIsValid === null) {
+      return null
+    }
 
     if (authenticationIsValid === false) {
       return (
@@ -90,7 +94,7 @@ const mapStateToProps = ({
     wantedUrlIdExists,
   },
 }) => {
-  const authenticationIsValid = authentication === null ? false : authentication.isValid
+  const authenticationIsValid = authentication === null ? null : authentication.isValid
 
   return {
     authenticationIsValid,

@@ -241,6 +241,7 @@ export default function(state = initialState, action) {
         ...state,
         currentUrlCollection: action.data,
         isFetchingUrlCollection: false,
+        selectedUrlCollectionId: action.data.id,
       }
 
     case FETCH_URL_METADATA.FAILURE:
@@ -283,6 +284,10 @@ export default function(state = initialState, action) {
     case REMOVE_URL_FROM_COLLECTION.SUCCESS:
       return {
         ...state,
+        currentUrlCollection: {
+          ...state.currentUrlCollection,
+          urls: state.currentUrlCollection!.urls.filter(({ id }) => id !== state.removingUrlId)
+        },
         removingUrlId: null,
       }
 

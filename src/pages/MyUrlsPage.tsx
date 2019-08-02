@@ -2,6 +2,10 @@ import * as history from "history"
 import * as React from "react"
 import { connect } from "react-redux"
 import { Redirect } from "react-router-dom"
+import {
+  Progress,
+  Section,
+} from "trunx"
 
 import HomePage from "./HomePage"
 
@@ -18,7 +22,7 @@ import {
 } from "../reducers/urlCollections"
 
 interface IProps {
-  authenticationIsValid: boolean
+  authenticationIsValid: boolean | null
   exitAccount: () => void
   location: history.Location
   fetchUrlCollection: IUrlCollectionProps["fetchUrlCollection"]
@@ -45,6 +49,10 @@ class MyUrlsPage extends React.Component<IProps> {
       urlCollection,
     } = this.props
 
+    if (authenticationIsValid === null) {
+      return null
+    }
+
     if (authenticationIsValid === false) {
       return (
         <Redirect push to={HomePage.path}/>
@@ -58,6 +66,12 @@ class MyUrlsPage extends React.Component<IProps> {
           exit={exitAccount}
           locationPath={this.props.location.pathname}
         />
+
+        {isFetchingUrlCollection && (
+          <Section>
+            <Progress isPrimary />
+          </Section>
+        )}
 
         <UrlCollection
           fetchUrlCollection={fetchUrlCollection}
@@ -87,7 +101,7 @@ const mapStateToProps = ({
     wantedUrlIdExists,
   },
 }) => {
-  const authenticationIsValid = authentication === null ? false : authentication.isValid
+  const authenticationIsValid = authentication === null ? null : authentication.isValid
 
   return {
     authenticationIsValid,

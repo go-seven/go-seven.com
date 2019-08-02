@@ -1,12 +1,12 @@
 import * as solidIcon from "fa-svg-icon/solid"
 import * as React from "react"
 import {
+  Box,
   Button,
   Buttons,
   Card,
   Column,
   Control,
-  Delete,
   Field,
   Icon,
   Input,
@@ -16,10 +16,14 @@ import {
   Tag,
 } from "trunx"
 
+import {
+  IUrl
+} from "../reducers/urlCollections"
+
 export interface IUrlCardProps {
   removeUrl: () => void
   removingUrl: boolean
-  url
+  url: IUrl
 }
 
 interface IState {
@@ -39,6 +43,13 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
     this.setState({
       askingRemovalConfirmation: true,
       editingUrl: false,
+    })
+  }
+
+  closeRemovalConfirmation = () => {
+    this.setState({
+      askingRemovalConfirmation: false,
+      editingUrl: true,
     })
   }
 
@@ -107,12 +118,15 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
           <Modal isActive>
             <Modal.Background onClick={this.closeUrlEditor} />
 
-            <Modal.Close isLarge />
+            <Modal.Close
+              isLarge
+              onClick={this.closeRemovalConfirmation}
+            />
 
             <Modal.Content>
               <Column>
-                <Notification isWarning>
-                  Are you sure you want to remove it?
+                <Notification isDanger>
+                  Are you sure you want to delete this URL?
                 </Notification>
 
                 <Buttons>
@@ -125,7 +139,7 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
                     isOutlined
                     onClick={this.onClickRemoveUrl}
                   >
-                    Remove
+                    Yes, delete it
                   </Button>
                 </Buttons>
               </Column>
@@ -137,51 +151,46 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
           <Modal isActive>
             <Modal.Background onClick={this.closeUrlEditor} />
 
-            <Modal.Card>
-              <Modal.Card.Head>
-                <Modal.Card.Title>
-                  <Tag isLink >{url.id}</Tag>
-                </Modal.Card.Title>
+            <Modal.Close
+              isLarge
+              onClick={this.closeUrlEditor}
+            />
 
-                <Delete onClick={this.closeUrlEditor}/>
-              </Modal.Card.Head>
-              <Modal.Card.Body>
-                <Field>
-                  <Label>
-                    Title
-                  </Label>
+            <Modal.Content>
+              <Column>
+                <Box>
+                  <form>
+                    <Field>
+                      <Control>
+                        <Tag isLink >{url.id}</Tag>
+                      </Control>
+                    </Field>
 
-                  <Control>
-                    <Input
-                      readOnly
-                      type="text"
-                      value={url.title}
-                    />
-                  </Control>
-                </Field>
+                    <Field>
+                      <Label>
+                        Title
+                      </Label>
 
-              </Modal.Card.Body>
+                      <Control>
+                        <Input
+                          readOnly
+                          type="text"
+                          value={url.title}
+                        />
+                      </Control>
+                    </Field>
+                  </form>
+                </Box>
 
-              <Modal.Card.Foot>
                 <Button
                   isDanger
+                  isOutlined
                   onClick={this.askUrlRemovalConfirmation}
                 >
-                  Remove
+                  Delete URL
                 </Button>
-
-                <Button
-                  onClick={this.closeUrlEditor}
-                >
-                  Cancel
-                </Button>
-
-                <Button isPrimary>
-                  Save
-                </Button>
-
-              </Modal.Card.Foot>
-            </Modal.Card>
+              </Column>
+            </Modal.Content>
           </Modal>
         )}
 

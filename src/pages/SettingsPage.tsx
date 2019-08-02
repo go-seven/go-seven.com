@@ -24,7 +24,7 @@ import {
 } from "../reducers/account"
 
 interface IProps {
-  authenticationIsValid: boolean
+  authenticationIsValid: boolean | null
   changePassword: IChangePasswordFormProps["changePassword"]
   deleteAccount: () => void
   exitAccount: () => void
@@ -85,6 +85,10 @@ class SettingsPage extends React.Component<IProps> {
           </Notification>
         </Modal>
       )
+    }
+
+    if (authenticationIsValid === null) {
+      return null
     }
 
     if (authenticationIsValid === false) {
@@ -160,7 +164,7 @@ class SettingsPage extends React.Component<IProps> {
 const mapStateToProps = ({ account }) => {
   const { authentication } = account
 
-  const authenticationIsValid = authentication === null ? false : authentication.isValid
+  const authenticationIsValid = authentication === null ? null : authentication.isValid
 
   return {
     authenticationIsValid,
