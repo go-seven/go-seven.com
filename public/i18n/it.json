@@ -1,6 +1,7 @@
 {
   "locale": "it",
   "messages": {
+    "ChangePasswordForm.submit": "Cambia password",
     "CreateAccountPage.account-created": "Utenza creata",
     "CreateAccountPage.email.EmailExists": "Email già registrata",
     "CreateAccountPage.password.InvalidPasswordError": "Password non sicura",
@@ -22,6 +23,9 @@
     "PleaseLookForVerificationEmail.email-verification": "email di verifica",
     "TermsOfServicePage.title": "Condizioni di Utilizzo",
     "UrlCollection.is-empty.action": "Crea una URL",
-    "UrlCollection.is-empty.message": "Non ci sono URL già create"
+    "UrlCollection.is-empty.message": "Non ci sono URL già create",
+    "UrlPage.removal-confirmation.action": "Sì, rimuovila",
+    "UrlPage.removal-confirmation.cancel": "No",
+    "UrlPage.removal-confirmation.message": "Sei sicuro di voler rimuovere questa URL?"
   }
 }

@@ -1,7 +1,6 @@
-import * as history from "history"
 import * as React from "react"
 import { connect } from "react-redux"
-import { Redirect } from "react-router-dom"
+import { Redirect, RouteComponentProps } from "react-router-dom"
 import {
   Progress,
   Section,
@@ -21,10 +20,9 @@ import {
   IUrlCollectionsState,
 } from "../reducers/urlCollections"
 
-interface IProps {
+interface IProps extends RouteComponentProps {
   authenticationIsValid: boolean | null
   exitAccount: () => void
-  location: history.Location
   fetchUrlCollection: IUrlCollectionProps["fetchUrlCollection"]
   fetchingUrlMetadata: IUrlCollectionsState["fetchingUrlMetadata"]
   isFetchingUrlCollection: boolean

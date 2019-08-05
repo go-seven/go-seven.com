@@ -1,6 +1,6 @@
-import * as history from "history"
 import * as React from "react"
 import { connect } from "react-redux"
+import { RouteComponentProps } from "react-router-dom"
 import {
   Container,
   Hero,
@@ -18,12 +18,11 @@ import {
   IAccountState,
 } from "../reducers/account"
 
-interface IProps {
+interface IProps extends RouteComponentProps {
   authenticationIsValid: boolean
   email: IAccountState["email"]
   exitAccount: () => void
   hasNoEmail: boolean
-  location: history.Location
 }
 
 class HomePage extends React.Component<IProps> {

@@ -1,7 +1,6 @@
-import * as history from "history"
 import * as React from "react"
 import { connect } from "react-redux"
-import { Redirect } from "react-router-dom"
+import { Redirect, RouteComponentProps } from "react-router-dom"
 import {
   Box,
   Button,
@@ -23,7 +22,7 @@ import {
   exitAccount,
 } from "../reducers/account"
 
-interface IProps {
+interface IProps extends RouteComponentProps {
   authenticationIsValid: boolean | null
   changePassword: IChangePasswordFormProps["changePassword"]
   deleteAccount: () => void
@@ -31,7 +30,6 @@ interface IProps {
   isChangingPassword: boolean
   isDeletingAccount: boolean
   justDeletedAccount: boolean
-  location: history.Location
 }
 
 interface IState {

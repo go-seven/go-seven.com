@@ -102,7 +102,7 @@ function fetchUrlCollection(token, id) {
 
 }
 
-export function fetchUrlCollectionIfNeeded() {
+export function fetchUrlCollectionIfNeeded(wantedUrlCollectionId?) {
   return (dispatch, getState) => {
     const {
       account: {
@@ -115,7 +115,7 @@ export function fetchUrlCollectionIfNeeded() {
       },
     } = getState()
 
-    const urlCollectionId = fallbackToDefaultUrlCollectionId(selectedUrlCollectionId, accountId)
+    const urlCollectionId = wantedUrlCollectionId || fallbackToDefaultUrlCollectionId(selectedUrlCollectionId, accountId)
 
     if (shouldFetchUrlCollection(currentUrlCollection, urlCollectionId)) {
       return dispatch(fetchUrlCollection(token, urlCollectionId))

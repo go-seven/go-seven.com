@@ -1,5 +1,6 @@
 import * as pdsp from "pdsp"
 import * as React from "react"
+import InjectIntl from "react-intl-inject"
 import {
   Button,
   Control,
@@ -64,13 +65,17 @@ export default class ChangePasswordForm extends React.Component<IChangePasswordF
 
         <Field>
           <Control>
-            <Button
-              disabled={!passwordIsValid}
-              isLoading={isChangingPassword}
-              isSuccess
-              type="submit"
-              value="Change password"
-            />
+            <InjectIntl>
+              {({ intl }) => (
+                <Button
+                  disabled={!passwordIsValid}
+                  isLoading={isChangingPassword}
+                  isSuccess
+                  type="submit"
+                  value={intl.formatMessage({ id: "ChangePasswordForm.submit" })}
+                />
+              )}
+            </InjectIntl>
           </Control>
         </Field>
       </form>

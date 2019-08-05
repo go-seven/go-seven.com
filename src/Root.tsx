@@ -20,6 +20,7 @@ import PasswordResetPage from "./pages/PasswordResetPage"
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage"
 import SettingsPage from "./pages/SettingsPage"
 import TermsOfServicePage from "./pages/TermsOfServicePage"
+import UrlPage from "./pages/UrlPage"
 
 import {
   CHECK_AUTHENTICATION,
@@ -63,6 +64,8 @@ export default class Root extends React.Component<IProps> {
               <Route component={SettingsPage} exact path={SettingsPage.path} />
 
               <Route component={TermsOfServicePage} exact path={TermsOfServicePage.path} />
+
+              <Route component={UrlPage} exact path={UrlPage.path} />
 
               <Redirect from="*" to={HomePage.path} />
             </Switch>

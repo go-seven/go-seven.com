@@ -100,6 +100,7 @@ export default class UrlCollection extends React.Component<IUrlCollectionProps> 
                         removeUrl={removeUrl(url.id)}
                         removingUrl={removingUrlId === url.id}
                         url={url}
+                        urlCollectionId={urlCollection.id}
                       />
                     )}
                   </Column>

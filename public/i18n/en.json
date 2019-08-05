@@ -1,6 +1,7 @@
 {
   "locale": "en",
   "messages": {
+    "ChangePasswordForm.submit": "Change password",
     "CreateAccountPage.account-created": "Account created",
     "CreateAccountPage.email.EmailExists": "Email already registered",
     "CreateAccountPage.password.InvalidPasswordError": "Password is not secure",
@@ -22,6 +23,9 @@
     "PleaseLookForVerificationEmail.email-verification": "verification email",
     "TermsOfServicePage.title": "Terms of Service",
     "UrlCollection.is-empty.action": "Create URL",
-    "UrlCollection.is-empty.message": "No URL was created yet"
+    "UrlCollection.is-empty.message": "No URL was created yet",
+    "UrlPage.removal-confirmation.action": "Yes, delete it",
+    "UrlPage.removal-confirmation.cancel": "No",
+    "UrlPage.removal-confirmation.message": "Are you sure you want to delete this URL?"
   }
 }

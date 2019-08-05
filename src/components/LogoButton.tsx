@@ -39,7 +39,7 @@ export default class LogoButton extends React.Component<IProps, IState> {
           alt=""
           height="34"
           onClick={this.onClickLogo}
-          src="media/logo.svg"
+          src="/media/logo.svg"
           width="34"
         />
       </div>
