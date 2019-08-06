@@ -1,5 +1,6 @@
 import * as pdsp from "pdsp"
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import { Redirect } from "react-router-dom"
 import {
   Button,
@@ -134,21 +135,21 @@ export default class Nav extends React.Component<IProps, IState> {
                   isActive={locationPath === MyUrlsPage.path}
                   onClick={this.onClickMyUrls}
                 >
-                  My URLs
+                  <FormattedMessage id="MyUrlsPage.title" />
                 </Navbar.Item>
 
                 <Navbar.Item
                   isActive={locationPath === CreateUrlPage.path}
                   onClick={this.onClickCreateUrl}
                 >
-                  Create URL
+                  <FormattedMessage id="CreateUrlPage.title" />
                 </Navbar.Item>
 
                 <Navbar.Item
                   isActive={locationPath === SettingsPage.path}
                   onClick={this.onClickSettings}
                 >
-                  Settings
+                  <FormattedMessage id="SettingsPage.title" />
                 </Navbar.Item>
               </Navbar.Start>
             )}
@@ -160,7 +161,7 @@ export default class Nav extends React.Component<IProps, IState> {
                     <Button
                       onClick={this.onClickExit}
                     >
-                      Exit
+                     <FormattedMessage id="Navbar.exit" />
                     </Button>
                   </Buttons>
                 ) : (
@@ -168,14 +169,14 @@ export default class Nav extends React.Component<IProps, IState> {
                     <Button
                       onClick={this.onClickEnter}
                     >
-                      Enter
+                     <FormattedMessage id="Navbar.enter" />
                     </Button>
 
                     {showCreateAccountButton && (
                       <Button
                         onClick={this.onClickCreateAccount}
                       >
-                        Create Account
+                        <FormattedMessage id="Navbar.create-account" />
                       </Button>
                     )}
                   </Buttons>

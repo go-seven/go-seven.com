@@ -164,7 +164,9 @@ class CreateAccountPage extends React.Component<IProps, IState> {
 
                 <Media.Content>
                   <Content hasTextCentered>
-                    <Title is4 hasTextGrey>Create a GoSeven account</Title>
+                    <Title is4 hasTextGrey>
+                      <FormattedMessage id="CreateAccountPage.title" />
+                    </Title>
                   </Content>
                 </Media.Content>
               </Media>

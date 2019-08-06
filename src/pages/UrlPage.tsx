@@ -10,6 +10,7 @@ import {
   Modal,
   Notification,
   Section,
+  Title,
 } from "trunx"
 
 import HomePage from "./HomePage"
@@ -163,12 +164,20 @@ class UrlPage extends React.Component<IProps, IState> {
           exit={exitAccount}
         />
 
-        <UrlEditor
-          currentUrl={currentUrl}
-          fetchingUrlMetadata={fetchingUrlMetadata}
-          fetchUrlMetadata={fetchUrlMetadata}
-          url={url}
-        />
+        <Section>
+          <Container>
+            <Title>
+              <FormattedMessage id="UrlPage.title" />
+            </Title>
+
+            <UrlEditor
+              currentUrl={currentUrl}
+              fetchingUrlMetadata={fetchingUrlMetadata}
+              fetchUrlMetadata={fetchUrlMetadata}
+              url={url}
+            />
+          </Container>
+        </Section>
 
         <Section>
           <Container>

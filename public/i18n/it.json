@@ -5,7 +5,9 @@
     "CreateAccountPage.account-created": "Utenza creata",
     "CreateAccountPage.email.EmailExists": "Email già registrata",
     "CreateAccountPage.password.InvalidPasswordError": "Password non sicura",
-    "EnterPage.account-not-verified.title": "Utenza non verificata",
+    "CreateAccountPage.title": "Crea un utente su GoSeven",
+    "CreateUrlPage.title": "Crea URL",
+    "EnterPage.account-not-verified.title": "Utente non verificato",
     "EnterPage.account-not-verified.resend-email": "Reinvia la email",
     "EnterPage.email.EmailNotFoundError": "Email non registrata",
     "EnterPage.new-user.action": "Registrati",
@@ -14,6 +16,10 @@
     "EnterPage.submit": "Entra",
     "EnterPage.title": "Entra in GoSeven",
     "Footer.sugar-free.message": "Questo sito <strong>non</strong> utilizza cookie.",
+    "MyUrlsPage.title": "Le mie URL",
+    "Navbar.create-account": "Crea Utente",
+    "Navbar.enter": "Entra",
+    "Navbar.exit": "Esci",
     "PasswordField.forgot-password.message": "Password dimenticata?",
     "PrivacyPolicyPage.title": "Informativa sulla Privacy",
     "PasswordResetPage.email.EmailNotFoundError": "Email non registrata",
@@ -21,6 +27,7 @@
     "PasswordResetPage.title": "Recupera la password",
     "PleaseLookForVerificationEmail.message": "Controlla la tua casella di posta, cerca la",
     "PleaseLookForVerificationEmail.email-verification": "email di verifica",
+    "SettingsPage.title": "Impostazioni",
     "TermsOfServicePage.title": "Condizioni di Utilizzo",
     "UrlCollection.is-empty.action": "Crea una URL",
     "UrlCollection.is-empty.message": "Non ci sono URL già create",
@@ -28,6 +35,7 @@
     "UrlPage.removal-confirmation.action": "Sì, rimuovila",
     "UrlPage.removal-confirmation.cancel": "No",
     "UrlPage.removal-confirmation.message": "Sei sicuro di voler rimuovere questa URL?",
-    "UrlPage.remove-url.button": "Rimuovi URL"
+    "UrlPage.remove-url.button": "Rimuovi URL",
+    "UrlPage.title": "Gestisci URL"
   }
 }

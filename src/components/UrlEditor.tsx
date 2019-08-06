@@ -1,11 +1,10 @@
 import * as React from "react"
 import {
-  Container,
+  Box,
   Control,
   Field,
   Input,
   Label,
-  Section,
   Tag,
 } from "trunx"
 
@@ -38,68 +37,66 @@ export default class UrlEditor extends React.Component<IProps> {
     } = this.props
 
     return (
-      <Section>
-        <Container>
-          <Field>
-            <Control>
-              <Tag
-                href={url.href}
-                isLink
-                target="_blank"
-              >
-                {url.id}
-              </Tag>
-            </Control>
-          </Field>
-
-          <Field>
-            <Label>
-              Original URL
-            </Label>
-
-            <Control
-              isLoading={fetchingUrlMetadata}
+      <Box>
+        <Field>
+          <Control>
+            <Tag
+              href={url.href}
+              isLink
+              target="_blank"
             >
-              <Input
-                isSuccess={(currentUrl !== null && currentUrl.metadata && currentUrl.metadata.statusCode === 200)}
-                readOnly
-                type="text"
-                value={url.href}
-              />
-            </Control>
-          </Field>
+              {url.id}
+            </Tag>
+          </Control>
+        </Field>
 
-          <Field>
-            <Label>
-              URL Title
-            </Label>
+        <Field>
+          <Label>
+            Original URL
+          </Label>
 
-            <Control>
-              <Input
-                readOnly
-                type="text"
-                value={url.title}
-              />
-            </Control>
-          </Field>
+          <Control
+            isLoading={fetchingUrlMetadata}
+          >
+            <Input
+              isSuccess={(currentUrl !== null && currentUrl.metadata && currentUrl.metadata.statusCode === 200)}
+              readOnly
+              type="text"
+              value={url.href}
+            />
+          </Control>
+        </Field>
 
-          <Field>
-            <Label>
-              Original URL Title
-            </Label>
+        <Field>
+          <Label>
+            URL Title
+          </Label>
 
-            <Control
-              isLoading={fetchingUrlMetadata}
-            >
-              <Input
-                readOnly
-                type="text"
-                value={(currentUrl !== null && currentUrl.metadata) ? currentUrl.metadata.title : ""}
-              />
-            </Control>
-          </Field>
-        </Container>
-      </Section>
+          <Control>
+            <Input
+              readOnly
+              type="text"
+              value={url.title}
+            />
+          </Control>
+        </Field>
+
+        <Field>
+          <Label>
+            Original URL Title
+          </Label>
+
+          <Control
+            isLoading={fetchingUrlMetadata}
+          >
+            <Input
+              readOnly
+              type="text"
+              value={(currentUrl !== null && currentUrl.metadata) ? currentUrl.metadata.title : ""}
+            />
+          </Control>
+        </Field>
+      </Box>
     )
   }
 }

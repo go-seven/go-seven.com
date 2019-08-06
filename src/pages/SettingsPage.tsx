@@ -1,4 +1,5 @@
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import { connect } from "react-redux"
 import { Redirect, RouteComponentProps } from "react-router-dom"
 import {
@@ -6,9 +7,11 @@ import {
   Button,
   Buttons,
   Column,
+  Container,
   Modal,
   Notification,
   Section,
+  Title,
 } from "trunx"
 
 import HomePage from "./HomePage"
@@ -137,22 +140,30 @@ class SettingsPage extends React.Component<IProps> {
         />
 
         <Section>
-          <Box>
-            <ChangePasswordForm
-              changePassword={changePassword}
-              isChangingPassword={isChangingPassword}
-            />
-          </Box>
+          <Container>
+            <Title>
+              <FormattedMessage id="SettingsPage.title" />
+            </Title>
+
+            <Box>
+              <ChangePasswordForm
+                changePassword={changePassword}
+                isChangingPassword={isChangingPassword}
+              />
+            </Box>
+          </Container>
         </Section>
 
         <Section>
-          <Button
-            isDanger
-            isLoading={isDeletingAccount}
-            onClick={this.onClickDeleteAccount}
-          >
-            Delete Account
-          </Button>
+          <Container>
+            <Button
+              isDanger
+              isLoading={isDeletingAccount}
+              onClick={this.onClickDeleteAccount}
+            >
+              Delete Account
+            </Button>
+          </Container>
         </Section>
       </>
     )

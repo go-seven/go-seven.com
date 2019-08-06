@@ -1,6 +1,12 @@
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import { connect } from "react-redux"
 import { Redirect, RouteComponentProps } from "react-router-dom"
+import {
+  Container,
+  Section,
+  Title,
+} from "trunx"
 
 import HomePage from "./HomePage"
 
@@ -59,17 +65,24 @@ class MyUrlsPage extends React.Component<IProps> {
           exit={exitAccount}
         />
 
-        <UrlCreator
-          createUrl={createUrl}
-          checkingIfUrlIdExists={checkingIfUrlIdExists}
-          creatingUrl={creatingUrl}
-          fetchingUrlMetadata={fetchingUrlMetadata}
-          setWantedUrl={setWantedUrl}
-          wantedUrl={wantedUrl}
-          wantedUrlIdExists={wantedUrlIdExists}
-          wantedUrlHrefIsValid={wantedUrlHrefIsValid}
-        />
+        <Section>
+          <Container>
+            <Title>
+              <FormattedMessage id="CreateUrlPage.title" />
+            </Title>
 
+            <UrlCreator
+              createUrl={createUrl}
+              checkingIfUrlIdExists={checkingIfUrlIdExists}
+              creatingUrl={creatingUrl}
+              fetchingUrlMetadata={fetchingUrlMetadata}
+              setWantedUrl={setWantedUrl}
+              wantedUrl={wantedUrl}
+              wantedUrlIdExists={wantedUrlIdExists}
+              wantedUrlHrefIsValid={wantedUrlHrefIsValid}
+            />
+          </Container>
+        </Section>
       </>
     )
   }

@@ -1,9 +1,12 @@
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import { connect } from "react-redux"
 import { Redirect, RouteComponentProps } from "react-router-dom"
 import {
+  Container,
   Progress,
   Section,
+  Title,
 } from "trunx"
 
 import HomePage from "./HomePage"
@@ -65,18 +68,24 @@ class MyUrlsPage extends React.Component<IProps> {
           locationPath={this.props.location.pathname}
         />
 
-        {isFetchingUrlCollection && (
-          <Section>
-            <Progress isPrimary />
-          </Section>
-        )}
+        <Section>
+          <Container>
+            <Title>
+              <FormattedMessage id="MyUrlsPage.title" />
+            </Title>
 
-        <UrlCollection
-          fetchUrlCollection={fetchUrlCollection}
-          removeUrl={removeUrlFromCollection(selectedUrlCollectionId)}
-          removingUrlId={removingUrlId}
-          urlCollection={urlCollection}
-        />
+            {isFetchingUrlCollection && (
+              <Progress isPrimary />
+            )}
+
+            <UrlCollection
+              fetchUrlCollection={fetchUrlCollection}
+              removeUrl={removeUrlFromCollection(selectedUrlCollectionId)}
+              removingUrlId={removingUrlId}
+              urlCollection={urlCollection}
+            />
+          </Container>
+        </Section>
       </>
     )
   }
