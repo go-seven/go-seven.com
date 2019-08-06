@@ -255,6 +255,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         creatingUrl: false,
+        wantedUrl: null,
       }
 
     case FETCH_URL_COLLECTION.FAILURE:
@@ -364,7 +365,6 @@ export default function(state = initialState, action) {
       return {
         ...state,
         checkingIfUrlIdExists: true,
-        wantedUrl: action.data,
         wantedUrlIdExists: null,
       }
 

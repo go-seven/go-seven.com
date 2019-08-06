@@ -1,5 +1,6 @@
 import * as pdsp from "pdsp"
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import {
   Button,
   Column,
@@ -37,6 +38,10 @@ interface IState {
   wantedUrlId: string
 }
 
+const generateId = () => (
+  new Date().getTime().toString(36)
+)
+
 export default class UrlCreator extends React.Component<IUrlCreatorProps, IState> {
   static defaultProps = {
     domain: "go7.li",
@@ -52,6 +57,21 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
 
   private urlHrefRef = React.createRef<HTMLInputElement>()
   private urlIdRef = React.createRef<HTMLInputElement>()
+
+  componentDidMount() {
+    const {
+      setWantedUrl
+    } = this.props
+
+    const wantedUrlId = generateId()
+
+    this.setState({
+      canSetWantedUrlId: true,
+      wantedUrlId,
+    }, () => {
+      setWantedUrl({ id: wantedUrlId })
+    })
+  }
 
   getUrlHref(): string {
     const {
@@ -193,9 +213,11 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
       wantedUrl,
     } = this.props
 
-    // Since the Save button is enabled only if url isValid
-    // there is no No need to check for URL validity here.
-    createUrl(wantedUrl)
+    if (wantedUrl !== null) {
+      const { href, id, title } = wantedUrl
+
+      createUrl({ href, id, title })
+    }
   }
 
   render() {
@@ -213,7 +235,12 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
       wantedUrlId,
     } = this.state
 
-    const saveButtonDisabled = wantedUrlIdExists === true || wantedUrlHrefIsValid !== true || fetchingUrlMetadata || checkingIfUrlIdExists
+    const saveButtonDisabled = (
+      (wantedUrlIdExists === true) ||
+      (wantedUrlHrefIsValid !== true) ||
+      fetchingUrlMetadata ||
+      checkingIfUrlIdExists
+    )
 
     return (
       <Section>
@@ -296,7 +323,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
                 isSuccess={wantedUrlHrefIsValid === true}
                 onClick={this.onClickSave}
               >
-                Save
+                <FormattedMessage id="UrlCreator.submit"/>
               </Button>
             </Control>
           </Field>

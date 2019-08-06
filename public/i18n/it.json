@@ -24,6 +24,7 @@
     "TermsOfServicePage.title": "Condizioni di Utilizzo",
     "UrlCollection.is-empty.action": "Crea una URL",
     "UrlCollection.is-empty.message": "Non ci sono URL già create",
+    "UrlCreator.submit": "Crea URL",
     "UrlPage.removal-confirmation.action": "Sì, rimuovila",
     "UrlPage.removal-confirmation.cancel": "No",
     "UrlPage.removal-confirmation.message": "Sei sicuro di voler rimuovere questa URL?",
