@@ -58,6 +58,7 @@ self.addEventListener('fetch', event => {
     const cachedResponsePromise = await cache.match(request)
     const networkResponsePromise = fetch(request)
 
+    // Whitelist only resources coming from app domain.
     if (request.url.startsWith(self.location.origin)) {
       event.waitUntil(async function () {
         const networkResponse = await networkResponsePromise

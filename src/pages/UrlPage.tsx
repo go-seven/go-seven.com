@@ -7,26 +7,22 @@ import {
   Buttons,
   Column,
   Container,
-  Control,
-  Field,
-  Input,
-  Label,
   Modal,
   Notification,
   Section,
-  Tag,
 } from "trunx"
 
 import HomePage from "./HomePage"
 import MyUrlsPage from "./MyUrlsPage"
 
 import Navbar from "../components/Navbar"
+import UrlEditor from "../components/UrlEditor"
 
 import {
   exitAccount,
 } from "../reducers/account"
 import {
-  fetchUrlCollectionIfNeeded,
+  fetchUrlMetadataIfNeeded,
   removeUrlFromCollection,
   IUrl,
 } from "../reducers/urlCollections"
@@ -38,10 +34,12 @@ interface IMatchParams {
 
 interface IProps extends RouteComponentProps<IMatchParams> {
   authenticationIsValid: boolean | null
+  currentUrl: IUrl | null
   exitAccount: () => void
-  fetchUrlCollection: (urlCollectionId: string) => void
+  fetchingUrlMetadata: boolean
+  fetchUrlMetadata: (IUrl) => void
   removeUrl: (IMatchParams) => void
-  url: IUrl | null | undefined
+  url: IUrl | undefined
 }
 
 interface IState {
@@ -89,6 +87,9 @@ class UrlPage extends React.Component<IProps, IState> {
   render() {
     const {
       authenticationIsValid,
+      currentUrl,
+      fetchingUrlMetadata,
+      fetchUrlMetadata,
       url,
     } = this.props
 
@@ -162,51 +163,24 @@ class UrlPage extends React.Component<IProps, IState> {
           exit={exitAccount}
         />
 
-        {(url === null) ? (
-          <Section>
-            <Container>
-              <Notification isWarning>
-                Could not find URL.
-              </Notification>
-            </Container>
-          </Section>
-        ) : (
-          <>
-            <Section>
-              <Container>
-                <Field>
-                  <Control>
-                    <Tag isLink >{url.id}</Tag>
-                  </Control>
-                </Field>
+        <UrlEditor
+          currentUrl={currentUrl}
+          fetchingUrlMetadata={fetchingUrlMetadata}
+          fetchUrlMetadata={fetchUrlMetadata}
+          url={url}
+        />
 
-                <Field>
-                  <Label>
-                    Title
-                  </Label>
-
-                  <Control>
-                    <Input
-                      readOnly
-                      type="text"
-                      value={url.title}
-                    />
-                  </Control>
-                </Field>
-              </Container>
-            </Section>
-
-            <Section>
-              <Button
-                isDanger
-                isOutlined
-                onClick={this.askUrlRemovalConfirmation}
-              >
-                Delete URL
-              </Button>
-            </Section>
-          </>
-        )}
+        <Section>
+          <Container>
+            <Button
+              isDanger
+              isOutlined
+              onClick={this.askUrlRemovalConfirmation}
+            >
+              <FormattedMessage id="UrlPage.remove-url.button" />
+            </Button>
+          </Container>
+        </Section>
       </>
     )
   }
@@ -214,7 +188,7 @@ class UrlPage extends React.Component<IProps, IState> {
 
 const mapDispatchToProps = (dispatch) => ({
   exitAccount: () => dispatch(exitAccount()),
-  fetchUrlCollection: (urlCollectionId) => dispatch(fetchUrlCollectionIfNeeded(urlCollectionId)),
+  fetchUrlMetadata: (url) => dispatch(fetchUrlMetadataIfNeeded(url)),
   removeUrl: ({ urlCollectionId, urlId }) => () => dispatch(removeUrlFromCollection(urlCollectionId, urlId)),
 })
 
@@ -225,6 +199,8 @@ const mapStateToProps = (
     },
     urlCollections: {
       currentUrlCollection,
+      currentUrl,
+      fetchingUrlMetadata,
     }
   },
   {
@@ -239,7 +215,9 @@ const mapStateToProps = (
 
   return {
     authenticationIsValid,
-    url: currentUrlCollection ? currentUrlCollection.urls.find(({ id }) => id === urlId) : null,
+    currentUrl,
+    fetchingUrlMetadata,
+    url: currentUrlCollection ? currentUrlCollection.urls.find(({ id }) => id === urlId) : undefined,
   }
 }
 

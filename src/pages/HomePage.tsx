@@ -44,7 +44,7 @@ class HomePage extends React.Component<IProps> {
           showCreateAccountButton={hasNoEmail}
         />
 
-        <Hero isFullheight>
+        <Hero isMedium>
           <Hero.Body>
             <Container>
               <Title>GoSeven</Title>

@@ -10,6 +10,7 @@ const CREATE_URL = asyncActions("CREATE_URL")
 const REMOVE_URL_FROM_COLLECTION = asyncActions("REMOVE_URL_FROM_COLLECTION")
 const FETCH_URL_COLLECTION = asyncActions("FETCH_URL_COLLECTION")
 const FETCH_URL_METADATA = asyncActions("FETCH_URL_METADATA")
+const FETCH_WANTED_URL_METADATA = asyncActions("FETCH_WANTED_URL_METADATA")
 const SET_WANTED_URL = "SET_WANTED_URL"
 const URL_ID_EXISTS = asyncActions("URL_ID_EXISTS")
 
@@ -31,10 +32,11 @@ export interface IUrlCollection {
   urls: IUrl[]
 }
 
-export interface IUrlCollectionsState {
+interface IUrlCollectionsState {
   checkingIfUrlIdExists: boolean
   creatingUrl: boolean
   currentUrlCollection: IUrlCollection | null
+  currentUrl: IUrl | null
   fetchingUrlMetadata: boolean
   isFetchingUrlCollection: boolean
   removingUrlId: string | null
@@ -47,6 +49,7 @@ export interface IUrlCollectionsState {
 export const initialState: IUrlCollectionsState = {
   checkingIfUrlIdExists: false,
   creatingUrl: false,
+  currentUrl: null,
   currentUrlCollection: null,
   fetchingUrlMetadata: false,
   isFetchingUrlCollection: false,
@@ -99,7 +102,6 @@ function fetchUrlCollection(token, id) {
       (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
   }
-
 }
 
 export function fetchUrlCollectionIfNeeded(wantedUrlCollectionId?) {
@@ -119,6 +121,33 @@ export function fetchUrlCollectionIfNeeded(wantedUrlCollectionId?) {
 
     if (shouldFetchUrlCollection(currentUrlCollection, urlCollectionId)) {
       return dispatch(fetchUrlCollection(token, urlCollectionId))
+    }
+  }
+}
+
+function fetchUrlMetadata(url) {
+  const { FAILURE, SUCCESS, REQUEST } = FETCH_URL_METADATA
+
+  return (dispatch, getState) => {
+    const {
+      account: { authentication: { token } },
+    } = getState()
+
+    dispatch({ type: REQUEST })
+
+    const encodedHref = encodeURIComponent(url.href)
+
+    client.get(`/url-metadata?href=${encodedHref}`, token).then(
+      (data) => dispatch({ data: { ...url, metadata: data }, type: SUCCESS }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
+    )
+  }
+}
+
+export function fetchUrlMetadataIfNeeded(url) {
+  return (dispatch) => {
+    if (shouldFetchUrlMetadata()) {
+      return dispatch(fetchUrlMetadata(url))
     }
   }
 }
@@ -158,13 +187,13 @@ export function setWantedUrl(url: IUrl) {
         const wantedUrlHrefIsValid = urlRegex.test(url.href)
 
         if (wantedUrlHrefIsValid) {
-          dispatch({ type: FETCH_URL_METADATA.REQUEST })
+          dispatch({ type: FETCH_WANTED_URL_METADATA.REQUEST })
 
           const encodedHref = encodeURIComponent(url.href)
 
           client.get(`/url-metadata?href=${encodedHref}`, token).then(
-            (data) => dispatch({ data: { href: url.href, metadata: data }, type: FETCH_URL_METADATA.SUCCESS }),
-            (error) => dispatch({ error: client.parseError(error), type: FETCH_URL_METADATA.FAILURE }),
+            (data) => dispatch({ data: { href: url.href, metadata: data }, type: FETCH_WANTED_URL_METADATA.SUCCESS }),
+            (error) => dispatch({ error: client.parseError(error), type: FETCH_WANTED_URL_METADATA.FAILURE }),
           )
         } else {
           dispatch({ data: { url, wantedUrlHrefIsValid: false }, type: SET_WANTED_URL })
@@ -201,6 +230,10 @@ function shouldFetchUrlCollection(currentUrlCollection, selectedUrlCollectionId)
   } else {
     return currentUrlCollection.id === selectedUrlCollectionId
   }
+}
+
+function shouldFetchUrlMetadata() {
+  return true
 }
 
 export default function(state = initialState, action) {
@@ -244,20 +277,20 @@ export default function(state = initialState, action) {
         selectedUrlCollectionId: action.data.id,
       }
 
-    case FETCH_URL_METADATA.FAILURE:
+    case FETCH_WANTED_URL_METADATA.FAILURE:
       return {
         ...state,
         fetchingUrlMetadata: false,
       }
 
-    case FETCH_URL_METADATA.REQUEST:
+    case FETCH_WANTED_URL_METADATA.REQUEST:
       return {
         ...state,
         fetchingUrlMetadata: true,
         wantedUrlHrefIsValid: true,
       }
 
-    case FETCH_URL_METADATA.SUCCESS:
+    case FETCH_WANTED_URL_METADATA.SUCCESS:
       return {
         ...state,
         fetchingUrlMetadata: false,
@@ -267,6 +300,27 @@ export default function(state = initialState, action) {
           metadata: action.data.metadata,
           title: action.data.metadata.title,
         }
+      }
+
+    case FETCH_URL_METADATA.FAILURE:
+      return {
+        ...state,
+        currentUrl: null,
+        fetchingUrlMetadata: false,
+      }
+
+    case FETCH_URL_METADATA.REQUEST:
+      return {
+        ...state,
+        currentUrl: null,
+        fetchingUrlMetadata: true,
+      }
+
+    case FETCH_URL_METADATA.SUCCESS:
+      return {
+        ...state,
+        currentUrl: action.data,
+        fetchingUrlMetadata: false,
       }
 
     case REMOVE_URL_FROM_COLLECTION.FAILURE:

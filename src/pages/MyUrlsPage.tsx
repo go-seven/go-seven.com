@@ -17,19 +17,19 @@ import {
 import {
   fetchUrlCollectionIfNeeded,
   removeUrlFromCollection,
-  IUrlCollectionsState,
+  IUrlCollection,
 } from "../reducers/urlCollections"
 
 interface IProps extends RouteComponentProps {
   authenticationIsValid: boolean | null
   exitAccount: () => void
   fetchUrlCollection: IUrlCollectionProps["fetchUrlCollection"]
-  fetchingUrlMetadata: IUrlCollectionsState["fetchingUrlMetadata"]
+  fetchingUrlMetadata: boolean
   isFetchingUrlCollection: boolean
   removeUrlFromCollection: (urlCollectionId: string) => (urlId: string) => () => void,
-  removingUrlId: IUrlCollectionProps["removingUrlId"]
+  removingUrlId: string
   selectedUrlCollectionId: string
-  urlCollection: IUrlCollectionsState["currentUrlCollection"]
+  urlCollection: IUrlCollection | null
 }
 
 class MyUrlsPage extends React.Component<IProps> {
@@ -73,7 +73,6 @@ class MyUrlsPage extends React.Component<IProps> {
 
         <UrlCollection
           fetchUrlCollection={fetchUrlCollection}
-          isFetchingUrlCollection={isFetchingUrlCollection}
           removeUrl={removeUrlFromCollection(selectedUrlCollectionId)}
           removingUrlId={removingUrlId}
           urlCollection={urlCollection}

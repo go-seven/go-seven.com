@@ -15,20 +15,19 @@ import {
 
 import {
   IUrl,
-  IUrlCollectionsState,
 } from "../reducers/urlCollections"
 
 export interface IUrlCreatorProps {
   createUrl: (IUrl) => void
   domain: string
-  checkingIfUrlIdExists: IUrlCollectionsState["checkingIfUrlIdExists"]
-  creatingUrl: IUrlCollectionsState["creatingUrl"]
-  fetchingUrlMetadata: IUrlCollectionsState["fetchingUrlMetadata"]
+  checkingIfUrlIdExists: boolean
+  creatingUrl: boolean
+  fetchingUrlMetadata: boolean
   setWantedUrlTimeout: number
   setWantedUrl: (IUrl) => void
-  wantedUrl: IUrlCollectionsState["wantedUrl"]
-  wantedUrlHrefIsValid: IUrlCollectionsState["wantedUrlHrefIsValid"]
-  wantedUrlIdExists: IUrlCollectionsState["wantedUrlIdExists"]
+  wantedUrl: IUrl | null
+  wantedUrlHrefIsValid: boolean
+  wantedUrlIdExists: boolean
 }
 
 interface IState {

@@ -13,20 +13,20 @@ import {
 import {
   createUrl,
   setWantedUrl,
-  IUrlCollectionsState,
+  IUrl,
 } from "../reducers/urlCollections"
 
 interface IProps extends RouteComponentProps {
   authenticationIsValid: boolean | null
-  checkingIfUrlIdExists: IUrlCollectionsState["checkingIfUrlIdExists"]
-  creatingUrl: IUrlCollectionsState["creatingUrl"]
+  checkingIfUrlIdExists: boolean
+  creatingUrl: boolean
   createUrl: IUrlCreatorProps["createUrl"]
   exitAccount: () => void
-  fetchingUrlMetadata: IUrlCollectionsState["fetchingUrlMetadata"]
+  fetchingUrlMetadata: boolean
   setWantedUrl: IUrlCreatorProps["setWantedUrl"]
-  wantedUrl: IUrlCollectionsState["wantedUrl"]
-  wantedUrlHrefIsValid: IUrlCollectionsState["wantedUrlHrefIsValid"]
-  wantedUrlIdExists: IUrlCollectionsState["wantedUrlIdExists"]
+  wantedUrl: IUrl | null
+  wantedUrlHrefIsValid: boolean
+  wantedUrlIdExists: boolean
 }
 
 class MyUrlsPage extends React.Component<IProps> {

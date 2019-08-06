@@ -24,8 +24,9 @@
     "TermsOfServicePage.title": "Terms of Service",
     "UrlCollection.is-empty.action": "Create URL",
     "UrlCollection.is-empty.message": "No URL was created yet",
-    "UrlPage.removal-confirmation.action": "Yes, delete it",
+    "UrlPage.removal-confirmation.action": "Yes, remove it",
     "UrlPage.removal-confirmation.cancel": "No",
-    "UrlPage.removal-confirmation.message": "Are you sure you want to delete this URL?"
+    "UrlPage.removal-confirmation.message": "Are you sure you want to remove this URL?",
+    "UrlPage.remove-url.button": "Remove URL"
   }
 }

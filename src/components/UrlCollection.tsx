@@ -6,7 +6,6 @@ import {
   Column,
   Columns,
   Notification,
-  Progress,
   Section
 } from "trunx"
 
@@ -16,14 +15,12 @@ import CreateUrlPage from "../pages/CreateUrlPage"
 
 import {
   IUrlCollection,
-  IUrlCollectionsState,
 } from "../reducers/urlCollections"
 
 export interface IUrlCollectionProps {
   fetchUrlCollection: () => void
-  isFetchingUrlCollection: boolean
   removeUrl: (urlId: string) => () => void
-  removingUrlId: IUrlCollectionsState["removingUrlId"]
+  removingUrlId: string
   urlCollection: IUrlCollection | null
 }
 
@@ -46,7 +43,6 @@ export default class UrlCollection extends React.Component<IUrlCollectionProps> 
 
   render() {
     const {
-      isFetchingUrlCollection,
       removeUrl,
       removingUrlId,
       urlCollection,
@@ -72,42 +68,36 @@ export default class UrlCollection extends React.Component<IUrlCollectionProps> 
 
     return (
       <Section>
-        {isFetchingUrlCollection ? (
-          <Progress isPrimary />
-        ) : (
-          <>
-            {urls.length === 0 ? (
-              <Columns>
-                <Column>
-                  <Notification>
-                    <FormattedMessage id="UrlCollection.is-empty.message" />.
-                  </Notification>
+        {urls.length === 0 ? (
+          <Columns>
+            <Column>
+              <Notification>
+                <FormattedMessage id="UrlCollection.is-empty.message" />.
+              </Notification>
 
-                  <Button
-                    isPrimary
-                    onClick={this.onClickCreateUrl}
-                  >
-                    <FormattedMessage id="UrlCollection.is-empty.action" />
-                  </Button>
-                </Column>
-              </Columns>
-            ) : (
-              <Columns isMultiline>
-                {urls.map((url, i) => (
-                  <Column key={i} isOneQuarter>
-                    {typeof url.id === "string" && (
-                      <UrlCard
-                        removeUrl={removeUrl(url.id)}
-                        removingUrl={removingUrlId === url.id}
-                        url={url}
-                        urlCollectionId={urlCollection.id}
-                      />
-                    )}
-                  </Column>
-                ))}
-              </Columns>
-            )}
-          </>
+              <Button
+                isPrimary
+                onClick={this.onClickCreateUrl}
+              >
+                <FormattedMessage id="UrlCollection.is-empty.action" />
+              </Button>
+            </Column>
+          </Columns>
+        ) : (
+          <Columns isMultiline>
+            {urls.map((url, i) => (
+              <Column key={i} isOneQuarter>
+                {typeof url.id === "string" && (
+                  <UrlCard
+                    removeUrl={removeUrl(url.id)}
+                    removingUrl={removingUrlId === url.id}
+                    url={url}
+                    urlCollectionId={urlCollection.id}
+                  />
+                )}
+              </Column>
+            ))}
+          </Columns>
         )}
       </Section>
     )

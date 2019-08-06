@@ -90,7 +90,7 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
           <Card.Header.Title>
             <Tag
               href={url.href}
-              isLink={!removingUrl}
+              isLink={!removingUrl && highlighted}
               isWarning={removingUrl}
               onClick={this.onClickLink}
               target="_blank"
