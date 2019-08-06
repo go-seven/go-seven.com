@@ -30,7 +30,6 @@ import {
   cleanupAuthenticationError,
   enterAccount,
   sendVerification,
-  IAuthentication,
   ICredentials,
 } from "../reducers/account"
 
@@ -38,7 +37,7 @@ import CreateAccountPage from "./CreateAccountPage"
 import MyUrlsPage from "./MyUrlsPage"
 
 interface IProps {
-  authentication: IAuthentication
+  authenticationIsValid: boolean
   cleanupAuthenticationError: () => void
   emailVericationSent: boolean
   enterAccount: (ICredentials) => void
@@ -95,7 +94,7 @@ class EnterPage extends React.Component<IProps, IState> {
 
   render() {
     const {
-      authentication,
+      authenticationIsValid,
       emailVericationSent,
       errorCode,
       isEntering,
@@ -106,11 +105,7 @@ class EnterPage extends React.Component<IProps, IState> {
       redirect
     } = this.state
 
-    if (authentication === null) {
-      return null
-    }
-
-    if (authentication.isValid) {
+    if (authenticationIsValid) {
       return (
         <Redirect push to={MyUrlsPage.path} />
       )
@@ -265,7 +260,7 @@ const mapStateToProps = ({
     isSendingVerification,
   }
 }) => ({
-  authentication,
+  authenticationIsValid: authentication === null ? false : authentication.isValid,
   emailVericationSent,
   errorCode: error && error.code,
   hasNoEmail: email === "",

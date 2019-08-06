@@ -210,15 +210,11 @@ const mapStateToProps = (
       }
     }
   }
-) => {
-  const authenticationIsValid = authentication === null ? null : authentication.isValid
-
-  return {
-    authenticationIsValid,
-    currentUrl,
-    fetchingUrlMetadata,
-    url: currentUrlCollection ? currentUrlCollection.urls.find(({ id }) => id === urlId) : undefined,
-  }
-}
+) => ({
+  authenticationIsValid: authentication === null ? null : authentication.isValid,
+  currentUrl,
+  fetchingUrlMetadata,
+  url: currentUrlCollection ? currentUrlCollection.urls.find(({ id }) => id === urlId) : undefined,
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(UrlPage)

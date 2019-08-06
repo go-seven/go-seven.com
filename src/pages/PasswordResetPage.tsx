@@ -142,29 +142,19 @@ class PasswordResetPage extends React.Component<IProps, IState> {
   }
 }
 
-const mapStateToProps = (state) => {
-  const {
-    account,
-  } = state
-
-  const {
+const mapStateToProps = ({
+  account: {
     authentication,
-    isSendingPasswordReset,
-    passwordResetEmailSent,
-  } = account
-
-  const authenticationIsValid = authentication === null ? false : authentication.isValid
-
-  const authenticationError = authentication && authentication.error
-  const errorMessage = authenticationError && authenticationError.message
-
-  return {
-    authenticationIsValid,
-    errorMessage,
+    error,
     isSendingPasswordReset,
     passwordResetEmailSent,
   }
-}
+}) => ({
+  authenticationIsValid: authentication === null ? false : authentication.isValid,
+  errorCode: error && error.code,
+  isSendingPasswordReset,
+  passwordResetEmailSent,
+})
 
 const mapDispatchToProps = (dispatch) => ({
   sendPasswordReset: (email) => dispatch(sendPasswordReset(email)),

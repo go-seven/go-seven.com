@@ -159,18 +159,19 @@ class SettingsPage extends React.Component<IProps> {
   }
 }
 
-const mapStateToProps = ({ account }) => {
-  const { authentication } = account
-
-  const authenticationIsValid = authentication === null ? null : authentication.isValid
-
-  return {
-    authenticationIsValid,
-    isChangingPassword: account.isChangingPassword,
-    isDeletingAccount: account.isDeleting,
-    justDeletedAccount: account.justDeleted,
+const mapStateToProps = ({
+  account: {
+    authentication,
+    isChangingPassword,
+    isDeleting,
+    justDeleted,
   }
-}
+}) => ({
+  authenticationIsValid: authentication === null ? null : authentication.isValid,
+  isChangingPassword,
+  isDeletingAccount: isDeleting,
+  justDeletedAccount: justDeleted,
+})
 
 const mapDispatchToProps = (dispatch) => ({
   changePassword: (password) => dispatch(changePassword(password)),

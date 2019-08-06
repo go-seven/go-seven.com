@@ -68,14 +68,10 @@ const mapStateToProps = ({
     authentication,
     email,
   }
-}) => {
-  const authenticationIsValid = authentication === null ? false : authentication.isValid
-
-  return {
-    authenticationIsValid,
-    hasNoEmail: email === "",
-  }
-}
+}) => ({
+  authenticationIsValid: authentication === null ? false : authentication.isValid,
+  hasNoEmail: email === "",
+})
 
 const mapDispatchToProps = (dispatch) => ({
   exitAccount: () => dispatch(exitAccount()),

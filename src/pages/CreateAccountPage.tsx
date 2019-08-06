@@ -31,15 +31,15 @@ import PleaseLookForVerificationEmail from "../components/PleaseLookForVerificat
 import {
   cleanupAuthenticationError,
   createAccount,
-  IAuthentication,
   ICredentials,
 } from "../reducers/account"
 
+import MyUrlsPage from "./MyUrlsPage"
 import PrivacyPolicyPage from "./PrivacyPolicyPage"
 import TermsOfServicePage from "./TermsOfServicePage"
 
 interface IProps {
-  authentication: IAuthentication
+  authenticationIsValid: boolean
   cleanupAuthenticationError: () => void
   createAccount: (ICredentials) => void
   errorCode?: string
@@ -102,7 +102,7 @@ class CreateAccountPage extends React.Component<IProps, IState> {
 
   render() {
     const {
-      authentication,
+      authenticationIsValid,
       errorCode,
       isCreating,
       justCreated,
@@ -115,8 +115,10 @@ class CreateAccountPage extends React.Component<IProps, IState> {
       redirect,
     } = this.state
 
-    if (authentication === null) {
-      return null
+    if (authenticationIsValid) {
+      return (
+        <Redirect push to={MyUrlsPage.path} />
+      )
     }
 
     if (redirect) {
@@ -263,7 +265,7 @@ const mapStateToProps = ({
     justCreated,
   }
 }) => ({
-  authentication,
+  authenticationIsValid: authentication === null ? false : authentication.isValid,
   errorCode: error && error.code,
   isCreating,
   justCreated,

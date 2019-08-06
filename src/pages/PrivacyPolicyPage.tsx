@@ -11,8 +11,7 @@ import {
 import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 
-interface IProps extends RouteComponentProps {
-}
+interface IProps extends RouteComponentProps {}
 
 export default class PrivacyPolicyPage extends React.Component<IProps> {
   static path = "/privacy-policy"

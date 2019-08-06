@@ -63,13 +63,12 @@ export default class Nav extends React.Component<IProps, IState> {
 
     const { exit } = this.props
 
-    this.setState({
-      redirect: HomePage.path
-    }, () => {
-      if (typeof exit === "function") {
-        exit()
-      }
-    })
+    if (typeof exit === "function") {
+      this.setState({
+        expanded: false,
+        redirect: HomePage.path,
+      }, exit)
+    }
   }
 
   onClickMyUrls = () => {

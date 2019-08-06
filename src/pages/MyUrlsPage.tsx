@@ -97,22 +97,18 @@ const mapStateToProps = ({
     wantedUrlHrefIsValid,
     wantedUrlIdExists,
   },
-}) => {
-  const authenticationIsValid = authentication === null ? null : authentication.isValid
-
-  return {
-    authenticationIsValid,
-    creatingUrl,
-    fetchingUrlMetadata,
-    isFetchingUrlCollection,
-    removingUrlId,
-    selectedUrlCollectionId,
-    urlCollection: currentUrlCollection,
-    wantedUrl,
-    wantedUrlHrefIsValid,
-    wantedUrlIdExists,
-  }
-}
+}) => ({
+  authenticationIsValid: authentication === null ? null : authentication.isValid,
+  creatingUrl,
+  fetchingUrlMetadata,
+  isFetchingUrlCollection,
+  removingUrlId,
+  selectedUrlCollectionId,
+  urlCollection: currentUrlCollection,
+  wantedUrl,
+  wantedUrlHrefIsValid,
+  wantedUrlIdExists,
+})
 
 const mapDispatchToProps = (dispatch) => ({
   exitAccount: () => dispatch(exitAccount()),
