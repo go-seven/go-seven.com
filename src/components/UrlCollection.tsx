@@ -22,11 +22,12 @@ import {
 
 export interface IUrlCollectionProps {
   fetchUrlCollection: () => void
+  fetchUrlDailyHits: (urlId: string, day: string) => void
   fetchUrlTotalHits: (urlId: string) => void
   removeUrl: (urlId: string) => () => void
   removingUrlId: string
   urlCollection: IUrlCollection | null
-  urlTotalHits: IUrlTotalHits[]
+  urlsTotalHits: IUrlTotalHits[]
 }
 
 interface IState {
@@ -48,11 +49,12 @@ export default class UrlCollection extends React.Component<IUrlCollectionProps> 
 
   render() {
     const {
+      fetchUrlDailyHits,
       fetchUrlTotalHits,
       removeUrl,
       removingUrlId,
       urlCollection,
-      urlTotalHits,
+      urlsTotalHits,
     } = this.props
 
     const {
@@ -96,12 +98,13 @@ export default class UrlCollection extends React.Component<IUrlCollectionProps> 
               <Column key={i} isOneQuarter>
                 {typeof url.id === "string" && (
                   <UrlCard
+                    fetchUrlDailyHits={fetchUrlDailyHits}
                     fetchUrlTotalHits={fetchUrlTotalHits}
                     removeUrl={removeUrl(url.id)}
                     removingUrl={removingUrlId === url.id}
                     url={url}
                     urlCollectionId={urlCollection.id}
-                    urlTotalHits={urlTotalHits.find(({ id }) => id === url.id)}
+                    urlTotalHits={urlsTotalHits.find(({ id }) => id === url.id)}
                   />
                 )}
               </Column>

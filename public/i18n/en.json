@@ -29,6 +29,7 @@
     "PleaseLookForVerificationEmail.email-verification": "verification email",
     "SettingsPage.title": "Settings",
     "TermsOfServicePage.title": "Terms of Service",
+    "UrlCard.total": "Total",
     "UrlCollection.is-empty.action": "Create URL",
     "UrlCollection.is-empty.message": "No URL was created yet",
     "UrlCreator.submit": "Create URL",

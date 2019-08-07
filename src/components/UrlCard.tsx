@@ -1,8 +1,11 @@
 import * as solidIcon from "fa-svg-icon/solid"
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import { Redirect } from "react-router-dom"
 import {
   Card,
+  Control,
+  Field,
   Icon,
   Tag,
   Tags,
@@ -18,6 +21,7 @@ import {
 } from "../reducers/urlCollections"
 
 export interface IUrlCardProps {
+  fetchUrlDailyHits: (urlId: string, day: string) => void
   fetchUrlTotalHits: (urlId: string) => void
   removeUrl: () => void
   removingUrl: boolean
@@ -31,6 +35,14 @@ interface IState {
   redirect?: string
 }
 
+function Chart() {
+  return (
+    <svg>
+      <text>ok</text>
+    </svg>
+  )
+}
+
 export default class UrlCard extends React.Component<IUrlCardProps, IState> {
   state: IState = {
     highlighted: false,
@@ -38,11 +50,23 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
 
   componentDidMount() {
     const {
+      fetchUrlDailyHits,
       fetchUrlTotalHits,
       url: { id },
     } = this.props
 
+    const time = new Date()
+    const numDays = 7
+
     fetchUrlTotalHits(id)
+
+    for (let i = 1; i <= numDays; i++) {
+      time.setDate(time.getDate() - i)
+
+      const day = time.toISOString().slice(0, 10)
+
+      fetchUrlDailyHits(id, day)
+    }
   }
 
   onClickEdit = () => {
@@ -104,7 +128,13 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
       >
         <Card.Header>
           <Card.Header.Title>
-            <Tags>
+            <Tags hasAddons>
+              <Tag>
+                {url.id}
+              </Tag>
+
+              {highlighted && (
+
               <Tag
                 href={url.href}
                 isLink={!removingUrl && highlighted}
@@ -112,13 +142,12 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
                 onClick={this.onClickLink}
                 target="_blank"
               >
-                {url.id}
+                <Icon>
+                  <Icon.Svg
+                    icon={solidIcon.externalLinkSquareAlt}
+                  />
+                </Icon>
               </Tag>
-
-              {urlTotalHits && (
-                <Tag>
-                  {urlTotalHits.tot}
-                </Tag>
               )}
             </Tags>
           </Card.Header.Title>
@@ -137,6 +166,24 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
         </Card.Header>
 
         <Card.Content>
+          <Field isGrouped>
+            <Control>
+              <Tags hasAddons>
+                <Tag>
+                  <FormattedMessage id="UrlCard.total" />
+                </Tag>
+
+                <Tag>
+                  {urlTotalHits && urlTotalHits.tot}
+                </Tag>
+              </Tags>
+            </Control>
+          </Field>
+
+          <div className="url-card__chart">
+            <Chart />
+          </div>
+
           <span>
             {url.title}
           </span>
