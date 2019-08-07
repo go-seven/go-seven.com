@@ -18,6 +18,10 @@ import {
   exitAccount,
 } from "../reducers/account"
 import {
+  fetchUrlTotalHitsIfNeeded,
+  IUrlTotalHits,
+} from "../reducers/analytics"
+import {
   fetchUrlCollectionIfNeeded,
   removeUrlFromCollection,
   IUrlCollection,
@@ -27,12 +31,14 @@ interface IProps extends RouteComponentProps {
   authenticationIsValid: boolean | null
   exitAccount: () => void
   fetchUrlCollection: IUrlCollectionProps["fetchUrlCollection"]
+  fetchUrlTotalHits: (urlId: string) => void
   fetchingUrlMetadata: boolean
   isFetchingUrlCollection: boolean
   removeUrlFromCollection: (urlCollectionId: string) => (urlId: string) => () => void,
   removingUrlId: string
   selectedUrlCollectionId: string
   urlCollection: IUrlCollection | null
+  urlTotalHits: IUrlTotalHits[]
 }
 
 class MyUrlsPage extends React.Component<IProps> {
@@ -43,11 +49,13 @@ class MyUrlsPage extends React.Component<IProps> {
       authenticationIsValid,
       exitAccount,
       fetchUrlCollection,
+      fetchUrlTotalHits,
       isFetchingUrlCollection,
       removeUrlFromCollection,
       removingUrlId,
       selectedUrlCollectionId,
       urlCollection,
+      urlTotalHits,
     } = this.props
 
     if (authenticationIsValid === null) {
@@ -80,9 +88,11 @@ class MyUrlsPage extends React.Component<IProps> {
 
             <UrlCollection
               fetchUrlCollection={fetchUrlCollection}
+              fetchUrlTotalHits={fetchUrlTotalHits}
               removeUrl={removeUrlFromCollection(selectedUrlCollectionId)}
               removingUrlId={removingUrlId}
               urlCollection={urlCollection}
+              urlTotalHits={urlTotalHits}
             />
           </Container>
         </Section>
@@ -94,6 +104,9 @@ class MyUrlsPage extends React.Component<IProps> {
 const mapStateToProps = ({
   account: {
     authentication,
+  },
+  analytics: {
+    urlTotalHits,
   },
   urlCollections: {
     creatingUrl,
@@ -114,6 +127,7 @@ const mapStateToProps = ({
   removingUrlId,
   selectedUrlCollectionId,
   urlCollection: currentUrlCollection,
+  urlTotalHits,
   wantedUrl,
   wantedUrlHrefIsValid,
   wantedUrlIdExists,
@@ -122,6 +136,7 @@ const mapStateToProps = ({
 const mapDispatchToProps = (dispatch) => ({
   exitAccount: () => dispatch(exitAccount()),
   fetchUrlCollection: () => dispatch(fetchUrlCollectionIfNeeded()),
+  fetchUrlTotalHits: (urlId) => dispatch(fetchUrlTotalHitsIfNeeded(urlId)),
   removeUrlFromCollection: (urlCollectionId) => (urlId) => () => dispatch(removeUrlFromCollection(urlCollectionId, urlId)),
 })
 

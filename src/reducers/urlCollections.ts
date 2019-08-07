@@ -21,7 +21,7 @@ export interface IUrlMetadata {
 
 export interface IUrl {
   href: string
-  id?: string
+  id: string
   metadata?: IUrlMetadata
   title?: string
 }

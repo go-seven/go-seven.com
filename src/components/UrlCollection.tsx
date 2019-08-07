@@ -14,14 +14,19 @@ import UrlCard from "./UrlCard"
 import CreateUrlPage from "../pages/CreateUrlPage"
 
 import {
+  IUrlTotalHits,
+} from "../reducers/analytics"
+import {
   IUrlCollection,
 } from "../reducers/urlCollections"
 
 export interface IUrlCollectionProps {
   fetchUrlCollection: () => void
+  fetchUrlTotalHits: (urlId: string) => void
   removeUrl: (urlId: string) => () => void
   removingUrlId: string
   urlCollection: IUrlCollection | null
+  urlTotalHits: IUrlTotalHits[]
 }
 
 interface IState {
@@ -43,9 +48,11 @@ export default class UrlCollection extends React.Component<IUrlCollectionProps> 
 
   render() {
     const {
+      fetchUrlTotalHits,
       removeUrl,
       removingUrlId,
       urlCollection,
+      urlTotalHits,
     } = this.props
 
     const {
@@ -89,10 +96,12 @@ export default class UrlCollection extends React.Component<IUrlCollectionProps> 
               <Column key={i} isOneQuarter>
                 {typeof url.id === "string" && (
                   <UrlCard
+                    fetchUrlTotalHits={fetchUrlTotalHits}
                     removeUrl={removeUrl(url.id)}
                     removingUrl={removingUrlId === url.id}
                     url={url}
                     urlCollectionId={urlCollection.id}
+                    urlTotalHits={urlTotalHits.find(({ id }) => id === url.id)}
                   />
                 )}
               </Column>

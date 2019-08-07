@@ -3,24 +3,13 @@ import * as client from "../client"
 
 export const CHANGE_PASSWORD = asyncActions("CHANGE_PASSWORD")
 export const CHECK_AUTHENTICATION = "CHECK_AUTHENTICATION"
-const CLEANUP_AUTHENTICATION_ERROR = "RESET_AUTHENTICATION_ERROR"
+const CLEANUP_AUTHENTICATION_ERROR = "CLEANUP_AUTHENTICATION_ERROR"
 export const CREATE_ACCOUNT = asyncActions("CREATE_ACCOUNT")
 export const DELETE_ACCOUNT = asyncActions("DELETE_ACCOUNT")
 export const ENTER_ACCOUNT = asyncActions("ENTER_ACCOUNT")
 export const EXIT_ACCOUNT = "EXIT_ACCOUNT"
 export const SEND_PASSWORD_RESET = asyncActions("SEND_PASSWORD_RESET")
 export const SEND_VERIFICATION = asyncActions("SEND_VERIFICATION")
-
-export const initialState: IAccountState = {
-  authentication: null,
-  emailVerificationSent: false,
-  isChangingPassword: false,
-  isCreating: false,
-  isDeleting: false,
-  isEntering: false,
-  isSendingPasswordReset: false,
-  isSendingVerification: false,
-}
 
 export interface ICredentials {
   email: string
@@ -52,6 +41,17 @@ export interface IAccountState {
   isSendingVerification: boolean
   justCreated?: boolean
   justDeleted?: boolean
+}
+
+export const initialState: IAccountState = {
+  authentication: null,
+  emailVerificationSent: false,
+  isChangingPassword: false,
+  isCreating: false,
+  isDeleting: false,
+  isEntering: false,
+  isSendingPasswordReset: false,
+  isSendingVerification: false,
 }
 
 export function changePassword(password) {

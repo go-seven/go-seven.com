@@ -5,19 +5,25 @@ import {
   Card,
   Icon,
   Tag,
+  Tags,
 } from "trunx"
 
 import UrlPage from "../pages/UrlPage"
 
 import {
+  IUrlTotalHits,
+} from "../reducers/analytics"
+import {
   IUrl
 } from "../reducers/urlCollections"
 
 export interface IUrlCardProps {
+  fetchUrlTotalHits: (urlId: string) => void
   removeUrl: () => void
   removingUrl: boolean
   url: IUrl
   urlCollectionId: string
+  urlTotalHits?: IUrlTotalHits
 }
 
 interface IState {
@@ -28,6 +34,15 @@ interface IState {
 export default class UrlCard extends React.Component<IUrlCardProps, IState> {
   state: IState = {
     highlighted: false,
+  }
+
+  componentDidMount() {
+    const {
+      fetchUrlTotalHits,
+      url: { id },
+    } = this.props
+
+    fetchUrlTotalHits(id)
   }
 
   onClickEdit = () => {
@@ -67,6 +82,7 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
     const {
       removingUrl,
       url,
+      urlTotalHits,
     } = this.props
 
     const {
@@ -88,15 +104,23 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
       >
         <Card.Header>
           <Card.Header.Title>
-            <Tag
-              href={url.href}
-              isLink={!removingUrl && highlighted}
-              isWarning={removingUrl}
-              onClick={this.onClickLink}
-              target="_blank"
-            >
-              {url.id}
-            </Tag>
+            <Tags>
+              <Tag
+                href={url.href}
+                isLink={!removingUrl && highlighted}
+                isWarning={removingUrl}
+                onClick={this.onClickLink}
+                target="_blank"
+              >
+                {url.id}
+              </Tag>
+
+              {urlTotalHits && (
+                <Tag>
+                  {urlTotalHits.tot}
+                </Tag>
+              )}
+            </Tags>
           </Card.Header.Title>
 
           <Card.Header.Icon>
