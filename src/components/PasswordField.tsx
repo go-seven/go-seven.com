@@ -104,6 +104,7 @@ export default class PasswordField extends React.Component<IProps, IState> {
             <A
               href={PasswordResetPage.path}
               isPulledRight
+              tabIndex={-1}
             >
               <FormattedMessage id="PasswordField.forgot-password.message"/>
             </A>

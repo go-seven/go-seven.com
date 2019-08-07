@@ -48,6 +48,7 @@ interface IProps {
 }
 
 interface IState {
+  antiSpamLoaded: boolean
   clientAgrees: boolean
   clientIsRobot: boolean
   passwordIsValid: boolean
@@ -58,12 +59,13 @@ class CreateAccountPage extends React.Component<IProps, IState> {
   static path = "/create-account"
 
   state: IState = {
+    antiSpamLoaded: false,
     clientAgrees: false,
     clientIsRobot: true,
     passwordIsValid: false,
   }
 
-  private antispamRef = React.createRef<HTMLInputElement>()
+  private antiSpamRef = React.createRef<HTMLInputElement>()
   private emailRef = React.createRef<HTMLInputElement>()
   private passwordRef = React.createRef<HTMLInputElement>()
 
@@ -73,12 +75,15 @@ class CreateAccountPage extends React.Component<IProps, IState> {
 
   loadAntiSpam() {
     const {
+      antiSpamLoaded,
       clientIsRobot
     } = this.state
 
-    if (clientIsRobot) {
-      ticTacToe(this.antispamRef.current, () => {
-        this.setState({ clientIsRobot: false })
+    if (clientIsRobot && !antiSpamLoaded) {
+      this.setState({ antiSpamLoaded: true }, () => {
+        ticTacToe(this.antiSpamRef.current, () => {
+          this.setState({ clientIsRobot: false })
+        })
       })
     }
   }
@@ -239,7 +244,7 @@ class CreateAccountPage extends React.Component<IProps, IState> {
                         Play <em>tic tac toe</em> !
                       </P>
 
-                      <div ref={this.antispamRef} />
+                      <div ref={this.antiSpamRef} />
                     </Message.Body>
                   </Message>
                 </Section>
