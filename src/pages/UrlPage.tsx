@@ -40,6 +40,7 @@ interface IProps extends RouteComponentProps<IMatchParams> {
   fetchingUrlMetadata: boolean
   fetchUrlMetadata: (IUrl) => void
   removeUrl: (IMatchParams) => void
+  removingUrl: boolean
   url: IUrl | undefined
 }
 
@@ -91,6 +92,7 @@ class UrlPage extends React.Component<IProps, IState> {
       currentUrl,
       fetchingUrlMetadata,
       fetchUrlMetadata,
+      removingUrl,
       url,
     } = this.props
 
@@ -183,6 +185,7 @@ class UrlPage extends React.Component<IProps, IState> {
           <Container>
             <Button
               isDanger
+              isLoading={removingUrl}
               isOutlined
               onClick={this.askUrlRemovalConfirmation}
             >
@@ -198,7 +201,7 @@ class UrlPage extends React.Component<IProps, IState> {
 const mapDispatchToProps = (dispatch) => ({
   exitAccount: () => dispatch(exitAccount()),
   fetchUrlMetadata: (url) => dispatch(fetchUrlMetadataIfNeeded(url)),
-  removeUrl: ({ urlCollectionId, urlId }) => () => dispatch(removeUrlFromCollection(urlCollectionId, urlId)),
+  removeUrl: ({ urlCollectionId, urlId }) => dispatch(removeUrlFromCollection(urlCollectionId, urlId)),
 })
 
 const mapStateToProps = (
@@ -210,6 +213,7 @@ const mapStateToProps = (
       currentUrlCollection,
       currentUrl,
       fetchingUrlMetadata,
+      removingUrlId,
     }
   },
   {
@@ -223,6 +227,7 @@ const mapStateToProps = (
   authenticationIsValid: authentication === null ? null : authentication.isValid,
   currentUrl,
   fetchingUrlMetadata,
+  removingUrl: removingUrlId === urlId,
   url: currentUrlCollection ? currentUrlCollection.urls.find(({ id }) => id === urlId) : undefined,
 })
 

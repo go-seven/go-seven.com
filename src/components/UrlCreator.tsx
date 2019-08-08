@@ -212,10 +212,14 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
       wantedUrl,
     } = this.props
 
-    if (wantedUrl !== null) {
-      const { href, id, title } = wantedUrl
+    const {
+      wantedUrlId,
+    } = this.state
 
-      createUrl({ href, id, title })
+    if (wantedUrl !== null) {
+      const { href, title } = wantedUrl
+
+      createUrl({ href, id: wantedUrlId, title })
     }
   }
 
