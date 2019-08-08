@@ -1,11 +1,14 @@
+import * as solidIcon from "fa-svg-icon/solid"
 import * as React from "react"
 import {
   Box,
   Control,
   Field,
+  Icon,
   Input,
   Label,
   Tag,
+  Tags,
 } from "trunx"
 
 import {
@@ -40,13 +43,24 @@ export default class UrlEditor extends React.Component<IProps> {
       <Box>
         <Field>
           <Control>
-            <Tag
-              href={url.href}
-              isLink
-              target="_blank"
-            >
-              {url.id}
-            </Tag>
+            <Tags hasAddons>
+              <Tag>
+                {url.id}
+              </Tag>
+
+              <Tag
+                href={url.href}
+                isLink
+                onClick={(event) => { event.stopPropagation() }}
+                target="_blank"
+              >
+                <Icon>
+                  <Icon.Svg
+                    icon={solidIcon.externalLinkSquareAlt}
+                  />
+                </Icon>
+              </Tag>
+            </Tags>
           </Control>
         </Field>
 

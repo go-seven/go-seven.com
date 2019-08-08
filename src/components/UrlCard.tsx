@@ -152,10 +152,6 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
     })
   }
 
-  onClickLink = (event) => {
-    event.stopPropagation()
-  }
-
   onMouseEnterCard = () => {
     this.setState({
       highlighted: true
@@ -207,7 +203,7 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
                 href={url.href}
                 isLink={!removingUrl && highlighted}
                 isWarning={removingUrl}
-                onClick={this.onClickLink}
+                onClick={(event) => { event.stopPropagation() }}
                 target="_blank"
               >
                 <Icon>
