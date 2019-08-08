@@ -1,3 +1,6 @@
+import * as chartBar from "fa-svg-icon/solid/chart-bar"
+import * as plusCircle from "fa-svg-icon/solid/plus-circle"
+import * as userCog from "fa-svg-icon/solid/user-cog"
 import * as pdsp from "pdsp"
 import * as React from "react"
 import { FormattedMessage } from "react-intl"
@@ -5,6 +8,7 @@ import { Redirect } from "react-router-dom"
 import {
   Button,
   Buttons,
+  Icon,
   Navbar,
 } from "trunx"
 
@@ -135,6 +139,10 @@ export default class Nav extends React.Component<IProps, IState> {
                   isActive={locationPath === MyUrlsPage.path}
                   onClick={this.onClickMyUrls}
                 >
+                  <Icon>
+                    <Icon.Svg icon={chartBar} />
+                  </Icon>
+
                   <FormattedMessage id="MyUrlsPage.title" />
                 </Navbar.Item>
 
@@ -142,6 +150,10 @@ export default class Nav extends React.Component<IProps, IState> {
                   isActive={locationPath === CreateUrlPage.path}
                   onClick={this.onClickCreateUrl}
                 >
+                  <Icon>
+                    <Icon.Svg icon={plusCircle} />
+                  </Icon>
+
                   <FormattedMessage id="CreateUrlPage.title" />
                 </Navbar.Item>
 
@@ -149,6 +161,10 @@ export default class Nav extends React.Component<IProps, IState> {
                   isActive={locationPath === SettingsPage.path}
                   onClick={this.onClickSettings}
                 >
+                  <Icon>
+                    <Icon.Svg icon={userCog} />
+                  </Icon>
+
                   <FormattedMessage id="SettingsPage.title" />
                 </Navbar.Item>
               </Navbar.Start>
