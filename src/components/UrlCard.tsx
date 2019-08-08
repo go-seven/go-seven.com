@@ -127,7 +127,7 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
     fetchUrlTotalHits(id)
 
     for (let i = 1; i <= numDays; i++) {
-      time.setDate(time.getDate() - i)
+      time.setDate(time.getDate() - 1)
 
       const day = time.toISOString().slice(0, 10)
 
