@@ -133,13 +133,28 @@ export default class PasswordField extends React.Component<IProps, IState> {
 
           {showPasswordPolicy && (
             <Help>
-              <Span hasTextSuccess={isLongEnough}>{PasswordField.minLenght} chars</Span>
+              <Span hasTextSuccess={isLongEnough}>
+                {PasswordField.minLenght}
+                <FormattedMessage id="PasswordField.policy.chars" />
+              </Span>
+
               <Span hasTextSuccess={isLongEnough && hasNumber}>&nbsp;&bull;&nbsp;</Span>
-              <Span hasTextSuccess={hasNumber}>number</Span>
+
+              <Span hasTextSuccess={hasNumber}>
+                <FormattedMessage id="PasswordField.policy.number" />
+              </Span>
+
               <Span hasTextSuccess={hasNumber && hasUppercase}>&nbsp;&bull;&nbsp;</Span>
-              <Span hasTextSuccess={hasUppercase}>uppercase</Span>
+
+              <Span hasTextSuccess={hasUppercase}>
+                <FormattedMessage id="PasswordField.policy.uppercase" />
+              </Span>
+
               <Span hasTextSuccess={hasUppercase && hasLowercase}>&nbsp;&bull;&nbsp;</Span>
-              <Span hasTextSuccess={hasLowercase}>lowercase</Span>
+
+              <Span hasTextSuccess={hasLowercase}>
+                <FormattedMessage id="PasswordField.policy.lowercase" />
+              </Span>
             </Help>
           )}
         </Control>
