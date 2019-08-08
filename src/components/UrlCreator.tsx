@@ -1,6 +1,7 @@
 import * as pdsp from "pdsp"
 import * as React from "react"
 import { FormattedMessage } from "react-intl"
+import InjectIntl from "react-intl-inject"
 import {
   Box,
   Button,
@@ -204,7 +205,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
     }
   }
 
-  onClickSave = (event) => {
+  onSubmit = (event) => {
     pdsp(event)
 
     const {
@@ -246,90 +247,101 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
     )
 
     return (
-      <Box>
-        <Field>
-          <Label>
-            Your long URL
-          </Label>
+      <form
+        onSubmit={this.onSubmit}
+      >
+        <Box>
+          <Field>
+            <Label>
+              <FormattedMessage id="UrlCreator.target-url.label" />
+            </Label>
 
-          <Control
-            isLoading={fetchingUrlMetadata}
-          >
-            <Input
-              inputRef={this.urlHrefRef}
-              isDanger={wantedUrlHref !== "" && wantedUrlHrefIsValid === false}
-              isSuccess={wantedUrlHref !== "" && wantedUrlHrefIsValid === true}
-              onChange={this.onChangeUrlHref}
-              placeholder="Paste or write your URL here"
-              readOnly={creatingUrl}
-              type="text"
-              value={wantedUrlHref}
-            />
-          </Control>
-
-          <Help isDanger={wantedUrlHrefIsValid === false}>
-            {wantedUrlHrefIsValid === false && "Invalid URL"}
-          </Help>
-        </Field>
-
-        <Field>
-          <Label>
-            Title
-          </Label>
-
-          <Control
-            isLoading={fetchingUrlMetadata}
-          >
-            <Input
-              readOnly
-              type="text"
-              value={wantedUrl && wantedUrl.title || ""}
-            />
-          </Control>
-        </Field>
-
-        <Columns isDesktop>
-          <Column isHalf>
-            <Field>
-              <Label>
-                Short URL
-              </Label>
-
-              <Control
-                isLoading={checkingIfUrlIdExists}
-              >
-                <Input
-                  inputRef={this.urlIdRef}
-                  isDanger={wantedUrlId !== "" && wantedUrlIdExists === true}
-                  isSuccess={wantedUrlId !== "" && wantedUrlIdExists === false}
-                  onChange={this.onChangeUrlId}
-                  placeholder="go7.li/"
-                  readOnly={creatingUrl}
-                  type="text"
-                  value={`go7.li/${wantedUrlId}`}
-                />
-              </Control>
-
-              <Help isDanger={wantedUrlIdExists === true}>
-                {wantedUrlIdExists === true && "Not available"}
-              </Help>
-            </Field>
-          </Column>
-        </Columns>
-
-        <Field>
-          <Control>
-            <Button
-              disabled={saveButtonDisabled}
-              isLoading={creatingUrl}
-              isSuccess={wantedUrlHrefIsValid === true}
-              onClick={this.onClickSave}
+            <Control
+              isLoading={fetchingUrlMetadata}
             >
-              <FormattedMessage id="UrlCreator.submit"/>
-            </Button>
-          </Control>
-        </Field>
-      </Box>
+              <InjectIntl>
+                {({ intl }) => (
+                  <Input
+                    inputRef={this.urlHrefRef}
+                    isDanger={wantedUrlHref !== "" && wantedUrlHrefIsValid === false}
+                    isSuccess={wantedUrlHref !== "" && wantedUrlHrefIsValid === true}
+                    onChange={this.onChangeUrlHref}
+                    placeholder={intl.formatMessage({ id: "UrlCreator.target-url.placeholder" })}
+                    readOnly={creatingUrl}
+                    type="text"
+                    value={wantedUrlHref}
+                  />
+                )}
+              </InjectIntl>
+            </Control>
+
+            <Help isDanger={wantedUrlHrefIsValid === false}>
+              {wantedUrlHrefIsValid === false && "Invalid URL"}
+            </Help>
+          </Field>
+
+          <Field>
+            <Label>
+              <FormattedMessage id="UrlCreator.short-url-title.label" />
+            </Label>
+
+            <Control
+              isLoading={fetchingUrlMetadata}
+            >
+              <Input
+                readOnly
+                type="text"
+                value={wantedUrl && wantedUrl.title || ""}
+              />
+            </Control>
+          </Field>
+
+          <Columns isDesktop>
+            <Column isHalf>
+              <Field>
+                <Label>
+                  <FormattedMessage id="UrlCreator.short-url-title.label" />
+                </Label>
+
+                <Control
+                  isLoading={checkingIfUrlIdExists}
+                >
+                  <Input
+                    inputRef={this.urlIdRef}
+                    isDanger={wantedUrlId !== "" && wantedUrlIdExists === true}
+                    isSuccess={wantedUrlId !== "" && wantedUrlIdExists === false}
+                    onChange={this.onChangeUrlId}
+                    placeholder="go7.li/"
+                    readOnly={creatingUrl}
+                    type="text"
+                    value={`go7.li/${wantedUrlId}`}
+                  />
+                </Control>
+
+                <Help isDanger={wantedUrlIdExists === true}>
+                  {wantedUrlIdExists === true && "Not available"}
+                </Help>
+              </Field>
+            </Column>
+          </Columns>
+
+          <Field>
+            <Control>
+              <InjectIntl>
+                {({ intl }) => (
+                  <Button
+                    disabled={saveButtonDisabled}
+                    isLoading={creatingUrl}
+                    isSuccess={wantedUrlHrefIsValid === true}
+                    type="submit"
+                    value={intl.formatMessage({ id: "UrlCreator.submit" })}
+                  />
+                )}
+              </InjectIntl>
+            </Control>
+          </Field>
+        </Box>
+      </form>
     )
   }
 }
