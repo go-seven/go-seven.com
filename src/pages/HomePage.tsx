@@ -48,7 +48,7 @@ class HomePage extends React.Component<IProps> {
           <Hero.Body>
             <Container>
               <Title>GoSeven</Title>
-              <Subtitle>Url shortener</Subtitle>
+              <Subtitle>Url shortener and click counter</Subtitle>
             </Container>
           </Hero.Body>
         </Hero>

@@ -1,7 +1,7 @@
 {
   "name": "GoSeven",
   "short_name": "GoSeven",
-  "description": "URL shortener",
+  "description": "URL shortener and click counter",
   "display": "fullscreen",
   "orientation": "portrait",
   "background_color": "#284f8b",
