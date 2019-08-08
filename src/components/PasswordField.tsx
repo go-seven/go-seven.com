@@ -135,6 +135,7 @@ export default class PasswordField extends React.Component<IProps, IState> {
             <Help>
               <Span hasTextSuccess={isLongEnough}>
                 {PasswordField.minLenght}
+                &nbsp;
                 <FormattedMessage id="PasswordField.policy.chars" />
               </Span>
 

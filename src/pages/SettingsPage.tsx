@@ -82,7 +82,7 @@ class SettingsPage extends React.Component<IProps> {
           <Modal.Background />
 
           <Notification>
-            Your account was deleted.
+            <FormattedMessage id="SettingsPage.account-deletion-confirmation.goodbye" />
           </Notification>
         </Modal>
       )
@@ -108,12 +108,12 @@ class SettingsPage extends React.Component<IProps> {
           <Modal.Content>
             <Column>
               <Notification isDanger>
-                Are you sure you want to delete your account?
+                <FormattedMessage id="SettingsPage.account-deletion-confirmation.message" />
               </Notification>
 
               <Buttons>
                 <Button onClick={this.closeAccountDeletionConfirmation}>
-                  Cancel
+                  <FormattedMessage id="SettingsPage.account-deletion-confirmation.cancel" />
                 </Button>
 
                 <Button
@@ -122,7 +122,7 @@ class SettingsPage extends React.Component<IProps> {
                   isOutlined
                   onClick={this.onClickConfirmAccountDeletion}
                 >
-                  Delete my account
+                  <FormattedMessage id="SettingsPage.account-deletion-confirmation.submit" />
                 </Button>
               </Buttons>
             </Column>
@@ -161,7 +161,7 @@ class SettingsPage extends React.Component<IProps> {
               isLoading={isDeletingAccount}
               onClick={this.onClickDeleteAccount}
             >
-              Delete Account
+              <FormattedMessage id="SettingsPage.account-deletion.button" />
             </Button>
           </Container>
         </Section>
