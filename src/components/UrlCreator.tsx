@@ -73,6 +73,14 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
     })
   }
 
+  getShortUrlPrefix(): string {
+    const {
+      domain,
+    } = this.props
+
+    return `https://${domain}/`
+  }
+
   getUrlHref(): string {
     const {
       wantedUrlHref
@@ -108,26 +116,20 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
   }
 
   getUrlId(): string {
-    const {
-      domain
-    } = this.props
+    const shortUrlPrefix = this.getShortUrlPrefix()
 
-    const prefix = `${domain}/`
+    const inputValue = this.urlIdRef.current!.value
 
-    let urlId = this.urlIdRef.current!.value
-
-    if (urlId === null) {
+    if (inputValue === null) {
       return ""
     }
 
-    if (urlId.length <= prefix.length) {
+    if (inputValue.length <= shortUrlPrefix.length) {
       return ""
     }
 
-    urlId = urlId.trim()
-    urlId = urlId.replace(prefix, "")
 
-    return urlId
+    return inputValue.trim().replace(shortUrlPrefix, "")
   }
 
   onChangeUrlHref = (event) => {
@@ -246,6 +248,8 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
       checkingIfUrlIdExists
     )
 
+    const shortUrlPrefix = this.getShortUrlPrefix()
+
     return (
       <form
         onSubmit={this.onSubmit}
@@ -311,10 +315,10 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
                     isDanger={wantedUrlId !== "" && wantedUrlIdExists === true}
                     isSuccess={wantedUrlId !== "" && wantedUrlIdExists === false}
                     onChange={this.onChangeUrlId}
-                    placeholder="go7.li/"
+                    placeholder={shortUrlPrefix}
                     readOnly={creatingUrl}
                     type="text"
-                    value={`go7.li/${wantedUrlId}`}
+                    value={`${shortUrlPrefix}${wantedUrlId}`}
                   />
                 </Control>
 

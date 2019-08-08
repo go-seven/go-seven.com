@@ -1,5 +1,7 @@
 import * as solidIcon from "fa-svg-icon/solid"
+import * as pdsp from "pdsp"
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import {
   Box,
   Control,
@@ -32,6 +34,10 @@ export default class UrlEditor extends React.Component<IProps> {
     fetchUrlMetadata(url)
   }
 
+  onSubmit = (event) => {
+    pdsp(event)
+  }
+
   render() {
     const {
       currentUrl,
@@ -40,77 +46,81 @@ export default class UrlEditor extends React.Component<IProps> {
     } = this.props
 
     return (
-      <Box>
-        <Field>
-          <Control>
-            <Tags hasAddons>
-              <Tag>
-                {url.id}
-              </Tag>
+      <form
+        onSubmit={this.onSubmit}
+      >
+        <Box>
+          <Field>
+            <Control>
+              <Tags hasAddons>
+                <Tag>
+                  {url.id}
+                </Tag>
 
-              <Tag
-                href={url.href}
-                isLink
-                onClick={(event) => { event.stopPropagation() }}
-                target="_blank"
-              >
-                <Icon>
-                  <Icon.Svg
-                    icon={solidIcon.externalLinkSquareAlt}
-                  />
-                </Icon>
-              </Tag>
-            </Tags>
-          </Control>
-        </Field>
+                <Tag
+                  href={url.href}
+                  isLink
+                  onClick={(event) => { event.stopPropagation() }}
+                  target="_blank"
+                >
+                  <Icon>
+                    <Icon.Svg
+                      icon={solidIcon.externalLinkSquareAlt}
+                    />
+                  </Icon>
+                </Tag>
+              </Tags>
+            </Control>
+          </Field>
 
-        <Field>
-          <Label>
-            Original URL
-          </Label>
+          <Field>
+            <Label>
+              <FormattedMessage id="UrlEditor.target-url.label" />
+            </Label>
 
-          <Control
-            isLoading={fetchingUrlMetadata}
-          >
-            <Input
-              isSuccess={(currentUrl !== null && currentUrl.metadata && currentUrl.metadata.statusCode === 200)}
-              readOnly
-              type="text"
-              value={url.href}
-            />
-          </Control>
-        </Field>
+            <Control
+              isLoading={fetchingUrlMetadata}
+            >
+              <Input
+                isSuccess={(currentUrl !== null && currentUrl.metadata && currentUrl.metadata.statusCode === 200)}
+                readOnly
+                type="text"
+                value={url.href}
+              />
+            </Control>
+          </Field>
 
-        <Field>
-          <Label>
-            URL Title
-          </Label>
+          <Field>
+            <Label>
+              <FormattedMessage id="UrlEditor.short-url-title.label" />
+            </Label>
 
-          <Control>
-            <Input
-              readOnly
-              type="text"
-              value={url.title}
-            />
-          </Control>
-        </Field>
+            <Control>
+              <Input
+                readOnly
+                type="text"
+                value={url.title}
+              />
+            </Control>
+          </Field>
 
-        <Field>
-          <Label>
-            Original URL Title
-          </Label>
+          <Field>
+            <Label>
+              <FormattedMessage id="UrlEditor.target-url-title.label" />
+            </Label>
 
-          <Control
-            isLoading={fetchingUrlMetadata}
-          >
-            <Input
-              readOnly
-              type="text"
-              value={(currentUrl !== null && currentUrl.metadata) ? currentUrl.metadata.title : ""}
-            />
-          </Control>
-        </Field>
-      </Box>
+            <Control
+              isLoading={fetchingUrlMetadata}
+            >
+              <Input
+                readOnly
+                type="text"
+                value={(currentUrl !== null && currentUrl.metadata) ? currentUrl.metadata.title : ""}
+              />
+            </Control>
+          </Field>
+        </Box>
+      </form>
     )
   }
 }
