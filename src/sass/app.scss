@@ -36,3 +36,12 @@
 .hero {
   background-image: linear-gradient(#49bcea, #f0ffff);
 }
+
+@include until($navbar-breakpoint) {
+  .navbar-item {
+    span.icon {
+      position: relative;
+      top: 3px;
+    }
+  }
+}

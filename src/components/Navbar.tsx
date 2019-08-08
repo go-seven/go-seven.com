@@ -143,6 +143,8 @@ export default class Nav extends React.Component<IProps, IState> {
                     <Icon.Svg icon={chartBar} />
                   </Icon>
 
+                  &nbsp;
+
                   <FormattedMessage id="MyUrlsPage.title" />
                 </Navbar.Item>
 
@@ -154,6 +156,8 @@ export default class Nav extends React.Component<IProps, IState> {
                     <Icon.Svg icon={plusCircle} />
                   </Icon>
 
+                  &nbsp;
+
                   <FormattedMessage id="CreateUrlPage.title" />
                 </Navbar.Item>
 
@@ -164,6 +168,8 @@ export default class Nav extends React.Component<IProps, IState> {
                   <Icon>
                     <Icon.Svg icon={userCog} />
                   </Icon>
+
+                  &nbsp;
 
                   <FormattedMessage id="SettingsPage.title" />
                 </Navbar.Item>
