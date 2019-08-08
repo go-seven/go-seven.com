@@ -20,6 +20,7 @@ import {
 import {
   fetchUrlDailyHitsIfNeeded,
   fetchUrlTotalHitsIfNeeded,
+  IUrlDailyHits,
   IUrlTotalHits,
 } from "../reducers/analytics"
 import {
@@ -40,6 +41,7 @@ interface IProps extends RouteComponentProps {
   removingUrlId: string
   selectedUrlCollectionId: string
   urlCollection: IUrlCollection | null
+  urlsDailyHits: IUrlDailyHits[]
   urlsTotalHits: IUrlTotalHits[]
 }
 
@@ -58,6 +60,7 @@ class MyUrlsPage extends React.Component<IProps> {
       removingUrlId,
       selectedUrlCollectionId,
       urlCollection,
+      urlsDailyHits,
       urlsTotalHits,
     } = this.props
 
@@ -96,6 +99,7 @@ class MyUrlsPage extends React.Component<IProps> {
               removeUrl={removeUrlFromCollection(selectedUrlCollectionId)}
               removingUrlId={removingUrlId}
               urlCollection={urlCollection}
+              urlsDailyHits={urlsDailyHits}
               urlsTotalHits={urlsTotalHits}
             />
           </Container>
@@ -110,6 +114,7 @@ const mapStateToProps = ({
     authentication,
   },
   analytics: {
+    urlsDailyHits,
     urlsTotalHits,
   },
   urlCollections: {
@@ -131,6 +136,7 @@ const mapStateToProps = ({
   removingUrlId,
   selectedUrlCollectionId,
   urlCollection: currentUrlCollection,
+  urlsDailyHits,
   urlsTotalHits,
   wantedUrl,
   wantedUrlHrefIsValid,

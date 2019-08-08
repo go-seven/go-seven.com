@@ -14,7 +14,7 @@ interface IAnalyticsState {
   urlsTotalHits: IUrlTotalHits[]
 }
 
-interface IUrlDailyHits {
+export interface IUrlDailyHits {
   id: string
   day: string
   num: number

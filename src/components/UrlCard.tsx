@@ -1,5 +1,9 @@
+import { max as d3Max } from "d3-array"
+import { scaleLinear as d3ScaleLinear } from "d3-scale"
+import { select as d3Select } from "d3-selection"
 import * as solidIcon from "fa-svg-icon/solid"
 import * as React from "react"
+import * as ReactDOM from "react-dom"
 import { FormattedMessage } from "react-intl"
 import { Redirect } from "react-router-dom"
 import {
@@ -14,11 +18,20 @@ import {
 import UrlPage from "../pages/UrlPage"
 
 import {
+  IUrlDailyHits,
   IUrlTotalHits,
 } from "../reducers/analytics"
 import {
   IUrl
 } from "../reducers/urlCollections"
+
+interface IChartProps {
+  barColor?: string
+  barGap?: number
+  urlDailyHits: IUrlDailyHits[]
+  height?: number
+  windowWidth: number // used as trigger for resize
+}
 
 export interface IUrlCardProps {
   fetchUrlDailyHits: (urlId: string, day: string) => void
@@ -27,7 +40,9 @@ export interface IUrlCardProps {
   removingUrl: boolean
   url: IUrl
   urlCollectionId: string
+  urlDailyHits: IUrlDailyHits[]
   urlTotalHits?: IUrlTotalHits
+  windowWidth: number
 }
 
 interface IState {
@@ -35,11 +50,63 @@ interface IState {
   redirect?: string
 }
 
-function Chart() {
+const numDays = 7
+
+function Chart({
+  barGap = 5,
+  barColor = "skyblue",
+  urlDailyHits,
+  height = 50,
+  windowWidth,
+}: IChartProps) {
+  const numBars = urlDailyHits.length
+
+  const containerRef = React.useRef<HTMLDivElement>(null)
+  const barsRef = React.useRef<SVGGElement>(null)
+
+  const [width, setWidth] = React.useState(0)
+
+  React.useEffect(() => {
+    const { width } = (ReactDOM.findDOMNode(containerRef.current) as HTMLDivElement).getBoundingClientRect()
+
+    setWidth(width)
+  }, [containerRef.current, windowWidth])
+
+  React.useEffect(() => {
+    const barWidth = numBars > 0 ? ((width - barGap * (numBars - 1))/ numBars) : 0
+    const zeroDataHeight = 1
+
+    const selectY = ({ num }) => num
+
+    const bars = d3Select(ReactDOM.findDOMNode(barsRef.current))
+
+    const y = d3ScaleLinear().domain([0, d3Max(urlDailyHits, selectY)]).range([0, height])
+
+    bars.selectAll("rect").remove()
+
+    bars.selectAll("rect")
+      .data(urlDailyHits)
+      .enter()
+      .append("rect")
+      .attr("x", (_d, i) => i * (barWidth + barGap))
+      .attr("y", (d) => selectY(d) === 0 ? height - zeroDataHeight : height - zeroDataHeight - y(selectY(d)))
+      .attr("width", barWidth)
+      .attr("height", (d) => selectY(d) === 0 ? zeroDataHeight : zeroDataHeight + y(selectY(d)))
+      .attr("fill", barColor)
+  }, [barColor, height, urlDailyHits, width])
+
   return (
-    <svg>
-      <text>ok</text>
-    </svg>
+    <div
+      ref={containerRef}
+      className="url-card__chart"
+    >
+      <svg
+        height={height}
+        width={width}
+      >
+        <g ref={barsRef} />
+      </svg>
+    </div>
   )
 }
 
@@ -56,7 +123,6 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
     } = this.props
 
     const time = new Date()
-    const numDays = 7
 
     fetchUrlTotalHits(id)
 
@@ -106,7 +172,9 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
     const {
       removingUrl,
       url,
+      urlDailyHits,
       urlTotalHits,
+      windowWidth,
     } = this.props
 
     const {
@@ -180,9 +248,10 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
             </Control>
           </Field>
 
-          <div className="url-card__chart">
-            <Chart />
-          </div>
+          <Chart
+            urlDailyHits={urlDailyHits.length === numDays ? urlDailyHits : []}
+            windowWidth={windowWidth}
+          />
 
           <span>
             {url.title}

@@ -14,6 +14,7 @@ import UrlCard from "./UrlCard"
 import CreateUrlPage from "../pages/CreateUrlPage"
 
 import {
+  IUrlDailyHits,
   IUrlTotalHits,
 } from "../reducers/analytics"
 import {
@@ -27,91 +28,99 @@ export interface IUrlCollectionProps {
   removeUrl: (urlId: string) => () => void
   removingUrlId: string
   urlCollection: IUrlCollection | null
+  urlsDailyHits: IUrlDailyHits[]
   urlsTotalHits: IUrlTotalHits[]
 }
 
-interface IState {
-  redirect?: string
-}
+export default function UrlCollection({
+  fetchUrlCollection,
+  fetchUrlDailyHits,
+  fetchUrlTotalHits,
+  removeUrl,
+  removingUrlId,
+  urlCollection,
+  urlsDailyHits,
+  urlsTotalHits,
+}: IUrlCollectionProps) {
+  const [redirect, setRedirect] = React.useState()
+  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth)
 
-export default class UrlCollection extends React.Component<IUrlCollectionProps> {
-  state: IState = {}
+  React.useEffect(() => {
+    fetchUrlCollection()
+  }, [])
 
-  componentDidMount() {
-    this.props.fetchUrlCollection()
+  React.useEffect(() => {
+    const resizeHandler = () => setWindowWidth(window.innerWidth)
+
+    window.addEventListener('resize', resizeHandler)
+
+    return () => {
+      window.removeEventListener('resize', resizeHandler)
+    }
+  }, [])
+
+  const onClickCreateUrl = () => {
+    setRedirect(CreateUrlPage.path)
   }
 
-  onClickCreateUrl = () => {
-    this.setState({
-      redirect: CreateUrlPage.path
-    })
+  if (urlCollection === null) {
+    return null
   }
 
-  render() {
-    const {
-      fetchUrlDailyHits,
-      fetchUrlTotalHits,
-      removeUrl,
-      removingUrlId,
-      urlCollection,
-      urlsTotalHits,
-    } = this.props
-
-    const {
-      redirect,
-    } = this.state
-
-    if (urlCollection === null) {
-      return null
-    }
-
-    if (redirect) {
-      return (
-        <Redirect push to={redirect} />
-      )
-    }
-
-    const {
-      urls,
-    } = urlCollection
-
+  if (redirect) {
     return (
-      <Section>
-        {urls.length === 0 ? (
-          <Columns>
-            <Column>
-              <Notification>
-                <FormattedMessage id="UrlCollection.is-empty.message" />.
-              </Notification>
-
-              <Button
-                isPrimary
-                onClick={this.onClickCreateUrl}
-              >
-                <FormattedMessage id="UrlCollection.is-empty.action" />
-              </Button>
-            </Column>
-          </Columns>
-        ) : (
-          <Columns isMultiline>
-            {urls.map((url, i) => (
-              <Column key={i} isOneQuarter>
-                {typeof url.id === "string" && (
-                  <UrlCard
-                    fetchUrlDailyHits={fetchUrlDailyHits}
-                    fetchUrlTotalHits={fetchUrlTotalHits}
-                    removeUrl={removeUrl(url.id)}
-                    removingUrl={removingUrlId === url.id}
-                    url={url}
-                    urlCollectionId={urlCollection.id}
-                    urlTotalHits={urlsTotalHits.find(({ id }) => id === url.id)}
-                  />
-                )}
-              </Column>
-            ))}
-          </Columns>
-        )}
-      </Section>
+      <Redirect push to={redirect} />
     )
   }
+
+  const {
+    urls,
+  } = urlCollection
+
+  return (
+    <Section>
+      {urls.length === 0 ? (
+        <Columns>
+          <Column>
+            <Notification>
+              <FormattedMessage id="UrlCollection.is-empty.message" />.
+            </Notification>
+
+            <Button
+              isPrimary
+              onClick={onClickCreateUrl}
+            >
+              <FormattedMessage id="UrlCollection.is-empty.action" />
+            </Button>
+          </Column>
+        </Columns>
+      ) : (
+        <Columns isMultiline>
+          {urls.map((url, i) => (
+            <Column key={i} isOneQuarter>
+              {typeof url.id === "string" && (
+                <UrlCard
+                  fetchUrlDailyHits={fetchUrlDailyHits}
+                  fetchUrlTotalHits={fetchUrlTotalHits}
+                  removeUrl={removeUrl(url.id)}
+                  removingUrl={removingUrlId === url.id}
+                  url={url}
+                  urlCollectionId={urlCollection.id}
+                  urlDailyHits={
+                    urlsDailyHits.filter(
+                      ({ id }) => id === url.id
+                    ).sort(
+                      ({ day: a, }, { day: b }) => (a < b ? 1 : a > b ? -1 : 0)
+                    )
+                  }
+                  urlTotalHits={urlsTotalHits.find(({ id }) => id === url.id)}
+                  windowWidth={windowWidth}
+                />
+              )}
+            </Column>
+          ))}
+        </Columns>
+      )}
+    </Section>
+  )
 }
