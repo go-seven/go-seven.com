@@ -55,13 +55,18 @@ export default class ChangePasswordForm extends React.Component<IChangePasswordF
         autoComplete="off"
         onSubmit={this.onSubmit}
       >
-        <PasswordField
-          autoComplete="off"
-          inputRef={this.passwordRef}
-          setPasswordIsValid={this.setPasswordIsValid}
-          showPasswordPolicy
-          visible
-        />
+        <InjectIntl>
+          {({ intl }) => (
+            <PasswordField
+              autoComplete="off"
+              inputRef={this.passwordRef}
+              label={intl.formatMessage({ id: "ChangePasswordForm.new-password.label" })}
+              setPasswordIsValid={this.setPasswordIsValid}
+              showPasswordPolicy
+              visible
+            />
+          )}
+        </InjectIntl>
 
         <Field>
           <Control>

@@ -1,10 +1,12 @@
 {
   "locale": "it",
   "messages": {
+    "ChangePasswordForm.new-password.label": "Nuova password",
     "ChangePasswordForm.submit": "Cambia password",
     "CreateAccountPage.account-created": "Utenza creata",
     "CreateAccountPage.email.EmailExists": "Email già registrata",
     "CreateAccountPage.password.InvalidPasswordError": "Password non sicura",
+    "CreateAccountPage.password.label": "Password",
     "CreateAccountPage.title": "Crea un utente su GoSeven",
     "CreateUrlPage.title": "Crea URL",
     "EnterPage.account-not-verified.title": "Utente non verificato",
@@ -13,6 +15,7 @@
     "EnterPage.new-user.action": "Registrati",
     "EnterPage.new-user.message": "Sei un nuovo utente?",
     "EnterPage.password.InvalidPasswordError": "Password sbagliata",
+    "EnterPage.password.label": "Password",
     "EnterPage.submit": "Entra",
     "EnterPage.title": "Entra in GoSeven",
     "Footer.sugar-free.message": "Questo sito <strong>non</strong> utilizza cookie.",

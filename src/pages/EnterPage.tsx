@@ -117,8 +117,8 @@ class EnterPage extends React.Component<IProps, IState> {
       )
     }
 
-    const emailFieldError = errorCode === apiError.EmailNotFoundError
-    const passwordFieldError = errorCode === apiError.InvalidPasswordError
+    const emailNotFoundError = errorCode === apiError.EmailNotFoundError
+    const invalidPasswordError = errorCode === apiError.InvalidPasswordError
     const emailNotVerifiedError = errorCode === apiError.EmailNotVerifiedError
 
     return (
@@ -150,7 +150,7 @@ class EnterPage extends React.Component<IProps, IState> {
                   <InjectIntl>
                     {({ intl }) => (
                       <EmailField
-                        errorMessage={emailFieldError && intl.formatMessage({ id: `EnterPage.email.${errorCode}` })}
+                        errorMessage={emailNotFoundError && intl.formatMessage({ id: "EnterPage.email.emailNotFoundError" })}
                         inputRef={this.emailRef}
                       />
                     )}
@@ -159,8 +159,10 @@ class EnterPage extends React.Component<IProps, IState> {
                   <InjectIntl>
                     {({ intl }) => (
                       <PasswordField
-                        errorMessage={passwordFieldError && intl.formatMessage({ id: `EnterPage.password.${errorCode}` })}
+                        autoComplete="current-password"
+                        errorMessage={invalidPasswordError ? (intl.formatMessage({ id: "EnterPage.password.invalidPasswordError" }) as string) : undefined}
                         inputRef={this.passwordRef}
+                        label={(intl.formatMessage({ id: "EnterPage.password.label" }) as string)}
                         showForgotPassword
                       />
                     )}

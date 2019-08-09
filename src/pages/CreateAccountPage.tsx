@@ -76,7 +76,7 @@ class CreateAccountPage extends React.Component<IProps, IState> {
   loadAntiSpam() {
     const {
       antiSpamLoaded,
-      clientIsRobot
+      clientIsRobot,
     } = this.state
 
     if (clientIsRobot && !antiSpamLoaded) {
@@ -132,8 +132,8 @@ class CreateAccountPage extends React.Component<IProps, IState> {
       )
     }
 
-    const emailFieldError = errorCode === apiError.EmailExistsError
-    const passwordFieldError = errorCode === apiError.InvalidPasswordError
+    const emailExistsError = errorCode === apiError.EmailExistsError
+    const invalidPasswordError = errorCode === apiError.InvalidPasswordError
 
     if (justCreated) {
       return (
@@ -186,7 +186,7 @@ class CreateAccountPage extends React.Component<IProps, IState> {
                   <InjectIntl>
                     {({ intl }) => (
                       <EmailField
-                        errorMessage={emailFieldError && intl.formatMessage({ id: `CreateAccountPage.email.${errorCode}` })}
+                        errorMessage={emailExistsError && intl.formatMessage({ id: "CreateAccountPage.email.emailExistsError" })}
                         inputRef={this.emailRef}
                       />
                     )}
@@ -196,8 +196,9 @@ class CreateAccountPage extends React.Component<IProps, IState> {
                     {({ intl }) => (
                       <PasswordField
                         autoComplete="new-password"
-                        errorMessage={passwordFieldError && intl.formatMessage({ id: `CreateAccountPage.password.${errorCode}` })}
+                        errorMessage={invalidPasswordError && intl.formatMessage({ id: "CreateAccountPage.password.InvalidPasswordError" })}
                         inputRef={this.passwordRef}
+                        label={intl.formatMessage({ id: "CreateAccountPage.password.label" })}
                         setPasswordIsValid={this.setPasswordIsValid}
                         showPasswordPolicy
                       />

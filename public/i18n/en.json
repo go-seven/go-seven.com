@@ -1,10 +1,12 @@
 {
   "locale": "en",
   "messages": {
+    "ChangePasswordForm.new-password.label": "New password",
     "ChangePasswordForm.submit": "Change password",
     "CreateAccountPage.account-created": "Account created",
     "CreateAccountPage.email.EmailExists": "Email already registered",
     "CreateAccountPage.password.InvalidPasswordError": "Password is not secure",
+    "CreateAccountPage.password.label": "Password",
     "CreateAccountPage.title": "Create a GoSeven account",
     "CreateUrlPage.title": "Create URL",
     "EnterPage.account-not-verified.title": "Account not verified",
@@ -13,6 +15,7 @@
     "EnterPage.new-user.action": "Create an account",
     "EnterPage.new-user.message": "New to GoSeven?",
     "EnterPage.password.InvalidPasswordError": "Invalid password",
+    "EnterPage.password.label": "Password",
     "EnterPage.submit": "Enter",
     "EnterPage.title": "Enter GoSeven",
     "Footer.sugar-free.message": "This website does <strong>not</strong> use cookies.",

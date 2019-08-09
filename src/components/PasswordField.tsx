@@ -18,6 +18,7 @@ interface IProps {
   autoComplete?: string
   errorMessage?: string,
   inputRef: React.RefObject<HTMLInputElement>
+  label?: string,
   setPasswordIsValid: (passwordIsValid: boolean) => void
   showForgotPassword?: boolean
   showPasswordPolicy?: boolean
@@ -81,6 +82,7 @@ export default class PasswordField extends React.Component<IProps, IState> {
       autoComplete,
       errorMessage,
       inputRef,
+      label,
       showForgotPassword,
       showPasswordPolicy,
       visible,
@@ -98,7 +100,7 @@ export default class PasswordField extends React.Component<IProps, IState> {
     return (
       <Field>
         <Label>
-          Password
+          {label}
 
           {showForgotPassword && (
             <A
