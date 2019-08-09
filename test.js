@@ -17,14 +17,16 @@ Object.keys(pkg.config.versions).forEach(libKey => {
 
 const libKeys = Object.keys(pkg.config.versions)
 
-const linkToCssApp = `<link rel="stylesheet" href="/css/app.v${version}.css">`
+const linkToAppCss = `href="/css/app.v${version}.css"`
+const linkToBundleJs = `src="/js/bundle.v${version}.js"`
 
 fs.readFile('public/index.html', 'utf8', (error, code) => {
   if (error) {
     throw error
   }
 
-  assert(code.includes(linkToCssApp))
+  assert(code.includes(linkToAppCss))
+  assert(code.includes(linkToBundleJs))
 
   libKeys.forEach(libKey => {
     const version = pkg.config.versions[libKey]

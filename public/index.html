@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8">
     <title>GoSeven</title>
@@ -31,17 +31,37 @@
     <meta name="apple-mobile-web-app-title" content="Go Seven">
     <meta name="application-name" content="Go Seven">
 
-    <link rel="stylesheet" href="/fonts/roboto-v18.css">
-
     <style>
+      html {
+        font-family: BlinkMacSystemFont, -apple-system, "Helvetica", "Arial", sans-serif;
+        font-size: 17px;
+      }
+
       body {
         background-color: azure;
         color: #363636;
-        font-family: "Roboto", BlinkMacSystemFont, -apple-system, "Helvetica", "Arial", sans-serif;
+        line-height: 1.5;
         margin: 0;
+        padding-top: 3.25rem;
       }
 
       @-webkit-keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+      .progress-bar {
+        border-radius: 5px;
+        overflow: hidden;
+        width: 70%;
+      }
+
+      .progress-bar > div {
+        background: #eef1f3;
+      }
+
+      #loader {
+        background: #49bcea;
+        padding: 2px;
+        transition: width 1s;
+      }
 
       .splashscreen {
         background-color: azure;
@@ -57,8 +77,12 @@
       }
 
       .splashscreen h1 {
+        font-family: BlinkMacSystemFont, -apple-system, "Helvetica", "Arial", sans-serif;
+        font-size: 17vw;
+        font-weight: 711;
         color: #49bcea;
-        font-size: 10vh;
+        margin-block-start: 0.17em;
+        margin-block-end: 0.17em;
         text-shadow: 4px 4px 2px #171717;
       }
 
@@ -68,13 +92,17 @@
         font-size: 5vh;
       }
     </style>
-
-    <link rel="stylesheet" href="/css/app.v0.2.1.css">
   </head>
 
   <body class="has-navbar-fixed-top">
     <section class="splashscreen">
       <h1>GoSeven</h1>
+
+      <div class="progress-bar">
+        <div>
+          <div id="loader" style="width:0%"></div>
+        </div>
+      </div>
 
       <noscript>
         <p>Opsss... your JavaScript looks disabled 😒</p>
@@ -83,16 +111,25 @@
 
     <div id="root"></div>
 
-    <script src="/libs/react.v16.8.6.min.js"></script>
-    <script src="/libs/react-dom.v16.8.6.min.js"></script>
-    <script src="/libs/react-router-dom.v5.0.1.min.js"></script>
-    <script src="/libs/redux.v4.0.1.min.js"></script>
+    <script>
+      function loaderProgress(num) {
+        loader.style.width = num + parseInt(loader.style.width) + '%'
+      }
+    </script>
 
-    <script src="/libs/react.js"></script>
-    <script src="/libs/react-dom.js"></script>
-    <script src="/libs/react-router-dom.js"></script>
-    <script src="/libs/redux.js"></script>
+    <script onload="loaderProgress(15)" src="/libs/react.v16.8.6.min.js"></script>
+    <script onload="loaderProgress(20)" src="/libs/react-dom.v16.8.6.min.js"></script>
+    <script onload="loaderProgress(10)" src="/libs/react-router-dom.v5.0.1.min.js"></script>
+    <script onload="loaderProgress(10)" src="/libs/redux.v4.0.1.min.js"></script>
 
-    <script src="/js/bundle.v0.2.1.js" defer></script>
+    <script onload="loaderProgress(5)" src="/libs/react.js"></script>
+    <script onload="loaderProgress(5)" src="/libs/react-dom.js"></script>
+    <script onload="loaderProgress(5)" src="/libs/react-router-dom.js"></script>
+    <script onload="loaderProgress(5)" src="/libs/redux.js"></script>
+
+    <link rel="stylesheet" href="/fonts/roboto-v18.css">
+    <link onload="loaderProgress(20)" rel="stylesheet" href="/css/app.v0.3.0.css">
+
+    <script onload="loaderProgress(5)" src="/js/bundle.v0.3.0.js" defer></script>
   </body>
 </html>
