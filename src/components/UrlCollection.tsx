@@ -110,7 +110,7 @@ export default function UrlCollection({
                     urlsDailyHits.filter(
                       ({ id }) => id === url.id
                     ).sort(
-                      ({ day: a, }, { day: b }) => (a < b ? 1 : a > b ? -1 : 0)
+                      ({ day: a, }, { day: b }) => (a > b ? 1 : a < b ? -1 : 0)
                     )
                   }
                   urlTotalHits={urlsTotalHits.find(({ id }) => id === url.id)}
