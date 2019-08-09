@@ -1,4 +1,5 @@
 import * as React from "react"
+import { FormattedMessage } from "react-intl"
 import {
   Container,
   Content,
@@ -12,14 +13,20 @@ export default function() {
   return (
     <Section>
       <Container>
-        <Title>Pricing</Title>
+        <Title>
+          <FormattedMessage id="Pricing.title" />
+        </Title>
 
         <Tile.Ancestor>
           <Tile isParent>
             <Tile.Child.Box>
-              <Title>Free</Title>
+              <Title>
+                <FormattedMessage id="Pricing.free.title" />
+              </Title>
 
-              <Subtitle>try it!</Subtitle>
+              <Subtitle>
+                <FormattedMessage id="Pricing.free.subtitle" />
+              </Subtitle>
 
               <Content>
                 <ul>
@@ -33,9 +40,13 @@ export default function() {
 
           <Tile isParent>
             <Tile.Child.Box>
-              <Title>Pro</Title>
+              <Title>
+                <FormattedMessage id="Pricing.pro.title" />
+              </Title>
 
-              <Subtitle>coming soon</Subtitle>
+              <Subtitle>
+                <FormattedMessage id="Pricing.pro.subtitle" />
+              </Subtitle>
 
               <Content>
                 <ul>

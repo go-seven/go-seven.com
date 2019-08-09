@@ -31,7 +31,7 @@ export default class PrivacyPolicyPage extends React.Component<IProps> {
             </Title>
 
             <Content>
-              We take your privacy very seriously. This policy describes all information collected or submitted on the GoSeven platform, and what we do with it.
+              <FormattedMessage id={"PrivacyPolicyPage.intro"} />
             </Content>
           </Container>
         </Section>

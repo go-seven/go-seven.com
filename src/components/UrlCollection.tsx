@@ -97,7 +97,7 @@ export default function UrlCollection({
       ) : (
         <Columns isMultiline>
           {urls.map((url, i) => (
-            <Column key={i} isOneQuarter>
+            <Column key={i} isOneThird>
               {typeof url.id === "string" && (
                 <UrlCard
                   fetchUrlDailyHits={fetchUrlDailyHits}
