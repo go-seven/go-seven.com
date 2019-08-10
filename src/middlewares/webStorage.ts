@@ -1,4 +1,4 @@
-/* global localStorage */
+/* global localStorage, sessionStorage */
 import {
   CHECK_AUTHENTICATION,
   CREATE_ACCOUNT,
@@ -117,6 +117,8 @@ export default function localStorageMiddleware() {
        case EXIT_ACCOUNT:
          localStorage.removeItem("accountId")
          localStorage.removeItem("authentication")
+
+         sessionStorage.removeItem("session")
 
          return next(action)
 

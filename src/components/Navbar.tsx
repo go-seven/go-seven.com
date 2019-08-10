@@ -70,11 +70,15 @@ export default class Nav extends React.Component<IProps, IState> {
 
   componentDidMount() {
     const {
+      authenticationIsValid,
+    } = this.props
+
+    const {
       storedSession,
       session,
     } = this.state
 
-    if (storedSession === null) {
+    if (authenticationIsValid && storedSession === null) {
       sessionStorage.setItem('session', session)
     }
   }
