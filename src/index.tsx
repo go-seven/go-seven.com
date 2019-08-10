@@ -19,10 +19,12 @@ window.addEventListener("load", () => {
     navigator.serviceWorker.register(`cache.v${version}.js`, { scope: "/" })
   }
 
-  // Hide splashscreen.
-  const splashscreen = document.querySelector(".splashscreen") as HTMLElement
-  splashscreen.style.display = "none"
+  setTimeout(() => {
+    // Hide splashscreen.
+    const splashscreen = document.querySelector(".splashscreen") as HTMLElement
+    splashscreen.style.display = "none"
 
-  // Mount app.
-  render(<Root store={configureStore(initialState)} />, document.getElementById("root"))
+    // Mount app.
+    render(<Root store={configureStore(initialState)} />, document.getElementById("root"))
+  }, 711)
 })

@@ -57,19 +57,18 @@ class UrlPage extends React.Component<IProps, IState> {
   }
 
   state: IState = {
-    askingRemovalConfirmation: false
+    askingRemovalConfirmation: false,
   }
 
   askUrlRemovalConfirmation = () => {
     this.setState({
-      askingRemovalConfirmation: true
+      askingRemovalConfirmation: true,
     })
   }
 
   closeRemovalConfirmation = () => {
     this.setState({
       askingRemovalConfirmation: false,
-      redirect: MyUrlsPage.path,
     })
   }
 
@@ -186,7 +185,7 @@ class UrlPage extends React.Component<IProps, IState> {
             <Button
               isDanger
               isLoading={removingUrl}
-              isOutlined
+              isOutlined={!removingUrl}
               onClick={this.askUrlRemovalConfirmation}
             >
               <FormattedMessage id="UrlPage.remove-url.button" />

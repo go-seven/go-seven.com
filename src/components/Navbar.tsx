@@ -4,6 +4,7 @@ import * as userCog from "fa-svg-icon/solid/user-cog"
 import * as pdsp from "pdsp"
 import * as React from "react"
 import { FormattedMessage } from "react-intl"
+import { useSpring, animated } from "react-spring"
 import { Redirect } from "react-router-dom"
 import {
   Button,
@@ -32,11 +33,50 @@ interface IProps {
 interface IState {
   expanded: boolean
   redirect?: string
+  session: string,
+  storedSession: string | null,
 }
+
+function ItemIcon({ animate, icon }) {
+  return (
+    <>
+      <Icon>
+        <animated.div
+          className="navbar__item-icon"
+          style={useSpring({
+            opacity: 1,
+            config: { duration: 1000 },
+            from: { opacity: animate ? 0 : 1 },
+            delay: 500,
+          })}
+        >
+          <Icon.Svg icon={icon} />
+        </animated.div>
+      </Icon>
+
+      &nbsp;
+    </>
+  )
+}
+
+const session = new Date().getTime().toString()
 
 export default class Nav extends React.Component<IProps, IState> {
   state: IState = {
-    expanded: false
+    expanded: false,
+    session,
+    storedSession: sessionStorage.getItem('session'),
+  }
+
+  componentDidMount() {
+    const {
+      storedSession,
+      session,
+    } = this.state
+
+    if (storedSession === null) {
+      sessionStorage.setItem('session', session)
+    }
   }
 
   onClickBurger = () => {
@@ -103,6 +143,7 @@ export default class Nav extends React.Component<IProps, IState> {
     const {
       expanded,
       redirect,
+      storedSession,
     } = this.state
 
     if (redirect) {
@@ -110,6 +151,8 @@ export default class Nav extends React.Component<IProps, IState> {
         <Redirect push to={redirect} />
       )
     }
+
+    const isFirstRendering = storedSession === null
 
     return (
       <Navbar
@@ -139,11 +182,7 @@ export default class Nav extends React.Component<IProps, IState> {
                   isActive={locationPath === MyUrlsPage.path}
                   onClick={this.onClickMyUrls}
                 >
-                  <Icon>
-                    <Icon.Svg icon={chartBar} />
-                  </Icon>
-
-                  &nbsp;
+                  <ItemIcon animate={isFirstRendering} icon={chartBar} />
 
                   <FormattedMessage id="MyUrlsPage.title" />
                 </Navbar.Item>
@@ -152,11 +191,7 @@ export default class Nav extends React.Component<IProps, IState> {
                   isActive={locationPath === CreateUrlPage.path}
                   onClick={this.onClickCreateUrl}
                 >
-                  <Icon>
-                    <Icon.Svg icon={plusCircle} />
-                  </Icon>
-
-                  &nbsp;
+                  <ItemIcon animate={isFirstRendering} icon={plusCircle} />
 
                   <FormattedMessage id="CreateUrlPage.title" />
                 </Navbar.Item>
@@ -165,11 +200,7 @@ export default class Nav extends React.Component<IProps, IState> {
                   isActive={locationPath === SettingsPage.path}
                   onClick={this.onClickSettings}
                 >
-                  <Icon>
-                    <Icon.Svg icon={userCog} />
-                  </Icon>
-
-                  &nbsp;
+                  <ItemIcon animate={isFirstRendering} icon={userCog} />
 
                   <FormattedMessage id="SettingsPage.title" />
                 </Navbar.Item>

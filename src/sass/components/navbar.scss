@@ -1,0 +1,16 @@
+.navbar__item-icon {
+  padding-top: 4px;
+}
+
+@include until($navbar-breakpoint) {
+  .navbar__item-icon {
+    padding-top: 0;
+  }
+
+  .navbar-item {
+    span.icon {
+      position: relative;
+      top: 3px;
+    }
+  }
+}
