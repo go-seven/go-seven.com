@@ -17,7 +17,7 @@ import HomePage from "./HomePage"
 import MyUrlsPage from "./MyUrlsPage"
 
 import Navbar from "../components/Navbar"
-import UrlEditor from "../components/UrlEditor"
+import UrlEditor, { IUrlEditorProps } from "../components/UrlEditor"
 
 import {
   exitAccount,
@@ -25,6 +25,7 @@ import {
 import {
   fetchUrlMetadataIfNeeded,
   removeUrlFromCollection,
+  updateUrl,
   IUrl,
 } from "../reducers/urlCollections"
 
@@ -41,6 +42,8 @@ interface IProps extends RouteComponentProps<IMatchParams> {
   fetchUrlMetadata: (IUrl) => void
   removeUrl: (IMatchParams) => void
   removingUrl: boolean
+  updateUrl: (urlCollectionId: string) => IUrlEditorProps["updateUrl"]
+  updatingUrl: boolean
   url: IUrl | undefined
 }
 
@@ -91,7 +94,10 @@ class UrlPage extends React.Component<IProps, IState> {
       currentUrl,
       fetchingUrlMetadata,
       fetchUrlMetadata,
+      match: { params: { urlCollectionId } },
       removingUrl,
+      updateUrl,
+      updatingUrl,
       url,
     } = this.props
 
@@ -175,6 +181,8 @@ class UrlPage extends React.Component<IProps, IState> {
               currentUrl={currentUrl}
               fetchingUrlMetadata={fetchingUrlMetadata}
               fetchUrlMetadata={fetchUrlMetadata}
+              updateUrl={updateUrl(urlCollectionId)}
+              updatingUrl={updatingUrl}
               url={url}
             />
           </Container>
@@ -201,6 +209,7 @@ const mapDispatchToProps = (dispatch) => ({
   exitAccount: () => dispatch(exitAccount()),
   fetchUrlMetadata: (url) => dispatch(fetchUrlMetadataIfNeeded(url)),
   removeUrl: ({ urlCollectionId, urlId }) => dispatch(removeUrlFromCollection(urlCollectionId, urlId)),
+  updateUrl: (urlCollectionId) => (url) => dispatch(updateUrl(urlCollectionId, url))
 })
 
 const mapStateToProps = (
@@ -213,6 +222,7 @@ const mapStateToProps = (
       currentUrl,
       fetchingUrlMetadata,
       removingUrlId,
+      updatingUrl,
     }
   },
   {
@@ -227,6 +237,7 @@ const mapStateToProps = (
   currentUrl,
   fetchingUrlMetadata,
   removingUrl: removingUrlId === urlId,
+  updatingUrl,
   url: currentUrlCollection ? currentUrlCollection.urls.find(({ id }) => id === urlId) : undefined,
 })
 

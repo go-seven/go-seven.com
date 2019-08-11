@@ -19,7 +19,7 @@ import UrlPage from "../pages/UrlPage"
 
 import {
   IUrlDailyHits,
-  IUrlTotalHits,
+  IUrlMonthlyHits,
 } from "../reducers/analytics"
 import {
   IUrl
@@ -35,13 +35,13 @@ interface IChartProps {
 
 export interface IUrlCardProps {
   fetchUrlDailyHits: (urlId: string, day: string) => void
-  fetchUrlTotalHits: (urlId: string) => void
+  fetchUrlMonthlyHits: (urlId: string, month: string) => void
   removeUrl: () => void
   removingUrl: boolean
   url: IUrl
   urlCollectionId: string
   urlDailyHits: IUrlDailyHits[]
-  urlTotalHits?: IUrlTotalHits
+  urlMonthlyHits?: IUrlMonthlyHits
   windowWidth: number
 }
 
@@ -118,20 +118,29 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
   componentDidMount() {
     const {
       fetchUrlDailyHits,
-      fetchUrlTotalHits,
+      fetchUrlMonthlyHits,
       url: { id },
     } = this.props
 
-    const time = new Date()
+    let time = new Date()
 
-    fetchUrlTotalHits(id)
+    const month = time.toISOString().slice(0, 7)
+    fetchUrlMonthlyHits(id, month)
 
-    for (let i = 1; i <= numDays; i++) {
-      time.setDate(time.getDate() - 1)
+    const oneDayBefore = (t1) => {
+      const t2 = new Date(t1)
 
+      t2.setDate(t2.getDate() - 1)
+
+      return t2
+    }
+
+    for (let i = 0; i < numDays; i++) {
       const day = time.toISOString().slice(0, 10)
 
       fetchUrlDailyHits(id, day)
+
+      time = oneDayBefore(time)
     }
   }
 
@@ -169,7 +178,7 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
       removingUrl,
       url,
       urlDailyHits,
-      urlTotalHits,
+      urlMonthlyHits,
       windowWidth,
     } = this.props
 
@@ -234,11 +243,11 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
             <Control>
               <Tags hasAddons>
                 <Tag>
-                  <FormattedMessage id="UrlCard.total" />
+                  <FormattedMessage id="UrlCard.month-to-date" />
                 </Tag>
 
                 <Tag>
-                  {urlTotalHits && urlTotalHits.tot}
+                  {urlMonthlyHits && urlMonthlyHits.num}
                 </Tag>
               </Tags>
             </Control>

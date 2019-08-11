@@ -12,6 +12,7 @@ const FETCH_URL_COLLECTION = asyncActions("FETCH_URL_COLLECTION")
 const FETCH_URL_METADATA = asyncActions("FETCH_URL_METADATA")
 const FETCH_WANTED_URL_METADATA = asyncActions("FETCH_WANTED_URL_METADATA")
 const SET_WANTED_URL = "SET_WANTED_URL"
+const UPDATE_URL = asyncActions("UPDATE_URL")
 const URL_ID_EXISTS = asyncActions("URL_ID_EXISTS")
 
 export interface IUrlMetadata {
@@ -41,6 +42,7 @@ interface IUrlCollectionsState {
   isFetchingUrlCollection: boolean
   removingUrlId: string | null
   selectedUrlCollectionId: string | null
+  updatingUrl: boolean
   wantedUrl: IUrl | null
   wantedUrlHrefIsValid: boolean | null
   wantedUrlIdExists: boolean | null
@@ -55,6 +57,7 @@ export const initialState: IUrlCollectionsState = {
   isFetchingUrlCollection: false,
   removingUrlId: null,
   selectedUrlCollectionId: null,
+  updatingUrl: false,
   wantedUrl: null,
   wantedUrlHrefIsValid: null,
   wantedUrlIdExists: null,
@@ -236,6 +239,21 @@ function shouldFetchUrlMetadata() {
   return true
 }
 
+export function updateUrl(urlCollectionId: string, { id: urlId, title, }: IUrl) {
+  const { FAILURE, SUCCESS, REQUEST } = UPDATE_URL
+
+  return (dispatch, getState) => {
+    const { account: { authentication: { token } } } = getState()
+
+    dispatch({ type: REQUEST })
+
+    client.put(`/url-collection/${urlCollectionId}/${urlId}`, { title }, token).then(
+      (data) => dispatch({ data, type: SUCCESS }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
+    )
+  }
+}
+
 export default function(state = initialState, action) {
   switch (action.type) {
     case CREATE_URL.FAILURE:
@@ -352,6 +370,25 @@ export default function(state = initialState, action) {
         wantedUrl: action.data.url,
         wantedUrlHrefIsValid: action.data.wantedUrlHrefIsValid,
         wantedUrlIdExists: action.data.id === "" ? null : state.wantedUrlIdExists,
+      }
+
+    case UPDATE_URL.FAILURE:
+      return {
+        ...state,
+        updatingUrl: false,
+      }
+
+    case UPDATE_URL.REQUEST:
+      return {
+        ...state,
+        updatingUrl: true,
+        wantedUrlIdExists: null,
+      }
+
+    case UPDATE_URL.SUCCESS:
+      return {
+        ...state,
+        updatingUrl: false,
       }
 
     case URL_ID_EXISTS.FAILURE:

@@ -15,7 +15,7 @@ import CreateUrlPage from "../pages/CreateUrlPage"
 
 import {
   IUrlDailyHits,
-  IUrlTotalHits,
+  IUrlMonthlyHits,
 } from "../reducers/analytics"
 import {
   IUrlCollection,
@@ -24,23 +24,23 @@ import {
 export interface IUrlCollectionProps {
   fetchUrlCollection: () => void
   fetchUrlDailyHits: (urlId: string, day: string) => void
-  fetchUrlTotalHits: (urlId: string) => void
+  fetchUrlMonthlyHits: (urlId: string, month: string) => void
   removeUrl: (urlId: string) => () => void
   removingUrlId: string
   urlCollection: IUrlCollection | null
   urlsDailyHits: IUrlDailyHits[]
-  urlsTotalHits: IUrlTotalHits[]
+  urlsMonthlyHits: IUrlMonthlyHits[]
 }
 
 export default function UrlCollection({
   fetchUrlCollection,
   fetchUrlDailyHits,
-  fetchUrlTotalHits,
+  fetchUrlMonthlyHits,
   removeUrl,
   removingUrlId,
   urlCollection,
   urlsDailyHits,
-  urlsTotalHits,
+  urlsMonthlyHits,
 }: IUrlCollectionProps) {
   const [redirect, setRedirect] = React.useState()
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth)
@@ -101,7 +101,7 @@ export default function UrlCollection({
               {typeof url.id === "string" && (
                 <UrlCard
                   fetchUrlDailyHits={fetchUrlDailyHits}
-                  fetchUrlTotalHits={fetchUrlTotalHits}
+                  fetchUrlMonthlyHits={fetchUrlMonthlyHits}
                   removeUrl={removeUrl(url.id)}
                   removingUrl={removingUrlId === url.id}
                   url={url}
@@ -113,7 +113,7 @@ export default function UrlCollection({
                       ({ day: a, }, { day: b }) => (a > b ? 1 : a < b ? -1 : 0)
                     )
                   }
-                  urlTotalHits={urlsTotalHits.find(({ id }) => id === url.id)}
+                  urlMonthlyHits={urlsMonthlyHits.find(({ id }) => id === url.id)}
                   windowWidth={windowWidth}
                 />
               )}

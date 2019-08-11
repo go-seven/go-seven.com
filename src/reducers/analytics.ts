@@ -2,16 +2,16 @@ import asyncActions from "../asyncActions"
 import * as client from "../client"
 
 const FETCH_URL_DAILY_HITS = asyncActions("FETCH_URL_DAILY_HITS")
-const FETCH_URL_TOTAL_HITS = asyncActions("FETCH_URL_TOTAL_HITS")
+const FETCH_URL_MONTHLY_HITS = asyncActions("FETCH_URL_MONTHLY_HITS")
 
 export const initialState: IAnalyticsState = {
   urlsDailyHits: [],
-  urlsTotalHits: [],
+  urlsMonthlyHits: [],
 }
 
 interface IAnalyticsState {
   urlsDailyHits: IUrlDailyHits[]
-  urlsTotalHits: IUrlTotalHits[]
+  urlsMonthlyHits: IUrlMonthlyHits[]
 }
 
 export interface IUrlDailyHits {
@@ -20,9 +20,10 @@ export interface IUrlDailyHits {
   num: number
 }
 
-export interface IUrlTotalHits {
+export interface IUrlMonthlyHits {
   id: string
-  tot: number
+  month: string
+  num: number
 }
 
 function fetchUrlDailyHits(token, id, day) {
@@ -38,13 +39,13 @@ function fetchUrlDailyHits(token, id, day) {
   }
 }
 
-function fetchUrlTotalHits(token, id) {
-  const { FAILURE, SUCCESS, REQUEST } = FETCH_URL_TOTAL_HITS
+function fetchUrlMonthlyHits(token, id, month) {
+  const { FAILURE, SUCCESS, REQUEST } = FETCH_URL_MONTHLY_HITS
 
   return (dispatch) => {
     dispatch({ type: REQUEST })
 
-    client.get(`/url-total-hits/${id}`, token).then(
+    client.get(`/url-monthly-hits/${id}/${month}`, token).then(
       (data) => dispatch({ data, type: SUCCESS }),
       (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
@@ -64,15 +65,15 @@ export function fetchUrlDailyHitsIfNeeded(id, day) {
   }
 }
 
-export function fetchUrlTotalHitsIfNeeded(id) {
+export function fetchUrlMonthlyHitsIfNeeded(id, month) {
   return (dispatch, getState) => {
     const {
       account: { authentication: { token } },
-      analytics: { urlsTotalHits },
+      analytics: { urlsMonthlyHits },
     } = getState()
 
-    if (shouldFetchUrlTotalHits(urlsTotalHits, id)) {
-      return dispatch(fetchUrlTotalHits(token, id))
+    if (shouldFetchUrlMonthlyHits(urlsMonthlyHits, id, month)) {
+      return dispatch(fetchUrlMonthlyHits(token, id, month))
     }
   }
 }
@@ -81,9 +82,10 @@ function shouldFetchUrlDailyHits(urlsDailyHits, urlId, wantedDay) {
   return !urlsDailyHits.find(({ id, day }) => `${id}${day}` === `${urlId}${wantedDay}`)
 }
 
-function shouldFetchUrlTotalHits(urlsTotalHits, urlId) {
-  return !urlsTotalHits.find(({ id }) => id === urlId)
+function shouldFetchUrlMonthlyHits(urlsMonthlyHits, urlId, wantedMonth) {
+  return !urlsMonthlyHits.find(({ id, month }) => `${id}${month}` === `${urlId}${wantedMonth}`)
 }
+
 export default function(state = initialState, action) {
   switch (action.type) {
     case FETCH_URL_DAILY_HITS.FAILURE:
@@ -102,20 +104,20 @@ export default function(state = initialState, action) {
         urlsDailyHits: state.urlsDailyHits.filter(({ id, day }) => `${id}${day}` !== `${action.data.id}${action.data.day}`).concat(action.data)
       }
 
-    case FETCH_URL_TOTAL_HITS.FAILURE:
+    case FETCH_URL_MONTHLY_HITS.FAILURE:
       return {
         ...state,
       }
 
-    case FETCH_URL_TOTAL_HITS.REQUEST:
+    case FETCH_URL_MONTHLY_HITS.REQUEST:
       return {
         ...state,
       }
 
-    case FETCH_URL_TOTAL_HITS.SUCCESS:
+    case FETCH_URL_MONTHLY_HITS.SUCCESS:
       return {
         ...state,
-        urlsTotalHits: state.urlsTotalHits.filter(({ id }) => id !== action.data.id).concat(action.data)
+        urlsMonthlyHits: state.urlsMonthlyHits.filter(({ id }) => id !== action.data.id).concat(action.data)
       }
 
     default: return state

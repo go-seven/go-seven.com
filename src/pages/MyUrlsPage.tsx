@@ -19,9 +19,9 @@ import {
 } from "../reducers/account"
 import {
   fetchUrlDailyHitsIfNeeded,
-  fetchUrlTotalHitsIfNeeded,
+  fetchUrlMonthlyHitsIfNeeded,
   IUrlDailyHits,
-  IUrlTotalHits,
+  IUrlMonthlyHits,
 } from "../reducers/analytics"
 import {
   fetchUrlCollectionIfNeeded,
@@ -33,8 +33,8 @@ interface IProps extends RouteComponentProps {
   authenticationIsValid: boolean | null
   exitAccount: () => void
   fetchUrlCollection: IUrlCollectionProps["fetchUrlCollection"]
-  fetchUrlDailyHits: (urlId: string, day: string) => void
-  fetchUrlTotalHits: (urlId: string) => void
+  fetchUrlDailyHits: IUrlCollectionProps["fetchUrlDailyHits"]
+  fetchUrlMonthlyHits: IUrlCollectionProps["fetchUrlMonthlyHits"]
   fetchingUrlMetadata: boolean
   isFetchingUrlCollection: boolean
   removeUrlFromCollection: (urlCollectionId: string) => (urlId: string) => () => void,
@@ -42,7 +42,7 @@ interface IProps extends RouteComponentProps {
   selectedUrlCollectionId: string
   urlCollection: IUrlCollection | null
   urlsDailyHits: IUrlDailyHits[]
-  urlsTotalHits: IUrlTotalHits[]
+  urlsMonthlyHits: IUrlMonthlyHits[]
 }
 
 class MyUrlsPage extends React.Component<IProps> {
@@ -54,14 +54,14 @@ class MyUrlsPage extends React.Component<IProps> {
       exitAccount,
       fetchUrlCollection,
       fetchUrlDailyHits,
-      fetchUrlTotalHits,
+      fetchUrlMonthlyHits,
       isFetchingUrlCollection,
       removeUrlFromCollection,
       removingUrlId,
       selectedUrlCollectionId,
       urlCollection,
       urlsDailyHits,
-      urlsTotalHits,
+      urlsMonthlyHits,
     } = this.props
 
     if (authenticationIsValid === null) {
@@ -95,12 +95,12 @@ class MyUrlsPage extends React.Component<IProps> {
             <UrlCollection
               fetchUrlCollection={fetchUrlCollection}
               fetchUrlDailyHits={fetchUrlDailyHits}
-              fetchUrlTotalHits={fetchUrlTotalHits}
+              fetchUrlMonthlyHits={fetchUrlMonthlyHits}
               removeUrl={removeUrlFromCollection(selectedUrlCollectionId)}
               removingUrlId={removingUrlId}
               urlCollection={urlCollection}
               urlsDailyHits={urlsDailyHits}
-              urlsTotalHits={urlsTotalHits}
+              urlsMonthlyHits={urlsMonthlyHits}
             />
           </Container>
         </Section>
@@ -115,7 +115,7 @@ const mapStateToProps = ({
   },
   analytics: {
     urlsDailyHits,
-    urlsTotalHits,
+    urlsMonthlyHits,
   },
   urlCollections: {
     creatingUrl,
@@ -137,7 +137,7 @@ const mapStateToProps = ({
   selectedUrlCollectionId,
   urlCollection: currentUrlCollection,
   urlsDailyHits,
-  urlsTotalHits,
+  urlsMonthlyHits,
   wantedUrl,
   wantedUrlHrefIsValid,
   wantedUrlIdExists,
@@ -147,7 +147,7 @@ const mapDispatchToProps = (dispatch) => ({
   exitAccount: () => dispatch(exitAccount()),
   fetchUrlCollection: () => dispatch(fetchUrlCollectionIfNeeded()),
   fetchUrlDailyHits: (urlId, day) => dispatch(fetchUrlDailyHitsIfNeeded(urlId, day)),
-  fetchUrlTotalHits: (urlId) => dispatch(fetchUrlTotalHitsIfNeeded(urlId)),
+  fetchUrlMonthlyHits: (urlId, month) => dispatch(fetchUrlMonthlyHitsIfNeeded(urlId, month)),
   removeUrlFromCollection: (urlCollectionId) => (urlId) => () => dispatch(removeUrlFromCollection(urlCollectionId, urlId)),
 })
 
