@@ -3,6 +3,7 @@ import { scaleLinear as d3ScaleLinear } from "d3-scale"
 import { select as d3Select } from "d3-selection"
 import * as solidIcon from "fa-svg-icon/solid"
 import * as React from "react"
+import { useEffect, useState, useRef } from "react"
 import * as ReactDOM from "react-dom"
 import { FormattedMessage } from "react-intl"
 import { Redirect } from "react-router-dom"
@@ -61,18 +62,18 @@ function Chart({
 }: IChartProps) {
   const numBars = urlDailyHits.length
 
-  const containerRef = React.useRef<HTMLDivElement>(null)
-  const barsRef = React.useRef<SVGGElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const barsRef = useRef<SVGGElement>(null)
 
-  const [width, setWidth] = React.useState(0)
+  const [width, setWidth] = useState(0)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const { width } = (ReactDOM.findDOMNode(containerRef.current) as HTMLDivElement).getBoundingClientRect()
 
     setWidth(width)
   }, [containerRef.current, windowWidth])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const barWidth = numBars > 0 ? ((width - barGap * (numBars - 1))/ numBars) : 0
     const zeroDataHeight = 1
 

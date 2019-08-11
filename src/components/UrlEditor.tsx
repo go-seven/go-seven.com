@@ -16,6 +16,8 @@ import {
   Tags,
 } from "trunx"
 
+import TargetUrlHrefField from "./TargetUrlHrefField"
+
 import {
   IUrl,
 } from "../reducers/urlCollections"
@@ -24,18 +26,22 @@ export interface IUrlEditorProps {
   currentUrl: IUrl | null
   fetchingUrlMetadata: boolean
   fetchUrlMetadata: (IUrl) => void
+  setWantedUrl: (IUrl) => void
   updateUrl: (url: IUrl) => void
   updatingUrl: boolean
   url: IUrl
+  wantedUrlHrefIsValid: boolean
 }
 
 export default function UrlEditor ({
   currentUrl,
   fetchUrlMetadata,
   fetchingUrlMetadata,
+  setWantedUrl,
   updateUrl,
   updatingUrl,
   url,
+  wantedUrlHrefIsValid,
 }: IUrlEditorProps) {
   const [wantedTitle, setWantedTitle] = useState(url.title)
 
@@ -89,22 +95,24 @@ export default function UrlEditor ({
           </Control>
         </Field>
 
-        <Field>
-          <Label>
-            <FormattedMessage id="UrlEditor.target-url.label" />
-          </Label>
-
-          <Control
-            isLoading={fetchingUrlMetadata}
-          >
-            <Input
-              isSuccess={(currentUrl !== null && currentUrl.metadata && currentUrl.metadata.statusCode === 200)}
-              readOnly
-              type="text"
-              value={url.href}
+        <InjectIntl>
+          {({ intl }) => (
+            <TargetUrlHrefField
+              initialUrlHref={url.href}
+              isLoading={fetchingUrlMetadata}
+              label={intl.formatMessage({ id: "UrlEditor.target-url.label" })}
+              readOnly={updatingUrl}
+              resetTargetUrlHref={0}
+              setTargetUrl={setWantedUrl}
+              wantedUrlHrefIsValid={wantedUrlHrefIsValid}
             />
-          </Control>
-        </Field>
+          )}
+        </InjectIntl>
+
+        {/*
+          TODO show status code
+          isSuccess={(currentUrl !== null && currentUrl.metadata && typeof currentUrl.metadata.statusCode === "number" && currentUrl.metadata.statusCode < 400)}
+        */}
 
         <Field>
           <Label>
@@ -113,7 +121,7 @@ export default function UrlEditor ({
 
           <Control
           >
-            <div className="url-editor__target-url-title">
+            <div className="url-editor__text-field--readonly">
               {(currentUrl !== null && currentUrl.metadata) ? currentUrl.metadata.title : ""}
             </div>
           </Control>
@@ -130,6 +138,17 @@ export default function UrlEditor ({
               type="text"
               value={wantedTitle}
             />
+          </Control>
+        </Field>
+
+        <Field>
+          <Label>
+            <FormattedMessage id="UrlEditor.short-url-title.label" />
+          </Label>
+          <Control>
+            <div className="url-editor__text-field--readonly">
+              {(currentUrl !== null && currentUrl.metadata) ? currentUrl.metadata.title : ""}
+            </div>
           </Control>
         </Field>
 

@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { Redirect } from "react-router-dom"
 import {
@@ -42,14 +43,14 @@ export default function UrlCollection({
   urlsDailyHits,
   urlsMonthlyHits,
 }: IUrlCollectionProps) {
-  const [redirect, setRedirect] = React.useState()
-  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth)
+  const [redirect, setRedirect] = useState()
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchUrlCollection()
   }, [])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const resizeHandler = () => setWindowWidth(window.innerWidth)
 
     window.addEventListener('resize', resizeHandler)

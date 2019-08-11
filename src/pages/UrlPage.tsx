@@ -25,6 +25,7 @@ import {
 import {
   fetchUrlMetadataIfNeeded,
   removeUrlFromCollection,
+  setWantedUrl,
   updateUrl,
   IUrl,
 } from "../reducers/urlCollections"
@@ -42,9 +43,11 @@ interface IProps extends RouteComponentProps<IMatchParams> {
   fetchUrlMetadata: (IUrl) => void
   removeUrl: (IMatchParams) => void
   removingUrl: boolean
+  setWantedUrl: (IUrl) => void
   updateUrl: (urlCollectionId: string) => IUrlEditorProps["updateUrl"]
   updatingUrl: boolean
   url: IUrl | undefined
+  wantedUrlHrefIsValid: boolean
 }
 
 interface IState {
@@ -99,6 +102,7 @@ class UrlPage extends React.Component<IProps, IState> {
       updateUrl,
       updatingUrl,
       url,
+      wantedUrlHrefIsValid,
     } = this.props
 
     const {
@@ -181,9 +185,11 @@ class UrlPage extends React.Component<IProps, IState> {
               currentUrl={currentUrl}
               fetchingUrlMetadata={fetchingUrlMetadata}
               fetchUrlMetadata={fetchUrlMetadata}
+              setWantedUrl={setWantedUrl}
               updateUrl={updateUrl(urlCollectionId)}
               updatingUrl={updatingUrl}
               url={url}
+              wantedUrlHrefIsValid={wantedUrlHrefIsValid}
             />
           </Container>
         </Section>
@@ -209,7 +215,8 @@ const mapDispatchToProps = (dispatch) => ({
   exitAccount: () => dispatch(exitAccount()),
   fetchUrlMetadata: (url) => dispatch(fetchUrlMetadataIfNeeded(url)),
   removeUrl: ({ urlCollectionId, urlId }) => dispatch(removeUrlFromCollection(urlCollectionId, urlId)),
-  updateUrl: (urlCollectionId) => (url) => dispatch(updateUrl(urlCollectionId, url))
+  setWantedUrl: (url) => dispatch(setWantedUrl(url)),
+  updateUrl: (urlCollectionId) => (url) => dispatch(updateUrl(urlCollectionId, url)),
 })
 
 const mapStateToProps = (
@@ -221,8 +228,10 @@ const mapStateToProps = (
       currentUrlCollection,
       currentUrl,
       fetchingUrlMetadata,
+      justCreatedUrls,
       removingUrlId,
       updatingUrl,
+      wantedUrlHrefIsValid,
     }
   },
   {
@@ -236,9 +245,11 @@ const mapStateToProps = (
   authenticationIsValid: authentication === null ? null : authentication.isValid,
   currentUrl,
   fetchingUrlMetadata,
+  justCreatedUrls,
   removingUrl: removingUrlId === urlId,
   updatingUrl,
   url: currentUrlCollection ? currentUrlCollection.urls.find(({ id }) => id === urlId) : undefined,
+  wantedUrlHrefIsValid,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UrlPage)

@@ -49,6 +49,7 @@
     "SettingsPage.account-deletion-confirmation.message": "Are you sure you want to delete your account?",
     "SettingsPage.account-deletion-confirmation.submit": "Delete my account",
     "SettingsPage.title": "Settings",
+    "TargetUrlField.help.invalid-url": "Invalid URL",
     "TermsOfServicePage.title": "Terms of Service",
     "UrlCard.month-to-date": "Month to date",
     "UrlCollection.is-empty.action": "Create URL",

@@ -14,6 +14,8 @@ import {
   Label,
 } from "trunx"
 
+import TargetUrlHrefField from "./TargetUrlHrefField"
+
 import {
   IUrl,
 } from "../reducers/urlCollections"
@@ -24,8 +26,9 @@ export interface IUrlCreatorProps {
   checkingIfUrlIdExists: boolean
   creatingUrl: boolean
   fetchingUrlMetadata: boolean
-  setWantedUrlTimeout: number
+  justCreatedUrls: IUrl[]
   setWantedUrl: (IUrl) => void
+  setWantedUrlTimeout: number
   wantedUrl: IUrl | null
   wantedUrlHrefIsValid: boolean
   wantedUrlIdExists: boolean
@@ -55,7 +58,6 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
     wantedUrlId: "",
   }
 
-  private urlHrefRef = React.createRef<HTMLInputElement>()
   private urlIdRef = React.createRef<HTMLInputElement>()
 
   componentDidMount() {
@@ -81,40 +83,6 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
     return `https://${domain}/`
   }
 
-  getUrlHref(): string {
-    const {
-      wantedUrlHref
-    } = this.state
-
-    let urlHref = this.urlHrefRef.current!.value
-
-    if (urlHref === "" || urlHref === null) {
-      return ""
-    } else {
-      urlHref = urlHref.trim()
-    }
-
-    if (wantedUrlHref.length < urlHref.length) { // user is not deleting text
-      if (urlHref.toLowerCase() === "http:") {
-        urlHref = "http://"
-      }
-
-      if (urlHref.toLowerCase() === "https") {
-        urlHref = "https://"
-      }
-
-      if (urlHref.toLowerCase() === "http:///") {
-        urlHref = "http://"
-      }
-
-      if (urlHref.toLowerCase() === "https:///") {
-        urlHref = "https://"
-      }
-    }
-
-    return urlHref
-  }
-
   getUrlId(): string {
     const shortUrlPrefix = this.getShortUrlPrefix()
 
@@ -130,46 +98,6 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
 
 
     return inputValue.trim().replace(shortUrlPrefix, "")
-  }
-
-  onChangeUrlHref = (event) => {
-    pdsp(event)
-
-    const {
-      setWantedUrl,
-      setWantedUrlTimeout,
-    } = this.props
-
-    const {
-      canSetWantedUrlHref,
-    } = this.state
-
-    const wantedUrlHref = this.getUrlHref()
-
-    this.setState({
-      wantedUrlHref,
-    })
-    if (canSetWantedUrlHref) {
-      this.setState({
-        canSetWantedUrlHref: false,
-        wantedUrlHref,
-      }, () => {
-        setTimeout(() => {
-          const wantedUrlHref = this.getUrlHref()
-
-          this.setState({
-            canSetWantedUrlHref: true,
-            wantedUrlHref,
-          }, () => {
-            setWantedUrl({ href: wantedUrlHref })
-          })
-        }, setWantedUrlTimeout)
-      })
-    } else {
-      this.setState({
-        wantedUrlHref,
-      })
-    }
   }
 
   onChangeUrlId = (event) => {
@@ -231,15 +159,18 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
       checkingIfUrlIdExists,
       creatingUrl,
       fetchingUrlMetadata,
+      justCreatedUrls,
+      setWantedUrl,
       wantedUrl,
       wantedUrlIdExists,
       wantedUrlHrefIsValid,
     } = this.props
 
     const {
-      wantedUrlHref,
       wantedUrlId,
     } = this.state
+
+    const numJustCreatedUrls = justCreatedUrls.length
 
     const saveButtonDisabled = (
       (wantedUrlIdExists === true) ||
@@ -255,34 +186,19 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
         onSubmit={this.onSubmit}
       >
         <Box>
-          <Field>
-            <Label>
-              <FormattedMessage id="UrlCreator.target-url.label" />
-            </Label>
-
-            <Control
-              isLoading={fetchingUrlMetadata}
-            >
-              <InjectIntl>
-                {({ intl }) => (
-                  <Input
-                    inputRef={this.urlHrefRef}
-                    isDanger={wantedUrlHref !== "" && wantedUrlHrefIsValid === false}
-                    isSuccess={wantedUrlHref !== "" && wantedUrlHrefIsValid === true}
-                    onChange={this.onChangeUrlHref}
-                    placeholder={intl.formatMessage({ id: "UrlCreator.target-url.placeholder" })}
-                    readOnly={creatingUrl}
-                    type="text"
-                    value={wantedUrlHref}
-                  />
-                )}
-              </InjectIntl>
-            </Control>
-
-            <Help isDanger={wantedUrlHrefIsValid === false}>
-              {wantedUrlHrefIsValid === false && "Invalid URL"}
-            </Help>
-          </Field>
+          <InjectIntl>
+            {({ intl }) => (
+              <TargetUrlHrefField
+                isLoading={fetchingUrlMetadata}
+                label={intl.formatMessage({ id: "UrlCreator.target-url.label" })}
+                placeholder={intl.formatMessage({ id: "UrlCreator.target-url.placeholder" })}
+                readOnly={creatingUrl}
+                resetTargetUrlHref={numJustCreatedUrls}
+                setTargetUrl={setWantedUrl}
+                wantedUrlHrefIsValid={wantedUrlHrefIsValid}
+              />
+            )}
+          </InjectIntl>
 
           <Field>
             <Label>
@@ -304,7 +220,7 @@ export default class UrlCreator extends React.Component<IUrlCreatorProps, IState
             <Column isHalf>
               <Field>
                 <Label>
-                  <FormattedMessage id="UrlCreator.short-url-title.label" />
+                  <FormattedMessage id="UrlCreator.short-url.label" />
                 </Label>
 
                 <Control

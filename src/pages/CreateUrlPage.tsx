@@ -3,6 +3,7 @@ import { FormattedMessage } from "react-intl"
 import { connect } from "react-redux"
 import { Redirect, RouteComponentProps } from "react-router-dom"
 import {
+  Box,
   Container,
   Section,
   Title,
@@ -28,8 +29,9 @@ interface IProps extends RouteComponentProps {
   creatingUrl: boolean
   createUrl: IUrlCreatorProps["createUrl"]
   exitAccount: () => void
+  justCreatedUrls: IUrl[]
   fetchingUrlMetadata: boolean
-  setWantedUrl: IUrlCreatorProps["setWantedUrl"]
+  setWantedUrl: (IUrl) => void
   wantedUrl: IUrl | null
   wantedUrlHrefIsValid: boolean
   wantedUrlIdExists: boolean
@@ -45,6 +47,7 @@ class MyUrlsPage extends React.Component<IProps> {
       createUrl,
       creatingUrl,
       fetchingUrlMetadata,
+      justCreatedUrls,
       setWantedUrl,
       wantedUrl,
       wantedUrlHrefIsValid,
@@ -76,12 +79,22 @@ class MyUrlsPage extends React.Component<IProps> {
               checkingIfUrlIdExists={checkingIfUrlIdExists}
               creatingUrl={creatingUrl}
               fetchingUrlMetadata={fetchingUrlMetadata}
+              justCreatedUrls={justCreatedUrls}
               setWantedUrl={setWantedUrl}
               wantedUrl={wantedUrl}
               wantedUrlIdExists={wantedUrlIdExists}
               wantedUrlHrefIsValid={wantedUrlHrefIsValid}
             />
           </Container>
+        </Section>
+
+        <Section>
+          {/* TODO show URL preview */}
+          {justCreatedUrls.map((url, i) => (
+            <Box key={i}>
+              <div>{url.href}</div>
+            </Box>
+          ))}
         </Section>
       </>
     )
@@ -96,6 +109,7 @@ const mapStateToProps = ({
     checkingIfUrlIdExists,
     creatingUrl,
     fetchingUrlMetadata,
+    justCreatedUrls,
     wantedUrl,
     wantedUrlHrefIsValid,
     wantedUrlIdExists,
@@ -105,6 +119,7 @@ const mapStateToProps = ({
   checkingIfUrlIdExists,
   creatingUrl,
   fetchingUrlMetadata,
+  justCreatedUrls,
   wantedUrl,
   wantedUrlHrefIsValid,
   wantedUrlIdExists,

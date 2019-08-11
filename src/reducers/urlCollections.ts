@@ -39,6 +39,7 @@ interface IUrlCollectionsState {
   currentUrlCollection: IUrlCollection | null
   currentUrl: IUrl | null
   fetchingUrlMetadata: boolean
+  justCreatedUrls: IUrl[]
   isFetchingUrlCollection: boolean
   removingUrlId: string | null
   selectedUrlCollectionId: string | null
@@ -55,6 +56,7 @@ export const initialState: IUrlCollectionsState = {
   currentUrlCollection: null,
   fetchingUrlMetadata: false,
   isFetchingUrlCollection: false,
+  justCreatedUrls: [],
   removingUrlId: null,
   selectedUrlCollectionId: null,
   updatingUrl: false,
@@ -80,7 +82,7 @@ export function createUrl(url: IUrl) {
     const urlCollectionId = fallbackToDefaultUrlCollectionId(selectedUrlCollectionId, accountId)
 
     client.post("/url", { urlCollectionId, url }, token).then(
-      (data) => dispatch({ data, type: SUCCESS }),
+      (data) => dispatch({ data, type: SUCCESS, url }),
       (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
     )
   }
@@ -273,6 +275,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         creatingUrl: false,
+        justCreatedUrls: state.justCreatedUrls.concat({ ...action.url, ...action.data }),
         wantedUrl: null,
       }
 
