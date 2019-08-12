@@ -30,9 +30,13 @@ export default function() {
 
               <Content>
                 <ul>
-                  <li>Unlimited links.</li>
+                  <li>
+                    <FormattedMessage id="Pricing.free.unlimited-urls" />
+                  </li>
 
-                  <li>Number of total clicks.</li>
+                  <li>
+                    <FormattedMessage id="Pricing.free.analytics" />
+                  </li>
                 </ul>
               </Content>
             </Tile.Child.Box>
@@ -50,9 +54,9 @@ export default function() {
 
               <Content>
                 <ul>
-                  <li>Unlimited links.</li>
-
-                  <li>Number of total clicks.</li>
+                  <li>
+                    <FormattedMessage id="Pricing.pro.unlimited-analytics" />
+                  </li>
                 </ul>
               </Content>
             </Tile.Child.Box>

@@ -26,12 +26,22 @@ export default class PrivacyPolicyPage extends React.Component<IProps> {
 
         <Section>
           <Container>
+            <Content>
             <Title>
               <FormattedMessage id={"PrivacyPolicyPage.title"} />
             </Title>
 
-            <Content>
+            <p>
               <FormattedMessage id={"PrivacyPolicyPage.intro"} />
+            </p>
+
+            <Title is3>
+              <FormattedMessage id={"PrivacyPolicyPage.changes.title"} />
+            </Title>
+
+            <p>
+              <FormattedMessage id={"PrivacyPolicyPage.changes.paragraph"} />
+            </p>
             </Content>
           </Container>
         </Section>
