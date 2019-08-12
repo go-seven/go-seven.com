@@ -30,6 +30,13 @@ export default class TermsOfServicePage extends React.Component<IProps> {
               <FormattedMessage id={"TermsOfServicePage.title"} />
             </Title>
 
+            <Title is4>
+              <FormattedMessage id={"TermsOfServicePage.downgrades.title"} />
+            </Title>
+
+            <p>
+              <FormattedMessage id={"TermsOfServicePage.downgrades.paragraph"} />
+            </p>
           </Container>
         </Section>
 

@@ -16,6 +16,7 @@ import {
   Tags,
 } from "trunx"
 
+import ReadOnlyTextField from "./ReadOnlyTextField"
 import TargetUrlHrefField from "./TargetUrlHrefField"
 
 import {
@@ -103,7 +104,7 @@ export default function UrlEditor ({
               label={intl.formatMessage({ id: "UrlEditor.target-url.label" })}
               readOnly={updatingUrl}
               resetTargetUrlHref={0}
-              setTargetUrl={setWantedUrl}
+              setTargetUrlHref={(href) => setWantedUrl({ href })}
               wantedUrlHrefIsValid={wantedUrlHrefIsValid}
             />
           )}
@@ -114,18 +115,14 @@ export default function UrlEditor ({
           isSuccess={(currentUrl !== null && currentUrl.metadata && typeof currentUrl.metadata.statusCode === "number" && currentUrl.metadata.statusCode < 400)}
         */}
 
-        <Field>
-          <Label>
-            <FormattedMessage id="UrlEditor.target-url-title.label" />
-          </Label>
-
-          <Control
-          >
-            <div className="url-editor__text-field--readonly">
-              {(currentUrl !== null && currentUrl.metadata) ? currentUrl.metadata.title : ""}
-            </div>
-          </Control>
-        </Field>
+        <InjectIntl>
+          {({ intl }) => (
+            <ReadOnlyTextField
+              label={intl.formatMessage({ id: "UrlEditor.target-url-title.label" })}
+              text={(currentUrl !== null && currentUrl.metadata && typeof currentUrl.metadata.title === "string") ? currentUrl.metadata.title : ""}
+            />
+          )}
+        </InjectIntl>
 
         <Field>
           <Label>

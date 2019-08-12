@@ -29,6 +29,7 @@ export interface IAuthentication {
 
 export interface IAccountState {
   authentication: IAuthentication | null
+  domain: string
   email?: string | null
   emailVerificationSent: boolean
   error?: IError
@@ -45,6 +46,7 @@ export interface IAccountState {
 
 export const initialState: IAccountState = {
   authentication: null,
+  domain: "go7.li",
   emailVerificationSent: false,
   isChangingPassword: false,
   isCreating: false,

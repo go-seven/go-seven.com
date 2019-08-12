@@ -1,5 +1,6 @@
 import * as pdsp from "pdsp"
 import * as React from "react"
+import { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import InjectIntl from "react-intl-inject"
 import {
@@ -9,11 +10,12 @@ import {
   Columns,
   Control,
   Field,
-  Help,
   Input,
   Label,
 } from "trunx"
 
+import ReadOnlyTextField from "./ReadOnlyTextField"
+import ShortUrlIdField from "./ShortUrlIdField"
 import TargetUrlHrefField from "./TargetUrlHrefField"
 
 import {
@@ -28,240 +30,144 @@ export interface IUrlCreatorProps {
   fetchingUrlMetadata: boolean
   justCreatedUrls: IUrl[]
   setWantedUrl: (IUrl) => void
-  setWantedUrlTimeout: number
   wantedUrl: IUrl | null
   wantedUrlHrefIsValid: boolean
   wantedUrlIdExists: boolean
 }
 
-interface IState {
-  canSetWantedUrlHref: boolean
-  canSetWantedUrlId: boolean
-  wantedUrlHref: string
-  wantedUrlId: string
-}
+export default function UrlCreator({
+  checkingIfUrlIdExists,
+  createUrl,
+  creatingUrl,
+  domain,
+  fetchingUrlMetadata,
+  justCreatedUrls,
+  setWantedUrl,
+  wantedUrl,
+  wantedUrlIdExists,
+  wantedUrlHrefIsValid,
+}: IUrlCreatorProps) {
+  const numJustCreatedUrls = justCreatedUrls.length
 
-const generateId = () => (
-  new Date().getTime().toString(36)
-)
+  const generateId = () => (
+    new Date().getTime().toString(36)
+  )
 
-export default class UrlCreator extends React.Component<IUrlCreatorProps, IState> {
-  static defaultProps = {
-    domain: "go7.li",
-    setWantedUrlTimeout: 2000,
-  }
+  const [wantedUrlId, setWantedUrlId] = useState(generateId())
+  const [wantedTitle, setWantedTitle] = useState("")
 
-  state = {
-    canSetWantedUrlHref: true,
-    canSetWantedUrlId: true,
-    wantedUrlHref: "",
-    wantedUrlId: "",
-  }
 
-  private urlIdRef = React.createRef<HTMLInputElement>()
-
-  componentDidMount() {
-    const {
-      setWantedUrl
-    } = this.props
-
-    const wantedUrlId = generateId()
-
-    this.setState({
-      canSetWantedUrlId: true,
-      wantedUrlId,
-    }, () => {
-      setWantedUrl({ id: wantedUrlId })
-    })
-  }
-
-  getShortUrlPrefix(): string {
-    const {
-      domain,
-    } = this.props
-
-    return `https://${domain}/`
-  }
-
-  getUrlId(): string {
-    const shortUrlPrefix = this.getShortUrlPrefix()
-
-    const inputValue = this.urlIdRef.current!.value
-
-    if (inputValue === null) {
-      return ""
+  useEffect(() => {
+    if (wantedTitle === "" && wantedUrl !== null && typeof wantedUrl.title === "string") {
+      setWantedTitle(wantedUrl.title)
     }
+  }, [wantedUrl])
 
-    if (inputValue.length <= shortUrlPrefix.length) {
-      return ""
-    }
-
-
-    return inputValue.trim().replace(shortUrlPrefix, "")
-  }
-
-  onChangeUrlId = (event) => {
+  const onChangeTitle = (event) => {
     pdsp(event)
 
-    const {
-      setWantedUrl,
-      setWantedUrlTimeout,
-    } = this.props
-
-    const {
-      canSetWantedUrlId,
-    } = this.state
-
-    const wantedUrlId = this.getUrlId()
-
-    if (canSetWantedUrlId) {
-      this.setState({
-        canSetWantedUrlId: false,
-        wantedUrlId,
-      }, () => {
-        setTimeout(() => {
-          const wantedUrlId = this.getUrlId()
-
-          this.setState({
-            canSetWantedUrlId: true,
-            wantedUrlId,
-          }, () => {
-            setWantedUrl({ id: wantedUrlId })
-          })
-        }, setWantedUrlTimeout)
-      })
-    } else {
-      this.setState({ wantedUrlId })
-    }
+    setWantedTitle(event.target)
   }
 
-  onSubmit = (event) => {
+  const onSubmit = (event) => {
     pdsp(event)
-
-    const {
-      createUrl,
-      wantedUrl,
-    } = this.props
-
-    const {
-      wantedUrlId,
-    } = this.state
 
     if (wantedUrl !== null) {
-      const { href, title } = wantedUrl
+      const { href } = wantedUrl
+      const title = wantedTitle.trim()
 
-      createUrl({ href, id: wantedUrlId, title })
+      createUrl({
+        href,
+        id: wantedUrlId,
+        title,
+      })
     }
   }
 
-  render() {
-    const {
-      checkingIfUrlIdExists,
-      creatingUrl,
-      fetchingUrlMetadata,
-      justCreatedUrls,
-      setWantedUrl,
-      wantedUrl,
-      wantedUrlIdExists,
-      wantedUrlHrefIsValid,
-    } = this.props
+  const saveButtonDisabled = (
+    (wantedUrlIdExists === true) ||
+    (wantedUrlHrefIsValid !== true) ||
+    fetchingUrlMetadata ||
+    checkingIfUrlIdExists
+  )
 
-    const {
-      wantedUrlId,
-    } = this.state
-
-    const numJustCreatedUrls = justCreatedUrls.length
-
-    const saveButtonDisabled = (
-      (wantedUrlIdExists === true) ||
-      (wantedUrlHrefIsValid !== true) ||
-      fetchingUrlMetadata ||
-      checkingIfUrlIdExists
-    )
-
-    const shortUrlPrefix = this.getShortUrlPrefix()
-
-    return (
-      <form
-        onSubmit={this.onSubmit}
-      >
-        <Box>
-          <InjectIntl>
-            {({ intl }) => (
-              <TargetUrlHrefField
-                isLoading={fetchingUrlMetadata}
-                label={intl.formatMessage({ id: "UrlCreator.target-url.label" })}
-                placeholder={intl.formatMessage({ id: "UrlCreator.target-url.placeholder" })}
-                readOnly={creatingUrl}
-                resetTargetUrlHref={numJustCreatedUrls}
-                setTargetUrl={setWantedUrl}
-                wantedUrlHrefIsValid={wantedUrlHrefIsValid}
-              />
-            )}
-          </InjectIntl>
-
-          <Field>
-            <Label>
-              <FormattedMessage id="UrlCreator.short-url-title.label" />
-            </Label>
-
-            <Control
+  return (
+    <form
+      onSubmit={onSubmit}
+    >
+      <Box>
+        <InjectIntl>
+          {({ intl }) => (
+            <TargetUrlHrefField
               isLoading={fetchingUrlMetadata}
-            >
-              <Input
-                readOnly
-                type="text"
-                value={wantedUrl && wantedUrl.title || ""}
-              />
-            </Control>
-          </Field>
+              label={intl.formatMessage({ id: "UrlCreator.target-url.label" })}
+              placeholder={intl.formatMessage({ id: "UrlCreator.target-url.placeholder" })}
+              readOnly={creatingUrl}
+              resetTargetUrlHref={numJustCreatedUrls}
+              setTargetUrlHref={(href) => setWantedUrl({ href })}
+              wantedUrlHrefIsValid={wantedUrlHrefIsValid}
+            />
+          )}
+        </InjectIntl>
 
-          <Columns isDesktop>
-            <Column isHalf>
-              <Field>
-                <Label>
-                  <FormattedMessage id="UrlCreator.short-url.label" />
-                </Label>
+        <InjectIntl>
+          {({ intl }) => (
+            <ReadOnlyTextField
+              label={intl.formatMessage({ id: "UrlCreator.target-url-title.label" })}
+              text={wantedUrl && wantedUrl.title || ""}
+            />
+          )}
+        </InjectIntl>
 
-                <Control
+        <Field>
+          <Label>
+            <FormattedMessage id="UrlCreator.short-url-title.label" />
+          </Label>
+
+          <Control>
+            <Input
+              onChange={onChangeTitle}
+              type="text"
+              value={wantedTitle}
+            />
+          </Control>
+        </Field>
+
+        <Columns isDesktop>
+          <Column isHalf>
+            <InjectIntl>
+              {({ intl }) => (
+                <ShortUrlIdField
+                  domain={domain}
                   isLoading={checkingIfUrlIdExists}
-                >
-                  <Input
-                    inputRef={this.urlIdRef}
-                    isDanger={wantedUrlId !== "" && wantedUrlIdExists === true}
-                    isSuccess={wantedUrlId !== "" && wantedUrlIdExists === false}
-                    onChange={this.onChangeUrlId}
-                    placeholder={shortUrlPrefix}
-                    readOnly={creatingUrl}
-                    type="text"
-                    value={`${shortUrlPrefix}${wantedUrlId}`}
-                  />
-                </Control>
+                  label={intl.formatMessage({ id: "UrlCreator.short-url.label" })}
+                  readOnly={creatingUrl}
+                  resetUrlId={numJustCreatedUrls}
+                  setWantedUrlId={setWantedUrlId}
+                  wantedUrlId={wantedUrlId}
+                  wantedUrlIdExists={wantedUrlIdExists}
+                />
+              )}
+            </InjectIntl>
+          </Column>
+        </Columns>
 
-                <Help isDanger={wantedUrlIdExists === true}>
-                  {wantedUrlIdExists === true && "Not available"}
-                </Help>
-              </Field>
-            </Column>
-          </Columns>
-
-          <Field>
-            <Control>
-              <InjectIntl>
-                {({ intl }) => (
-                  <Button
-                    disabled={saveButtonDisabled}
-                    isLoading={creatingUrl}
-                    isSuccess={wantedUrlHrefIsValid === true}
-                    type="submit"
-                    value={intl.formatMessage({ id: "UrlCreator.submit" })}
-                  />
-                )}
-              </InjectIntl>
-            </Control>
-          </Field>
-        </Box>
-      </form>
-    )
-  }
+        <Field>
+          <Control>
+            <InjectIntl>
+              {({ intl }) => (
+                <Button
+                  disabled={saveButtonDisabled}
+                  isLoading={creatingUrl}
+                  isSuccess={wantedUrlHrefIsValid === true}
+                  type="submit"
+                  value={intl.formatMessage({ id: "UrlCreator.submit" })}
+                />
+              )}
+            </InjectIntl>
+          </Control>
+        </Field>
+      </Box>
+    </form>
+  )
 }

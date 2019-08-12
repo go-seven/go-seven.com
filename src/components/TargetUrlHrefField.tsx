@@ -10,17 +10,13 @@ import {
   Label,
 } from "trunx"
 
-import {
-  IUrl,
-} from "../reducers/urlCollections"
-
 export interface ITargetUrlFieldProps {
   initialUrlHref?: string
   isLoading: boolean
   label: string
   placeholder?: string
   resetTargetUrlHref: number,
-  setTargetUrl: (IUrl) => void
+  setTargetUrlHref: (href: string) => void
   readOnly: boolean
   wantedUrlHrefIsValid: boolean
 }
@@ -32,7 +28,7 @@ export default function TargetUrlField({
   placeholder,
   readOnly,
   resetTargetUrlHref,
-  setTargetUrl,
+  setTargetUrlHref,
   wantedUrlHrefIsValid,
 }: ITargetUrlFieldProps) {
   const delay = 2000
@@ -42,32 +38,32 @@ export default function TargetUrlField({
 
   const [componentDidMount, setComponentDidMount] = useState(false)
 
-  const getUrlHref = (urlHref) => {
-    if (urlHref === "" || urlHref === null) {
+  const getUrlHref = (value) => {
+    if (value === "" || value === null) {
       return ""
     } else {
-      urlHref = urlHref.trim()
+      value = value.trim()
     }
 
-    if (wantedUrlHref.length < urlHref.length) { // user is not deleting text
-      if (urlHref.toLowerCase() === "http:") {
-        urlHref = "http://"
+    if (wantedUrlHref.length < value.length) { // user is not deleting text
+      if (value.toLowerCase() === "http:") {
+        value = "http://"
       }
 
-      if (urlHref.toLowerCase() === "https") {
-        urlHref = "https://"
+      if (value.toLowerCase() === "https") {
+        value = "https://"
       }
 
-      if (urlHref.toLowerCase() === "http:///") {
-        urlHref = "http://"
+      if (value.toLowerCase() === "http:///") {
+        value = "http://"
       }
 
-      if (urlHref.toLowerCase() === "https:///") {
-        urlHref = "https://"
+      if (value.toLowerCase() === "https:///") {
+        value = "https://"
       }
     }
 
-    return urlHref
+    return value
   }
 
   useEffect(() => {
@@ -89,7 +85,7 @@ export default function TargetUrlField({
   }, [wantedUrlHref])
 
   useEffect(() => {
-    setTargetUrl({ href: debouncedUrlHref })
+    setTargetUrlHref(debouncedUrlHref)
   }, [debouncedUrlHref])
 
   const onChange = (event) => {
@@ -124,7 +120,7 @@ export default function TargetUrlField({
         isDanger={wantedUrlHrefIsValid === false}
       >
         {wantedUrlHrefIsValid === false && (
-          <FormattedMessage id="TargetUrlField.help.invalid-url" />
+          <FormattedMessage id="TargetUrlHrefField.help.invalid-url" />
         )}
       </Help>
     </Field>

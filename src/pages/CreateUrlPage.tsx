@@ -28,6 +28,7 @@ interface IProps extends RouteComponentProps {
   checkingIfUrlIdExists: boolean
   creatingUrl: boolean
   createUrl: IUrlCreatorProps["createUrl"]
+  domain: string
   exitAccount: () => void
   justCreatedUrls: IUrl[]
   fetchingUrlMetadata: boolean
@@ -46,6 +47,7 @@ class MyUrlsPage extends React.Component<IProps> {
       checkingIfUrlIdExists,
       createUrl,
       creatingUrl,
+      domain,
       fetchingUrlMetadata,
       justCreatedUrls,
       setWantedUrl,
@@ -78,6 +80,7 @@ class MyUrlsPage extends React.Component<IProps> {
               createUrl={createUrl}
               checkingIfUrlIdExists={checkingIfUrlIdExists}
               creatingUrl={creatingUrl}
+              domain={domain}
               fetchingUrlMetadata={fetchingUrlMetadata}
               justCreatedUrls={justCreatedUrls}
               setWantedUrl={setWantedUrl}
@@ -104,6 +107,7 @@ class MyUrlsPage extends React.Component<IProps> {
 const mapStateToProps = ({
   account: {
     authentication,
+    domain,
   },
   urlCollections: {
     checkingIfUrlIdExists,
@@ -118,6 +122,7 @@ const mapStateToProps = ({
   authenticationIsValid: authentication === null ? false : authentication.isValid,
   checkingIfUrlIdExists,
   creatingUrl,
+  domain,
   fetchingUrlMetadata,
   justCreatedUrls,
   wantedUrl,
