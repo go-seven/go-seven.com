@@ -39,14 +39,14 @@ export default function() {
                 <FormattedHTMLMessage id="Features.list.mobile-first" />
               </li>
 
-              {/*
               <li>
-                Rock solid engine, relying on <a href="https://aws.amazon.com/cloudfront/" rel="noopener" target="_blank">Amazon Cloudfront</a>: practically it will be 99.9&#37; online.
+                <FormattedHTMLMessage id="Features.list.engine" />
               </li>
 
               <li>
-                Short URLs are served securely using <strong>https</strong> scheme. A short URL using http schema is allowed and it will be routed to safe https.
+                <FormattedHTMLMessage id="Features.list.secure" />
               </li>
+              {/*
 
               <li>
                 Customized short link. By default a random link is generated, but you can also set a custom string.
@@ -60,12 +60,14 @@ export default function() {
 
               <li>Short URL title is copied from your target URL.</li>
 
-              <li><em>Near real time</em> analytics: data is updated every few minutes.</li>
-
               <li>Analytics are private. You need to access with your email and password to manage your URLs and access your data.</li>
 
               <li>Analytics are never deleted and <a href="https://en.wikipedia.org/wiki/Data_anonymization" rel="noopener" target="_blank">data is anonymized</a>.</li>
               */}
+
+              <li>
+                <FormattedHTMLMessage id="Features.list.near-real-time" />
+              </li>
             </ul>
           </Content>
         </Container>
