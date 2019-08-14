@@ -40,12 +40,8 @@
       body {
         background-color: azure;
         color: #363636;
-        line-height: 1.5;
         margin: 0;
-        padding-top: 3.25rem;
       }
-
-      @-webkit-keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
 
       .progress-bar {
         border-radius: 5px;
@@ -71,19 +67,6 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
-
-        animation-duration: 2s;
-        animation-name: fadeIn;
-      }
-
-      .splashscreen h1 {
-        font-family: BlinkMacSystemFont, -apple-system, "Helvetica", "Arial", sans-serif;
-        font-size: 17vw;
-        font-weight: 711;
-        color: #49bcea;
-        margin-block-start: 0.17em;
-        margin-block-end: 0.17em;
-        text-shadow: 4px 4px 2px #171717;
       }
 
       noscript {
@@ -96,8 +79,6 @@
 
   <body class="has-navbar-fixed-top">
     <section class="splashscreen">
-      <h1>GoSeven</h1>
-
       <div class="progress-bar">
         <div>
           <div id="loader" style="width:0%"></div>
@@ -128,8 +109,8 @@
     <script onload="loaderProgress(5)" src="/libs/redux.js"></script>
 
     <link rel="stylesheet" href="/fonts/roboto-v18.css">
-    <link onload="loaderProgress(20)" rel="stylesheet" href="/css/app.v0.4.0.css">
+    <link onload="loaderProgress(20)" rel="stylesheet" href="/css/app.v0.4.1.css">
 
-    <script onload="loaderProgress(5)" src="/js/bundle.v0.4.0.js" defer></script>
+    <script onload="loaderProgress(5)" src="/js/bundle.v0.4.1.js" defer></script>
   </body>
 </html>

@@ -2,10 +2,7 @@ import * as React from "react"
 import { connect } from "react-redux"
 import { RouteComponentProps } from "react-router-dom"
 import {
-  Container,
   Hero,
-  Subtitle,
-  Title,
 } from "trunx"
 
 import Features from "../components/Features"
@@ -44,12 +41,12 @@ class HomePage extends React.Component<IProps> {
           showCreateAccountButton={hasNoEmail}
         />
 
-        <Hero isMedium>
+        <Hero>
           <Hero.Body>
-            <Container>
-              <Title>GoSeven</Title>
-              <Subtitle>Url shortener and click counter</Subtitle>
-            </Container>
+            <img
+              className="logotype"
+              src="/media/logotype-711x207.png"
+            />
           </Hero.Body>
         </Hero>
 
