@@ -1,19 +1,19 @@
 // User can organize its URLs into collections.
 // Every collection has an identifier and a name.
 // If no URL collection is selected there is always a "default" collection.
-import * as urlRegex from "regex-weburl"
+import * as urlRegex from 'regex-weburl'
 
-import asyncActions from "../asyncActions"
-import * as client from "../client"
+import asyncActions from '../asyncActions'
+import * as client from '../client'
 
-const CREATE_URL = asyncActions("CREATE_URL")
-const REMOVE_URL_FROM_COLLECTION = asyncActions("REMOVE_URL_FROM_COLLECTION")
-const FETCH_URL_COLLECTION = asyncActions("FETCH_URL_COLLECTION")
-const FETCH_URL_METADATA = asyncActions("FETCH_URL_METADATA")
-const FETCH_WANTED_URL_METADATA = asyncActions("FETCH_WANTED_URL_METADATA")
-const SET_WANTED_URL = "SET_WANTED_URL"
-const UPDATE_URL = asyncActions("UPDATE_URL")
-const URL_ID_EXISTS = asyncActions("URL_ID_EXISTS")
+const CREATE_URL = asyncActions('CREATE_URL')
+const REMOVE_URL_FROM_COLLECTION = asyncActions('REMOVE_URL_FROM_COLLECTION')
+const FETCH_URL_COLLECTION = asyncActions('FETCH_URL_COLLECTION')
+const FETCH_URL_METADATA = asyncActions('FETCH_URL_METADATA')
+const FETCH_WANTED_URL_METADATA = asyncActions('FETCH_WANTED_URL_METADATA')
+const SET_WANTED_URL = 'SET_WANTED_URL'
+const UPDATE_URL = asyncActions('UPDATE_URL')
+const URL_ID_EXISTS = asyncActions('URL_ID_EXISTS')
 
 export interface IUrlMetadata {
   statusCode?: number
@@ -62,17 +62,17 @@ export const initialState: IUrlCollectionsState = {
   updatingUrl: false,
   wantedUrl: null,
   wantedUrlHrefIsValid: null,
-  wantedUrlIdExists: null,
+  wantedUrlIdExists: null
 }
 
-export function createUrl(url: IUrl) {
+export function createUrl (url: IUrl) {
   const { FAILURE, SUCCESS, REQUEST } = CREATE_URL
 
   return (dispatch, getState) => {
     const {
       account: {
         authentication: { token },
-        id: accountId,
+        id: accountId
       },
       urlCollections: { selectedUrlCollectionId }
     } = getState()
@@ -81,22 +81,22 @@ export function createUrl(url: IUrl) {
 
     const urlCollectionId = fallbackToDefaultUrlCollectionId(selectedUrlCollectionId, accountId)
 
-    client.post("/url", { urlCollectionId, url }, token).then(
+    client.post('/url', { urlCollectionId, url }, token).then(
       (data) => dispatch({ data, type: SUCCESS, url }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
     )
   }
 }
 
-function fallbackToDefaultUrlCollectionId(selectedUrlCollectionId, accountId) {
-  if (typeof selectedUrlCollectionId === "string") {
+function fallbackToDefaultUrlCollectionId (selectedUrlCollectionId, accountId) {
+  if (typeof selectedUrlCollectionId === 'string') {
     return selectedUrlCollectionId
   } else {
-    return accountId.replace(/^a-/, "c-")
+    return accountId.replace(/^a-/, 'c-')
   }
 }
 
-function fetchUrlCollection(token, id) {
+function fetchUrlCollection (token, id) {
   const { FAILURE, SUCCESS, REQUEST } = FETCH_URL_COLLECTION
 
   return (dispatch) => {
@@ -104,22 +104,22 @@ function fetchUrlCollection(token, id) {
 
     client.get(`/url-collection/${id}`, token).then(
       (data) => dispatch({ data, type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
     )
   }
 }
 
-export function fetchUrlCollectionIfNeeded(wantedUrlCollectionId?) {
+export function fetchUrlCollectionIfNeeded (wantedUrlCollectionId?) {
   return (dispatch, getState) => {
     const {
       account: {
         authentication: { token },
-        id: accountId,
+        id: accountId
       },
       urlCollections: {
         currentUrlCollection,
-        selectedUrlCollectionId,
-      },
+        selectedUrlCollectionId
+      }
     } = getState()
 
     const urlCollectionId = wantedUrlCollectionId || fallbackToDefaultUrlCollectionId(selectedUrlCollectionId, accountId)
@@ -130,12 +130,12 @@ export function fetchUrlCollectionIfNeeded(wantedUrlCollectionId?) {
   }
 }
 
-function fetchUrlMetadata(url) {
+function fetchUrlMetadata (url) {
   const { FAILURE, SUCCESS, REQUEST } = FETCH_URL_METADATA
 
   return (dispatch, getState) => {
     const {
-      account: { authentication: { token } },
+      account: { authentication: { token } }
     } = getState()
 
     dispatch({ type: REQUEST })
@@ -144,12 +144,12 @@ function fetchUrlMetadata(url) {
 
     client.get(`/url-metadata?href=${encodedHref}`, token).then(
       (data) => dispatch({ data: { ...url, metadata: data }, type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
     )
   }
 }
 
-export function fetchUrlMetadataIfNeeded(url) {
+export function fetchUrlMetadataIfNeeded (url) {
   return (dispatch) => {
     if (shouldFetchUrlMetadata()) {
       return dispatch(fetchUrlMetadata(url))
@@ -157,7 +157,7 @@ export function fetchUrlMetadataIfNeeded(url) {
   }
 }
 
-export function removeUrlFromCollection(urlCollectionId: string, urlId: string) {
+export function removeUrlFromCollection (urlCollectionId: string, urlId: string) {
   const { FAILURE, SUCCESS, REQUEST } = REMOVE_URL_FROM_COLLECTION
 
   return (dispatch, getState) => {
@@ -167,23 +167,23 @@ export function removeUrlFromCollection(urlCollectionId: string, urlId: string) 
 
     client.del(`/url-collection/${urlCollectionId}/${urlId}`, token).then(
       () => dispatch({ type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
     )
   }
 }
 
-export function setWantedUrl(url: IUrl) {
+export function setWantedUrl (url: IUrl) {
   return (dispatch, getState) => {
     const {
       account: { authentication: { token } },
-      wantedUrl,
+      wantedUrl
     } = getState()
 
-    const urlHrefChanged = wantedUrl ? (wantedUrl.href !== url.href) : typeof url.href === "string"
-    const urlHrefIsEmpty = url.href === ""
+    const urlHrefChanged = wantedUrl ? (wantedUrl.href !== url.href) : typeof url.href === 'string'
+    const urlHrefIsEmpty = url.href === ''
 
-    const urlIdChanged = wantedUrl ? (wantedUrl.id !== url.id) : typeof url.id === "string"
-    const urlIdIsEmpty = url.id === ""
+    const urlIdChanged = wantedUrl ? (wantedUrl.id !== url.id) : typeof url.id === 'string'
+    const urlIdIsEmpty = url.id === ''
 
     if (urlHrefChanged) {
       if (urlHrefIsEmpty) {
@@ -198,7 +198,7 @@ export function setWantedUrl(url: IUrl) {
 
           client.get(`/url-metadata?href=${encodedHref}`, token).then(
             (data) => dispatch({ data: { href: url.href, metadata: data }, type: FETCH_WANTED_URL_METADATA.SUCCESS }),
-            (error) => dispatch({ error: client.parseError(error), type: FETCH_WANTED_URL_METADATA.FAILURE }),
+            (error) => dispatch({ error: client.parseError(error), type: FETCH_WANTED_URL_METADATA.FAILURE })
           )
         } else {
           dispatch({ data: { url, wantedUrlHrefIsValid: false }, type: SET_WANTED_URL })
@@ -217,7 +217,7 @@ export function setWantedUrl(url: IUrl) {
           (error) => {
             const { code } = client.parseError(error)
 
-            if (code === "UrlDoesNotExistError") {
+            if (code === 'UrlDoesNotExistError') {
               dispatch({ data: { exists: false }, type: URL_ID_EXISTS.SUCCESS })
             } else {
               dispatch({ error: { code }, type: URL_ID_EXISTS.FAILURE })
@@ -229,7 +229,7 @@ export function setWantedUrl(url: IUrl) {
   }
 }
 
-function shouldFetchUrlCollection(currentUrlCollection, selectedUrlCollectionId) {
+function shouldFetchUrlCollection (currentUrlCollection, selectedUrlCollectionId) {
   if (currentUrlCollection === null) {
     return true
   } else {
@@ -237,11 +237,11 @@ function shouldFetchUrlCollection(currentUrlCollection, selectedUrlCollectionId)
   }
 }
 
-function shouldFetchUrlMetadata() {
+function shouldFetchUrlMetadata () {
   return true
 }
 
-export function updateUrl(urlCollectionId: string, { id: urlId, title, }: IUrl) {
+export function updateUrl (urlCollectionId: string, { id: urlId, title }: IUrl) {
   const { FAILURE, SUCCESS, REQUEST } = UPDATE_URL
 
   return (dispatch, getState) => {
@@ -251,24 +251,24 @@ export function updateUrl(urlCollectionId: string, { id: urlId, title, }: IUrl) 
 
     client.put(`/url-collection/${urlCollectionId}/${urlId}`, { title }, token).then(
       (data) => dispatch({ data, type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE }),
+      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
     )
   }
 }
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case CREATE_URL.FAILURE:
       return {
         ...state,
-        creatingUrl: false,
+        creatingUrl: false
       }
 
     case CREATE_URL.REQUEST:
       return {
         ...state,
         creatingUrl: true,
-        wantedUrlIdExists: null,
+        wantedUrlIdExists: null
       }
 
     case CREATE_URL.SUCCESS:
@@ -276,19 +276,19 @@ export default function(state = initialState, action) {
         ...state,
         creatingUrl: false,
         justCreatedUrls: state.justCreatedUrls.concat({ ...action.url, ...action.data }),
-        wantedUrl: null,
+        wantedUrl: null
       }
 
     case FETCH_URL_COLLECTION.FAILURE:
       return {
         ...state,
-        isFetchingUrlCollection: false,
+        isFetchingUrlCollection: false
       }
 
     case FETCH_URL_COLLECTION.REQUEST:
       return {
         ...state,
-        isFetchingUrlCollection: true,
+        isFetchingUrlCollection: true
       }
 
     case FETCH_URL_COLLECTION.SUCCESS:
@@ -296,20 +296,20 @@ export default function(state = initialState, action) {
         ...state,
         currentUrlCollection: action.data,
         isFetchingUrlCollection: false,
-        selectedUrlCollectionId: action.data.id,
+        selectedUrlCollectionId: action.data.id
       }
 
     case FETCH_WANTED_URL_METADATA.FAILURE:
       return {
         ...state,
-        fetchingUrlMetadata: false,
+        fetchingUrlMetadata: false
       }
 
     case FETCH_WANTED_URL_METADATA.REQUEST:
       return {
         ...state,
         fetchingUrlMetadata: true,
-        wantedUrlHrefIsValid: true,
+        wantedUrlHrefIsValid: true
       }
 
     case FETCH_WANTED_URL_METADATA.SUCCESS:
@@ -320,7 +320,7 @@ export default function(state = initialState, action) {
           ...state.wantedUrl,
           href: action.data.href,
           metadata: action.data.metadata,
-          title: action.data.metadata.title,
+          title: action.data.metadata.title
         }
       }
 
@@ -328,33 +328,33 @@ export default function(state = initialState, action) {
       return {
         ...state,
         currentUrl: null,
-        fetchingUrlMetadata: false,
+        fetchingUrlMetadata: false
       }
 
     case FETCH_URL_METADATA.REQUEST:
       return {
         ...state,
         currentUrl: null,
-        fetchingUrlMetadata: true,
+        fetchingUrlMetadata: true
       }
 
     case FETCH_URL_METADATA.SUCCESS:
       return {
         ...state,
         currentUrl: action.data,
-        fetchingUrlMetadata: false,
+        fetchingUrlMetadata: false
       }
 
     case REMOVE_URL_FROM_COLLECTION.FAILURE:
       return {
         ...state,
-        removingUrlId: null,
+        removingUrlId: null
       }
 
     case REMOVE_URL_FROM_COLLECTION.REQUEST:
       return {
         ...state,
-        removingUrlId: action.data.removingUrlId,
+        removingUrlId: action.data.removingUrlId
       }
 
     case REMOVE_URL_FROM_COLLECTION.SUCCESS:
@@ -362,9 +362,9 @@ export default function(state = initialState, action) {
         ...state,
         currentUrlCollection: {
           ...state.currentUrlCollection,
-          urls: state.currentUrlCollection!.urls.filter(({ id }) => id !== state.removingUrlId)
+          urls: state.currentUrlCollection === null ? [] : state.currentUrlCollection.urls.filter(({ id }) => id !== state.removingUrlId)
         },
-        removingUrlId: null,
+        removingUrlId: null
       }
 
     case SET_WANTED_URL:
@@ -372,47 +372,47 @@ export default function(state = initialState, action) {
         ...state,
         wantedUrl: action.data.url,
         wantedUrlHrefIsValid: action.data.wantedUrlHrefIsValid,
-        wantedUrlIdExists: action.data.id === "" ? null : state.wantedUrlIdExists,
+        wantedUrlIdExists: action.data.id === '' ? null : state.wantedUrlIdExists
       }
 
     case UPDATE_URL.FAILURE:
       return {
         ...state,
-        updatingUrl: false,
+        updatingUrl: false
       }
 
     case UPDATE_URL.REQUEST:
       return {
         ...state,
         updatingUrl: true,
-        wantedUrlIdExists: null,
+        wantedUrlIdExists: null
       }
 
     case UPDATE_URL.SUCCESS:
       return {
         ...state,
-        updatingUrl: false,
+        updatingUrl: false
       }
 
     case URL_ID_EXISTS.FAILURE:
       return {
         ...state,
         checkingIfUrlIdExists: false,
-        wantedUrlIdExists: null,
+        wantedUrlIdExists: null
       }
 
     case URL_ID_EXISTS.REQUEST:
       return {
         ...state,
         checkingIfUrlIdExists: true,
-        wantedUrlIdExists: null,
+        wantedUrlIdExists: null
       }
 
     case URL_ID_EXISTS.SUCCESS:
       return {
         ...state,
         checkingIfUrlIdExists: false,
-        wantedUrlIdExists: action.data.exists,
+        wantedUrlIdExists: action.data.exists
       }
 
     default: return state

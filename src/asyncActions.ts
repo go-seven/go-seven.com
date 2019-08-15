@@ -1,8 +1,8 @@
 /** Redux helper */
-export default function asyncActions(NAME: string) {
+export default function asyncActions (NAME: string) {
   return {
     FAILURE: `${NAME}_FAILURE`,
     REQUEST: `${NAME}_REQUEST`,
-    SUCCESS: `${NAME}_SUCCESS`,
+    SUCCESS: `${NAME}_SUCCESS`
   }
 }

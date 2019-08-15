@@ -37,6 +37,7 @@
     "get_js_libs:react-dom": "wget https://unpkg.com/react-dom@${npm_package_config_versions_react_dom}/umd/react-dom.production.min.js -O public/libs/react-dom.v${npm_package_config_versions_react_dom}.min.js",
     "get_js_libs:react-router-dom": "wget https://unpkg.com/react-router-dom@${npm_package_config_versions_react_router_dom}/umd/react-router-dom.min.js -O public/libs/react-router-dom.v${npm_package_config_versions_react_router_dom}.min.js",
     "get_js_libs:redux": "wget https://unpkg.com/redux@${npm_package_config_versions_redux}/dist/redux.min.js -O public/libs/redux.v${npm_package_config_versions_redux}.min.js",
+    "linter": " eslint --ext .js,.ts .",
     "postbuild": "npm test",
     "postget_js_libs:react": "npm run browserify:shim:react",
     "postget_js_libs:react-dom": "npm run browserify:shim:react-dom",
@@ -47,15 +48,14 @@
     "predeploy": "npm run build",
     "sass": "run-s sass:*",
     "sass:app": "node-sass --include-path node_modules src/sass/app.scss --output-style compressed > public/css/app.v${npm_package_version}.css",
-    "standa": "standa test.js src/*.js",
     "start": "npm run budo",
     "test": "node test.js",
     "tsc--noemit": "tsc --declaration --project . --noemit"
   },
   "pre-commit": [
+    "linter",
     "test",
-    "tsc--noemit",
-    "standa"
+    "tsc--noemit"
   ],
   "repository": {
     "type": "git",
@@ -90,13 +90,18 @@
     "@types/react": "^16.8.22",
     "@types/react-dom": "^16.8.2",
     "@types/react-router-dom": "^4.3.4",
+    "@typescript-eslint/eslint-plugin": "^1.10.1",
     "budo": "^11.6.0",
     "dot-editorconfig": "^1.1.1",
+    "eslint": "^6.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
     "node-sass": "^4.12.0",
     "npm-run-all": "^4.1.5",
     "pre-commit": "^1.2.2",
     "rimraf": "^2.6.3",
-    "standa": "^12.2.0",
     "tsify": "^4.0.1",
     "typescript": "^3.5.2"
   }

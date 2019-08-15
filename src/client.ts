@@ -1,13 +1,13 @@
-const basePath = "https://api.go-seven.com/v1"
+const basePath = 'https://api.go-seven.com/v1'
 
 const headersForJson = {
-  "Accept": "application/json",
-  "Content-Type": "application/json",
+  Accept: 'application/json',
+  'Content-Type': 'application/json'
 }
 
 const headersWithAuthentication = (token) => ({
   ...headersForJson,
-  Authorization: `BEARER ${token}`,
+  Authorization: `BEARER ${token}`
 })
 
 const checkResponse = (response) => {
@@ -23,7 +23,7 @@ const checkResponse = (response) => {
 
 // Strip initial "Error :" in stringified error and return result parsed as JSON.
 export const parseError = (error: Error) => (
-  JSON.parse(error.toString().substring("Error :".length))
+  JSON.parse(error.toString().substring('Error :'.length))
 )
 
 const client = (method, endpoint, token?) => {
@@ -39,10 +39,10 @@ const clientSend = (method, endpoint, data, token?) => {
   return fetch(`${basePath}${endpoint}`, { body, headers, method }).then(checkResponse)
 }
 
-export const del = (endpoint, token) => client("DELETE", endpoint, token)
+export const del = (endpoint, token) => client('DELETE', endpoint, token)
 
-export const get = (endpoint, token?) => client("GET", endpoint, token)
+export const get = (endpoint, token?) => client('GET', endpoint, token)
 
-export const put = (endpoint, data, token?) => clientSend("PUT", endpoint, data, token)
+export const put = (endpoint, data, token?) => clientSend('PUT', endpoint, data, token)
 
-export const post = (endpoint, data, token?) => clientSend("POST", endpoint, data, token)
+export const post = (endpoint, data, token?) => clientSend('POST', endpoint, data, token)
