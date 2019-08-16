@@ -110,13 +110,24 @@ export default class Nav extends React.Component<IProps, IState> {
   onClickExit = (event) => {
     pdsp(event)
 
-    const { exit } = this.props
+    const {
+      exit,
+      locationPath
+    } = this.props
 
     if (typeof exit === 'function') {
-      this.setState({
-        expanded: false,
-        redirect: HomePage.path
-      }, exit)
+      const expanded = false
+
+      if (locationPath === HomePage.path) {
+        this.setState({
+          expanded
+        }, exit)
+      } else {
+        this.setState({
+          expanded,
+          redirect: HomePage.path
+        }, exit)
+      }
     }
   }
 
@@ -167,7 +178,9 @@ export default class Nav extends React.Component<IProps, IState> {
       >
         <Navbar.Brand>
           <Navbar.Item>
-            <LogoButton />
+            <LogoButton
+              disabledClick={locationPath === HomePage.path}
+            />
           </Navbar.Item>
 
           {noMenu || (

@@ -6,43 +6,34 @@ import {
 
 import HomePage from '../pages/HomePage'
 
-interface IProps {}
-
-interface IState {
-  redirect?: string
+interface IProps {
+  disabledClick?: boolean
 }
 
-export default class LogoButton extends React.Component<IProps, IState> {
-  state: IState = {
+export default function LogoButton ({
+  disabledClick
+}: IProps) {
+  const [redirect, setRedirect] = React.useState('')
+
+  const onClickLogo = () => {
+    setRedirect(HomePage.path)
   }
 
-  onClickLogo = () => {
-    this.setState({
-      redirect: HomePage.path
-    })
-  }
-
-  render () {
-    const {
-      redirect
-    } = this.state
-
-    if (redirect) {
-      return (
-        <Redirect push to={redirect} />
-      )
-    }
-
+  if (redirect) {
     return (
-      <div className="logo-button">
-        <Image
-          alt=""
-          height="34"
-          onClick={this.onClickLogo}
-          src="/media/logo.svg"
-          width="34"
-        />
-      </div>
+      <Redirect push to={redirect} />
     )
   }
+
+  return (
+    <div className="logo-button">
+      <Image
+        alt=""
+        height="34"
+        onClick={disabledClick === true ? undefined : onClickLogo}
+        src="/media/logo.svg"
+        width="34"
+      />
+    </div>
+  )
 }
