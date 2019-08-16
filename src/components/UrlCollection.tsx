@@ -1,26 +1,25 @@
-import * as React from "react"
-import { useEffect, useState } from "react"
-import { FormattedMessage } from "react-intl"
-import { Redirect } from "react-router-dom"
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { Redirect } from 'react-router-dom'
 import {
   Button,
   Column,
   Columns,
   Notification,
   Section
-} from "trunx"
+} from 'trunx'
 
-import UrlCard from "./UrlCard"
+import UrlCard from './UrlCard'
 
-import CreateUrlPage from "../pages/CreateUrlPage"
+import CreateUrlPage from '../pages/CreateUrlPage'
 
 import {
   IUrlDailyHits,
-  IUrlMonthlyHits,
-} from "../reducers/analytics"
+  IUrlMonthlyHits
+} from '../reducers/analytics'
 import {
-  IUrlCollection,
-} from "../reducers/urlCollections"
+  IUrlCollection
+} from '../reducers/urlCollections'
 
 export interface IUrlCollectionProps {
   fetchUrlCollection: () => void
@@ -33,7 +32,7 @@ export interface IUrlCollectionProps {
   urlsMonthlyHits: IUrlMonthlyHits[]
 }
 
-export default function UrlCollection({
+export default function UrlCollection ({
   fetchUrlCollection,
   fetchUrlDailyHits,
   fetchUrlMonthlyHits,
@@ -41,16 +40,16 @@ export default function UrlCollection({
   removingUrlId,
   urlCollection,
   urlsDailyHits,
-  urlsMonthlyHits,
+  urlsMonthlyHits
 }: IUrlCollectionProps) {
-  const [redirect, setRedirect] = useState()
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const [redirect, setRedirect] = React.useState()
+  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth)
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchUrlCollection()
   }, [])
 
-  useEffect(() => {
+  React.useEffect(() => {
     const resizeHandler = () => setWindowWidth(window.innerWidth)
 
     window.addEventListener('resize', resizeHandler)
@@ -75,7 +74,7 @@ export default function UrlCollection({
   }
 
   const {
-    urls,
+    urls
   } = urlCollection
 
   return (
@@ -99,7 +98,7 @@ export default function UrlCollection({
         <Columns isMultiline>
           {urls.map((url, i) => (
             <Column key={i} isOneThird>
-              {typeof url.id === "string" && (
+              {typeof url.id === 'string' && (
                 <UrlCard
                   fetchUrlDailyHits={fetchUrlDailyHits}
                   fetchUrlMonthlyHits={fetchUrlMonthlyHits}
@@ -111,7 +110,7 @@ export default function UrlCollection({
                     urlsDailyHits.filter(
                       ({ id }) => id === url.id
                     ).sort(
-                      ({ day: a, }, { day: b }) => (a > b ? 1 : a < b ? -1 : 0)
+                      ({ day: a }, { day: b }) => (a > b ? 1 : a < b ? -1 : 0)
                     )
                   }
                   urlMonthlyHits={urlsMonthlyHits.find(({ id }) => id === url.id)}

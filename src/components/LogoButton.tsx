@@ -1,10 +1,10 @@
-import * as React from "react"
-import { Redirect } from "react-router-dom"
+import * as React from 'react'
+import { Redirect } from 'react-router-dom'
 import {
-  Image,
-} from "trunx"
+  Image
+} from 'trunx'
 
-import HomePage from "../pages/HomePage"
+import HomePage from '../pages/HomePage'
 
 interface IProps {}
 
@@ -22,9 +22,9 @@ export default class LogoButton extends React.Component<IProps, IState> {
     })
   }
 
-  render() {
+  render () {
     const {
-      redirect,
+      redirect
     } = this.state
 
     if (redirect) {

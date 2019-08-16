@@ -1,26 +1,26 @@
-import * as chartBar from "fa-svg-icon/solid/chart-bar"
-import * as plusCircle from "fa-svg-icon/solid/plus-circle"
-import * as userCog from "fa-svg-icon/solid/user-cog"
-import * as pdsp from "pdsp"
-import * as React from "react"
-import { FormattedMessage } from "react-intl"
-import { useSpring, animated } from "react-spring"
-import { Redirect } from "react-router-dom"
+import * as chartBar from 'fa-svg-icon/solid/chart-bar'
+import * as plusCircle from 'fa-svg-icon/solid/plus-circle'
+import * as userCog from 'fa-svg-icon/solid/user-cog'
+import * as pdsp from 'pdsp'
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { useSpring, animated } from 'react-spring'
+import { Redirect } from 'react-router-dom'
 import {
   Button,
   Buttons,
   Icon,
-  Navbar,
-} from "trunx"
+  Navbar
+} from 'trunx'
 
-import LogoButton from "./LogoButton"
+import LogoButton from './LogoButton'
 
-import CreateAccountPage from "../pages/CreateAccountPage"
-import CreateUrlPage from "../pages/CreateUrlPage"
-import EnterPage from "../pages/EnterPage"
-import HomePage from "../pages/HomePage"
-import MyUrlsPage from "../pages/MyUrlsPage"
-import SettingsPage from "../pages/SettingsPage"
+import CreateAccountPage from '../pages/CreateAccountPage'
+import CreateUrlPage from '../pages/CreateUrlPage'
+import EnterPage from '../pages/EnterPage'
+import HomePage from '../pages/HomePage'
+import MyUrlsPage from '../pages/MyUrlsPage'
+import SettingsPage from '../pages/SettingsPage'
 
 interface IProps {
   authenticationIsValid?: boolean
@@ -33,11 +33,11 @@ interface IProps {
 interface IState {
   expanded: boolean
   redirect?: string
-  session: string,
-  storedSession: string | null,
+  session: string
+  storedSession: string | null
 }
 
-function ItemIcon({ animate, icon }) {
+function ItemIcon ({ animate, icon }) {
   return (
     <>
       <Icon>
@@ -47,7 +47,7 @@ function ItemIcon({ animate, icon }) {
             opacity: 1,
             config: { duration: 1000 },
             from: { opacity: animate ? 0 : 1 },
-            delay: 500,
+            delay: 500
           })}
         >
           <Icon.Svg icon={icon} />
@@ -65,17 +65,17 @@ export default class Nav extends React.Component<IProps, IState> {
   state: IState = {
     expanded: false,
     session,
-    storedSession: sessionStorage.getItem('session'),
+    storedSession: sessionStorage.getItem('session')
   }
 
-  componentDidMount() {
+  componentDidMount () {
     const {
-      authenticationIsValid,
+      authenticationIsValid
     } = this.props
 
     const {
       storedSession,
-      session,
+      session
     } = this.state
 
     if (authenticationIsValid && storedSession === null) {
@@ -112,10 +112,10 @@ export default class Nav extends React.Component<IProps, IState> {
 
     const { exit } = this.props
 
-    if (typeof exit === "function") {
+    if (typeof exit === 'function') {
       this.setState({
         expanded: false,
-        redirect: HomePage.path,
+        redirect: HomePage.path
       }, exit)
     }
   }
@@ -136,18 +136,18 @@ export default class Nav extends React.Component<IProps, IState> {
     }
   }
 
-  render() {
+  render () {
     const {
       authenticationIsValid,
       locationPath,
       noMenu,
-      showCreateAccountButton,
+      showCreateAccountButton
     } = this.props
 
     const {
       expanded,
       redirect,
-      storedSession,
+      storedSession
     } = this.state
 
     if (redirect) {
@@ -218,7 +218,7 @@ export default class Nav extends React.Component<IProps, IState> {
                     <Button
                       onClick={this.onClickExit}
                     >
-                     <FormattedMessage id="Navbar.exit" />
+                      <FormattedMessage id="Navbar.exit" />
                     </Button>
                   </Buttons>
                 ) : (
@@ -226,7 +226,7 @@ export default class Nav extends React.Component<IProps, IState> {
                     <Button
                       onClick={this.onClickEnter}
                     >
-                     <FormattedMessage id="Navbar.enter" />
+                      <FormattedMessage id="Navbar.enter" />
                     </Button>
 
                     {showCreateAccountButton && (

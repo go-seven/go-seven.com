@@ -1,33 +1,33 @@
-import * as React from "react"
-import { FormattedMessage } from "react-intl"
-import { connect } from "react-redux"
-import { Redirect, RouteComponentProps } from "react-router-dom"
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import {
   Box,
   Container,
   Section,
-  Title,
-} from "trunx"
+  Title
+} from 'trunx'
 
-import HomePage from "./HomePage"
+import HomePage from './HomePage'
 
-import Navbar from "../components/Navbar"
-import UrlCreator, { IUrlCreatorProps } from "../components/UrlCreator"
+import Navbar from '../components/Navbar'
+import UrlCreator, { IUrlCreatorProps } from '../components/UrlCreator'
 
 import {
-  exitAccount,
-} from "../reducers/account"
+  exitAccount
+} from '../reducers/account'
 import {
   createUrl,
   setWantedUrl,
-  IUrl,
-} from "../reducers/urlCollections"
+  IUrl
+} from '../reducers/urlCollections'
 
 interface IProps extends RouteComponentProps {
   authenticationIsValid: boolean
   checkingIfUrlIdExists: boolean
   creatingUrl: boolean
-  createUrl: IUrlCreatorProps["createUrl"]
+  createUrl: IUrlCreatorProps['createUrl']
   domain: string
   exitAccount: () => void
   justCreatedUrls: IUrl[]
@@ -39,9 +39,9 @@ interface IProps extends RouteComponentProps {
 }
 
 class MyUrlsPage extends React.Component<IProps> {
-  static path = "/create-url"
+  static path = '/create-url'
 
-  render() {
+  render () {
     const {
       authenticationIsValid,
       checkingIfUrlIdExists,
@@ -53,7 +53,7 @@ class MyUrlsPage extends React.Component<IProps> {
       setWantedUrl,
       wantedUrl,
       wantedUrlHrefIsValid,
-      wantedUrlIdExists,
+      wantedUrlIdExists
     } = this.props
 
     if (authenticationIsValid === false) {
@@ -107,7 +107,7 @@ class MyUrlsPage extends React.Component<IProps> {
 const mapStateToProps = ({
   account: {
     authentication,
-    domain,
+    domain
   },
   urlCollections: {
     checkingIfUrlIdExists,
@@ -116,8 +116,8 @@ const mapStateToProps = ({
     justCreatedUrls,
     wantedUrl,
     wantedUrlHrefIsValid,
-    wantedUrlIdExists,
-  },
+    wantedUrlIdExists
+  }
 }) => ({
   authenticationIsValid: authentication === null ? false : authentication.isValid,
   checkingIfUrlIdExists,
@@ -127,13 +127,13 @@ const mapStateToProps = ({
   justCreatedUrls,
   wantedUrl,
   wantedUrlHrefIsValid,
-  wantedUrlIdExists,
+  wantedUrlIdExists
 })
 
 const mapDispatchToProps = (dispatch) => ({
   createUrl: (url) => dispatch(createUrl(url)),
   exitAccount: () => dispatch(exitAccount()),
-  setWantedUrl: (url) => dispatch(setWantedUrl(url)),
+  setWantedUrl: (url) => dispatch(setWantedUrl(url))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyUrlsPage)

@@ -1,5 +1,5 @@
-import * as React from "react"
-import { FormattedHTMLMessage, FormattedMessage } from "react-intl"
+import * as React from 'react'
+import { FormattedHTMLMessage, FormattedMessage } from 'react-intl'
 import {
   Column,
   Columns,
@@ -7,12 +7,12 @@ import {
   Footer,
   Tag,
   Tags
-} from "trunx"
+} from 'trunx'
 
-import PrivacyPolicyPage from "../pages/PrivacyPolicyPage"
-import TermsOfServicePage from "../pages/TermsOfServicePage"
+import PrivacyPolicyPage from '../pages/PrivacyPolicyPage'
+import TermsOfServicePage from '../pages/TermsOfServicePage'
 
-export default function() {
+export default function () {
   return (
     <Footer>
       <Container>

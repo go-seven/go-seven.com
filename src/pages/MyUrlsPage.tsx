@@ -1,43 +1,43 @@
-import * as React from "react"
-import { FormattedMessage } from "react-intl"
-import { connect } from "react-redux"
-import { Redirect, RouteComponentProps } from "react-router-dom"
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import {
   Container,
   Progress,
   Section,
-  Title,
-} from "trunx"
+  Title
+} from 'trunx'
 
-import HomePage from "./HomePage"
+import HomePage from './HomePage'
 
-import Navbar from "../components/Navbar"
-import UrlCollection, { IUrlCollectionProps } from "../components/UrlCollection"
+import Navbar from '../components/Navbar'
+import UrlCollection, { IUrlCollectionProps } from '../components/UrlCollection'
 
 import {
-  exitAccount,
-} from "../reducers/account"
+  exitAccount
+} from '../reducers/account'
 import {
   fetchUrlDailyHitsIfNeeded,
   fetchUrlMonthlyHitsIfNeeded,
   IUrlDailyHits,
-  IUrlMonthlyHits,
-} from "../reducers/analytics"
+  IUrlMonthlyHits
+} from '../reducers/analytics'
 import {
   fetchUrlCollectionIfNeeded,
   removeUrlFromCollection,
-  IUrlCollection,
-} from "../reducers/urlCollections"
+  IUrlCollection
+} from '../reducers/urlCollections'
 
 interface IProps extends RouteComponentProps {
   authenticationIsValid: boolean | null
   exitAccount: () => void
-  fetchUrlCollection: IUrlCollectionProps["fetchUrlCollection"]
-  fetchUrlDailyHits: IUrlCollectionProps["fetchUrlDailyHits"]
-  fetchUrlMonthlyHits: IUrlCollectionProps["fetchUrlMonthlyHits"]
+  fetchUrlCollection: IUrlCollectionProps['fetchUrlCollection']
+  fetchUrlDailyHits: IUrlCollectionProps['fetchUrlDailyHits']
+  fetchUrlMonthlyHits: IUrlCollectionProps['fetchUrlMonthlyHits']
   fetchingUrlMetadata: boolean
   isFetchingUrlCollection: boolean
-  removeUrlFromCollection: (urlCollectionId: string) => (urlId: string) => () => void,
+  removeUrlFromCollection: (urlCollectionId: string) => (urlId: string) => () => void
   removingUrlId: string
   selectedUrlCollectionId: string
   urlCollection: IUrlCollection | null
@@ -46,9 +46,9 @@ interface IProps extends RouteComponentProps {
 }
 
 class MyUrlsPage extends React.Component<IProps> {
-  static path = "/my-urls"
+  static path = '/my-urls'
 
-  render() {
+  render () {
     const {
       authenticationIsValid,
       exitAccount,
@@ -61,7 +61,7 @@ class MyUrlsPage extends React.Component<IProps> {
       selectedUrlCollectionId,
       urlCollection,
       urlsDailyHits,
-      urlsMonthlyHits,
+      urlsMonthlyHits
     } = this.props
 
     if (authenticationIsValid === null) {
@@ -111,11 +111,11 @@ class MyUrlsPage extends React.Component<IProps> {
 
 const mapStateToProps = ({
   account: {
-    authentication,
+    authentication
   },
   analytics: {
     urlsDailyHits,
-    urlsMonthlyHits,
+    urlsMonthlyHits
   },
   urlCollections: {
     creatingUrl,
@@ -126,8 +126,8 @@ const mapStateToProps = ({
     selectedUrlCollectionId,
     wantedUrl,
     wantedUrlHrefIsValid,
-    wantedUrlIdExists,
-  },
+    wantedUrlIdExists
+  }
 }) => ({
   authenticationIsValid: authentication === null ? null : authentication.isValid,
   creatingUrl,
@@ -140,7 +140,7 @@ const mapStateToProps = ({
   urlsMonthlyHits,
   wantedUrl,
   wantedUrlHrefIsValid,
-  wantedUrlIdExists,
+  wantedUrlIdExists
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -148,7 +148,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchUrlCollection: () => dispatch(fetchUrlCollectionIfNeeded()),
   fetchUrlDailyHits: (urlId, day) => dispatch(fetchUrlDailyHitsIfNeeded(urlId, day)),
   fetchUrlMonthlyHits: (urlId, month) => dispatch(fetchUrlMonthlyHitsIfNeeded(urlId, month)),
-  removeUrlFromCollection: (urlCollectionId) => (urlId) => () => dispatch(removeUrlFromCollection(urlCollectionId, urlId)),
+  removeUrlFromCollection: (urlCollectionId) => (urlId) => () => dispatch(removeUrlFromCollection(urlCollectionId, urlId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyUrlsPage)

@@ -1,7 +1,7 @@
-import * as React from "react"
-import { FormattedMessage } from "react-intl"
-import { connect } from "react-redux"
-import { Redirect, RouteComponentProps } from "react-router-dom"
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import {
   Button,
   Buttons,
@@ -10,25 +10,25 @@ import {
   Modal,
   Notification,
   Section,
-  Title,
-} from "trunx"
+  Title
+} from 'trunx'
 
-import HomePage from "./HomePage"
-import MyUrlsPage from "./MyUrlsPage"
+import HomePage from './HomePage'
+import MyUrlsPage from './MyUrlsPage'
 
-import Navbar from "../components/Navbar"
-import UrlEditor, { IUrlEditorProps } from "../components/UrlEditor"
+import Navbar from '../components/Navbar'
+import UrlEditor, { IUrlEditorProps } from '../components/UrlEditor'
 
 import {
-  exitAccount,
-} from "../reducers/account"
+  exitAccount
+} from '../reducers/account'
 import {
   fetchUrlMetadataIfNeeded,
   removeUrlFromCollection,
   setWantedUrl,
   updateUrl,
-  IUrl,
-} from "../reducers/urlCollections"
+  IUrl
+} from '../reducers/urlCollections'
 
 interface IMatchParams {
   urlCollectionId: string
@@ -44,7 +44,7 @@ interface IProps extends RouteComponentProps<IMatchParams> {
   removeUrl: (IMatchParams) => void
   removingUrl: boolean
   setWantedUrl: (IUrl) => void
-  updateUrl: (urlCollectionId: string) => IUrlEditorProps["updateUrl"]
+  updateUrl: (urlCollectionId: string) => IUrlEditorProps['updateUrl']
   updatingUrl: boolean
   url: IUrl | undefined
   wantedUrlHrefIsValid: boolean
@@ -56,42 +56,42 @@ interface IState {
 }
 
 class UrlPage extends React.Component<IProps, IState> {
-  static path = "/url/:urlCollectionId/:urlId"
+  static path = '/url/:urlCollectionId/:urlId'
 
-  static buildPath({ urlCollectionId, urlId }: IMatchParams) {
+  static buildPath ({ urlCollectionId, urlId }: IMatchParams) {
     return `/url/${urlCollectionId}/${urlId}`
   }
 
   state: IState = {
-    askingRemovalConfirmation: false,
+    askingRemovalConfirmation: false
   }
 
   askUrlRemovalConfirmation = () => {
     this.setState({
-      askingRemovalConfirmation: true,
+      askingRemovalConfirmation: true
     })
   }
 
   closeRemovalConfirmation = () => {
     this.setState({
-      askingRemovalConfirmation: false,
+      askingRemovalConfirmation: false
     })
   }
 
   onClickRemoveUrl = () => {
     const {
       match: { params },
-      removeUrl,
+      removeUrl
     } = this.props
 
     this.setState({
-      askingRemovalConfirmation: false,
+      askingRemovalConfirmation: false
     }, () => {
       removeUrl(params)
     })
   }
 
-  render() {
+  render () {
     const {
       authenticationIsValid,
       currentUrl,
@@ -102,12 +102,12 @@ class UrlPage extends React.Component<IProps, IState> {
       updateUrl,
       updatingUrl,
       url,
-      wantedUrlHrefIsValid,
+      wantedUrlHrefIsValid
     } = this.props
 
     const {
       askingRemovalConfirmation,
-      redirect,
+      redirect
     } = this.state
 
     if (authenticationIsValid === null) {
@@ -120,7 +120,7 @@ class UrlPage extends React.Component<IProps, IState> {
       )
     }
 
-    if (typeof url === "undefined") {
+    if (typeof url === 'undefined') {
       return (
         <Redirect push to={MyUrlsPage.path}/>
       )
@@ -216,13 +216,13 @@ const mapDispatchToProps = (dispatch) => ({
   fetchUrlMetadata: (url) => dispatch(fetchUrlMetadataIfNeeded(url)),
   removeUrl: ({ urlCollectionId, urlId }) => dispatch(removeUrlFromCollection(urlCollectionId, urlId)),
   setWantedUrl: (url) => dispatch(setWantedUrl(url)),
-  updateUrl: (urlCollectionId) => (url) => dispatch(updateUrl(urlCollectionId, url)),
+  updateUrl: (urlCollectionId) => (url) => dispatch(updateUrl(urlCollectionId, url))
 })
 
 const mapStateToProps = (
   {
     account: {
-      authentication,
+      authentication
     },
     urlCollections: {
       currentUrlCollection,
@@ -231,13 +231,13 @@ const mapStateToProps = (
       justCreatedUrls,
       removingUrlId,
       updatingUrl,
-      wantedUrlHrefIsValid,
+      wantedUrlHrefIsValid
     }
   },
   {
     match: {
       params: {
-        urlId,
+        urlId
       }
     }
   }
@@ -249,7 +249,7 @@ const mapStateToProps = (
   removingUrl: removingUrlId === urlId,
   updatingUrl,
   url: currentUrlCollection ? currentUrlCollection.urls.find(({ id }) => id === urlId) : undefined,
-  wantedUrlHrefIsValid,
+  wantedUrlHrefIsValid
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UrlPage)

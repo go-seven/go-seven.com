@@ -1,7 +1,7 @@
-import * as React from "react"
-import { FormattedMessage } from "react-intl"
-import { connect } from "react-redux"
-import { Redirect, RouteComponentProps } from "react-router-dom"
+import * as React from 'react'
+import { Redirect, FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
+import { RouteComponentProps } from 'react-router-dom'
 import {
   Box,
   Button,
@@ -11,23 +11,23 @@ import {
   Modal,
   Notification,
   Section,
-  Title,
-} from "trunx"
+  Title
+} from 'trunx'
 
-import HomePage from "./HomePage"
+import HomePage from './HomePage'
 
-import ChangePasswordForm, { IChangePasswordFormProps } from "../components/ChangePasswordForm"
-import Navbar from "../components/Navbar"
+import ChangePasswordForm, { IChangePasswordFormProps } from '../components/ChangePasswordForm'
+import Navbar from '../components/Navbar'
 
 import {
   changePassword,
   deleteAccount,
-  exitAccount,
-} from "../reducers/account"
+  exitAccount
+} from '../reducers/account'
 
 interface IProps extends RouteComponentProps {
   authenticationIsValid: boolean | null
-  changePassword: IChangePasswordFormProps["changePassword"]
+  changePassword: IChangePasswordFormProps['changePassword']
   deleteAccount: () => void
   exitAccount: () => void
   isChangingPassword: boolean
@@ -40,7 +40,7 @@ interface IState {
 }
 
 class SettingsPage extends React.Component<IProps> {
-  static path = "/settings"
+  static path = '/settings'
 
   state: IState = {
     askingAccountDeletionConfirmation: false
@@ -62,14 +62,14 @@ class SettingsPage extends React.Component<IProps> {
     this.props.deleteAccount()
   }
 
-  render() {
+  render () {
     const {
       authenticationIsValid,
       changePassword,
       exitAccount,
       isChangingPassword,
       isDeletingAccount,
-      justDeletedAccount,
+      justDeletedAccount
     } = this.props
 
     const {
@@ -175,19 +175,19 @@ const mapStateToProps = ({
     authentication,
     isChangingPassword,
     isDeleting,
-    justDeleted,
+    justDeleted
   }
 }) => ({
   authenticationIsValid: authentication === null ? null : authentication.isValid,
   isChangingPassword,
   isDeletingAccount: isDeleting,
-  justDeletedAccount: justDeleted,
+  justDeletedAccount: justDeleted
 })
 
 const mapDispatchToProps = (dispatch) => ({
   changePassword: (password) => dispatch(changePassword(password)),
   deleteAccount: () => dispatch(deleteAccount()),
-  exitAccount: () => dispatch(exitAccount()),
+  exitAccount: () => dispatch(exitAccount())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsPage)

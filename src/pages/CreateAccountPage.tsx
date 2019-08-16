@@ -1,10 +1,10 @@
-import { ticTacToe } from "i-am-not-a-robot"
-import * as pdsp from "pdsp"
-import * as React from "react"
-import { FormattedMessage } from "react-intl"
-import InjectIntl from "react-intl-inject"
-import { connect } from "react-redux"
-import { Redirect } from "react-router-dom"
+import { ticTacToe } from 'i-am-not-a-robot'
+import * as pdsp from 'pdsp'
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
+import InjectIntl from 'react-intl-inject'
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import {
   Box,
   Button,
@@ -18,25 +18,25 @@ import {
   Modal,
   P,
   Section,
-  Title,
-} from "trunx"
+  Title
+} from 'trunx'
 
-import * as apiError from "../apiErrors"
+import * as apiError from '../apiErrors'
 
-import EmailField from "../components/EmailField"
-import LogoButton from "../components/LogoButton"
-import PasswordField from "../components/PasswordField"
-import PleaseLookForVerificationEmail from "../components/PleaseLookForVerificationEmail"
+import EmailField from '../components/EmailField'
+import LogoButton from '../components/LogoButton'
+import PasswordField from '../components/PasswordField'
+import PleaseLookForVerificationEmail from '../components/PleaseLookForVerificationEmail'
 
 import {
   cleanupAuthenticationError,
   createAccount,
-  ICredentials,
-} from "../reducers/account"
+  ICredentials
+} from '../reducers/account'
 
-import MyUrlsPage from "./MyUrlsPage"
-import PrivacyPolicyPage from "./PrivacyPolicyPage"
-import TermsOfServicePage from "./TermsOfServicePage"
+import MyUrlsPage from './MyUrlsPage'
+import PrivacyPolicyPage from './PrivacyPolicyPage'
+import TermsOfServicePage from './TermsOfServicePage'
 
 interface IProps {
   authenticationIsValid: boolean
@@ -56,27 +56,29 @@ interface IState {
 }
 
 class CreateAccountPage extends React.Component<IProps, IState> {
-  static path = "/create-account"
+  static path = '/create-account'
 
   state: IState = {
     antiSpamLoaded: false,
     clientAgrees: false,
     clientIsRobot: true,
-    passwordIsValid: false,
+    passwordIsValid: false
   }
 
   private antiSpamRef = React.createRef<HTMLInputElement>()
+
   private emailRef = React.createRef<HTMLInputElement>()
+
   private passwordRef = React.createRef<HTMLInputElement>()
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.cleanupAuthenticationError()
   }
 
-  loadAntiSpam() {
+  loadAntiSpam () {
     const {
       antiSpamLoaded,
-      clientIsRobot,
+      clientIsRobot
     } = this.state
 
     if (clientIsRobot && !antiSpamLoaded) {
@@ -91,9 +93,9 @@ class CreateAccountPage extends React.Component<IProps, IState> {
   onChangeCheckbox = (event) => {
     this.setState({
       clientAgrees: event.target.checked
-      }, () => {
-        this.loadAntiSpam()
-      })
+    }, () => {
+      this.loadAntiSpam()
+    })
   }
 
   onSubmit = (event) => {
@@ -105,19 +107,19 @@ class CreateAccountPage extends React.Component<IProps, IState> {
     this.props.createAccount({ email, password })
   }
 
-  render() {
+  render () {
     const {
       authenticationIsValid,
       errorCode,
       isCreating,
-      justCreated,
+      justCreated
     } = this.props
 
     const {
       clientAgrees,
       clientIsRobot,
       passwordIsValid,
-      redirect,
+      redirect
     } = this.state
 
     if (authenticationIsValid) {
@@ -137,21 +139,21 @@ class CreateAccountPage extends React.Component<IProps, IState> {
 
     if (justCreated) {
       return (
-      <Modal isActive>
-        <Modal.Background />
+        <Modal isActive>
+          <Modal.Background />
 
-        <Modal.Content>
-          <Message isSuccess>
-            <Message.Header>
-              <FormattedMessage id="CreateAccountPage.account-created" />
-            </Message.Header>
+          <Modal.Content>
+            <Message isSuccess>
+              <Message.Header>
+                <FormattedMessage id="CreateAccountPage.account-created" />
+              </Message.Header>
 
-            <Message.Body>
-              <PleaseLookForVerificationEmail />
-            </Message.Body>
-          </Message>
-        </Modal.Content>
-      </Modal>
+              <Message.Body>
+                <PleaseLookForVerificationEmail />
+              </Message.Body>
+            </Message>
+          </Modal.Content>
+        </Modal>
       )
     }
 
@@ -186,7 +188,7 @@ class CreateAccountPage extends React.Component<IProps, IState> {
                   <InjectIntl>
                     {({ intl }) => (
                       <EmailField
-                        errorMessage={emailExistsError && intl.formatMessage({ id: "CreateAccountPage.email.emailExistsError" })}
+                        errorMessage={emailExistsError && intl.formatMessage({ id: 'CreateAccountPage.email.emailExistsError' })}
                         inputRef={this.emailRef}
                       />
                     )}
@@ -196,9 +198,9 @@ class CreateAccountPage extends React.Component<IProps, IState> {
                     {({ intl }) => (
                       <PasswordField
                         autoComplete="new-password"
-                        errorMessage={invalidPasswordError && intl.formatMessage({ id: "CreateAccountPage.password.InvalidPasswordError" })}
+                        errorMessage={invalidPasswordError && intl.formatMessage({ id: 'CreateAccountPage.password.InvalidPasswordError' })}
                         inputRef={this.passwordRef}
-                        label={intl.formatMessage({ id: "CreateAccountPage.password.label" })}
+                        label={intl.formatMessage({ id: 'CreateAccountPage.password.label' })}
                         setPasswordIsValid={this.setPasswordIsValid}
                         showPasswordPolicy
                       />
@@ -262,7 +264,6 @@ class CreateAccountPage extends React.Component<IProps, IState> {
       passwordIsValid
     })
   }
-
 }
 
 const mapStateToProps = ({
@@ -270,18 +271,18 @@ const mapStateToProps = ({
     authentication,
     error,
     isCreating,
-    justCreated,
+    justCreated
   }
 }) => ({
   authenticationIsValid: authentication === null ? false : authentication.isValid,
   errorCode: error && error.code,
   isCreating,
-  justCreated,
+  justCreated
 })
 
 const mapDispatchToProps = (dispatch) => ({
   cleanupAuthenticationError: () => dispatch(cleanupAuthenticationError),
-  createAccount: (credentials) => dispatch(createAccount(credentials)),
+  createAccount: (credentials) => dispatch(createAccount(credentials))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountPage)

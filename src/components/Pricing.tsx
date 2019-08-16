@@ -1,8 +1,8 @@
-import * as React from "react"
-import { FormattedMessage } from "react-intl"
-import { Container, Content, Section, Subtitle, Tile, Title } from "trunx"
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { Container, Content, Section, Subtitle, Tile, Title } from 'trunx'
 
-export default function() {
+export default function () {
   return (
     <Section>
       <Container>

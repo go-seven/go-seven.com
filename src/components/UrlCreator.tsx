@@ -1,8 +1,7 @@
-import * as pdsp from "pdsp"
-import * as React from "react"
-import { useEffect, useState } from "react"
-import { FormattedMessage } from "react-intl"
-import InjectIntl from "react-intl-inject"
+import * as pdsp from 'pdsp'
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
+import InjectIntl from 'react-intl-inject'
 import {
   Box,
   Button,
@@ -11,16 +10,16 @@ import {
   Control,
   Field,
   Input,
-  Label,
-} from "trunx"
+  Label
+} from 'trunx'
 
-import ReadOnlyTextField from "./ReadOnlyTextField"
-import ShortUrlIdField from "./ShortUrlIdField"
-import TargetUrlHrefField from "./TargetUrlHrefField"
+import ReadOnlyTextField from './ReadOnlyTextField'
+import ShortUrlIdField from './ShortUrlIdField'
+import TargetUrlHrefField from './TargetUrlHrefField'
 
 import {
-  IUrl,
-} from "../reducers/urlCollections"
+  IUrl
+} from '../reducers/urlCollections'
 
 export interface IUrlCreatorProps {
   createUrl: (IUrl) => void
@@ -35,7 +34,7 @@ export interface IUrlCreatorProps {
   wantedUrlIdExists: boolean
 }
 
-export default function UrlCreator({
+export default function UrlCreator ({
   checkingIfUrlIdExists,
   createUrl,
   creatingUrl,
@@ -45,7 +44,7 @@ export default function UrlCreator({
   setWantedUrl,
   wantedUrl,
   wantedUrlIdExists,
-  wantedUrlHrefIsValid,
+  wantedUrlHrefIsValid
 }: IUrlCreatorProps) {
   const numJustCreatedUrls = justCreatedUrls.length
 
@@ -53,12 +52,11 @@ export default function UrlCreator({
     new Date().getTime().toString(36)
   )
 
-  const [wantedUrlId, setWantedUrlId] = useState(generateId())
-  const [wantedTitle, setWantedTitle] = useState("")
+  const [wantedUrlId, setWantedUrlId] = React.useState(generateId())
+  const [wantedTitle, setWantedTitle] = React.useState('')
 
-
-  useEffect(() => {
-    if (wantedTitle === "" && wantedUrl !== null && typeof wantedUrl.title === "string") {
+  React.useEffect(() => {
+    if (wantedTitle === '' && wantedUrl !== null && typeof wantedUrl.title === 'string') {
       setWantedTitle(wantedUrl.title)
     }
   }, [wantedUrl])
@@ -79,7 +77,7 @@ export default function UrlCreator({
       createUrl({
         href,
         id: wantedUrlId,
-        title,
+        title
       })
     }
   }
@@ -100,8 +98,8 @@ export default function UrlCreator({
           {({ intl }) => (
             <TargetUrlHrefField
               isLoading={fetchingUrlMetadata}
-              label={intl.formatMessage({ id: "UrlCreator.target-url.label" })}
-              placeholder={intl.formatMessage({ id: "UrlCreator.target-url.placeholder" })}
+              label={intl.formatMessage({ id: 'UrlCreator.target-url.label' })}
+              placeholder={intl.formatMessage({ id: 'UrlCreator.target-url.placeholder' })}
               readOnly={creatingUrl}
               resetTargetUrlHref={numJustCreatedUrls}
               setTargetUrlHref={(href) => setWantedUrl({ href })}
@@ -113,8 +111,8 @@ export default function UrlCreator({
         <InjectIntl>
           {({ intl }) => (
             <ReadOnlyTextField
-              label={intl.formatMessage({ id: "UrlCreator.target-url-title.label" })}
-              text={wantedUrl && wantedUrl.title || ""}
+              label={intl.formatMessage({ id: 'UrlCreator.target-url-title.label' })}
+              text={(wantedUrl && wantedUrl.title) ? wantedUrl.title : ''}
             />
           )}
         </InjectIntl>
@@ -140,7 +138,7 @@ export default function UrlCreator({
                 <ShortUrlIdField
                   domain={domain}
                   isLoading={checkingIfUrlIdExists}
-                  label={intl.formatMessage({ id: "UrlCreator.short-url.label" })}
+                  label={intl.formatMessage({ id: 'UrlCreator.short-url.label' })}
                   readOnly={creatingUrl}
                   resetUrlId={numJustCreatedUrls}
                   setWantedUrlId={setWantedUrlId}
@@ -161,7 +159,7 @@ export default function UrlCreator({
                   isLoading={creatingUrl}
                   isSuccess={wantedUrlHrefIsValid === true}
                   type="submit"
-                  value={intl.formatMessage({ id: "UrlCreator.submit" })}
+                  value={intl.formatMessage({ id: 'UrlCreator.submit' })}
                 />
               )}
             </InjectIntl>

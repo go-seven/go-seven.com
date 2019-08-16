@@ -1,18 +1,18 @@
-import * as React from "react"
+import * as React from 'react'
 import {
   Control,
   Field,
-  Label,
-} from "trunx"
+  Label
+} from 'trunx'
 
 interface IReadOnlyTextFieldProps {
   label: string
   text: string
 }
 
-export default function ReadOnlyTextField({
+export default function ReadOnlyTextField ({
   label,
-  text,
+  text
 }: IReadOnlyTextFieldProps) {
   return (
     <Field>
@@ -26,6 +26,5 @@ export default function ReadOnlyTextField({
         </div>
       </Control>
     </Field>
-
   )
 }

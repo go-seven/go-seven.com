@@ -1,5 +1,5 @@
-import * as envelope from "fa-svg-icon/solid/envelope"
-import * as React from "react"
+import * as envelope from 'fa-svg-icon/solid/envelope'
+import * as React from 'react'
 import {
   Control,
   Field,
@@ -7,19 +7,19 @@ import {
   Icon,
   Input,
   Label,
-  Span,
-} from "trunx"
+  Span
+} from 'trunx'
 
 interface IProps {
-  errorMessage?: string,
+  errorMessage?: string
   inputRef?: React.RefObject<HTMLInputElement>
 }
 
 export default class EmailField extends React.Component<IProps> {
-  render() {
+  render () {
     const {
       errorMessage,
-      inputRef,
+      inputRef
     } = this.props
 
     return (

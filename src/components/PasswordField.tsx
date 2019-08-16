@@ -1,6 +1,6 @@
-import * as lock from "fa-svg-icon/solid/lock"
-import * as React from "react"
-import { FormattedMessage } from "react-intl"
+import * as lock from 'fa-svg-icon/solid/lock'
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
 import {
   A,
   Control,
@@ -9,16 +9,16 @@ import {
   Icon,
   Input,
   Label,
-  Span,
-} from "trunx"
+  Span
+} from 'trunx'
 
-import PasswordResetPage from "../pages/PasswordResetPage"
+import PasswordResetPage from '../pages/PasswordResetPage'
 
 interface IProps {
   autoComplete?: string
-  errorMessage?: string,
+  errorMessage?: string
   inputRef: React.RefObject<HTMLInputElement>
-  label?: string,
+  label?: string
   setPasswordIsValid: (passwordIsValid: boolean) => void
   showForgotPassword?: boolean
   showPasswordPolicy?: boolean
@@ -39,7 +39,7 @@ interface IState {
 export default class PasswordField extends React.Component<IProps, IState> {
   static defaultProps = {
     setPasswordIsValid: Function.prototype,
-    visible: false,
+    visible: false
   }
 
   static minLenght = 8
@@ -49,11 +49,11 @@ export default class PasswordField extends React.Component<IProps, IState> {
       hasLowercase: false,
       hasNumber: false,
       hasUppercase: false,
-      isLongEnough: false,
-    },
+      isLongEnough: false
+    }
   }
 
-  checkPasswordPolicy(): IPasswordPolicyChecks {
+  checkPasswordPolicy (): IPasswordPolicyChecks {
     const password = this.props.inputRef.current!.value
 
     const hasLowercase = /[a-z]/.test(password)
@@ -67,7 +67,7 @@ export default class PasswordField extends React.Component<IProps, IState> {
       hasLowercase,
       hasNumber,
       hasUppercase,
-      isLongEnough,
+      isLongEnough
     }
   }
 
@@ -77,7 +77,7 @@ export default class PasswordField extends React.Component<IProps, IState> {
     this.setState({ passwordCheck })
   }
 
-  render() {
+  render () {
     const {
       autoComplete,
       errorMessage,
@@ -85,7 +85,7 @@ export default class PasswordField extends React.Component<IProps, IState> {
       label,
       showForgotPassword,
       showPasswordPolicy,
-      visible,
+      visible
     } = this.props
 
     const {
@@ -93,8 +93,8 @@ export default class PasswordField extends React.Component<IProps, IState> {
         hasLowercase,
         hasNumber,
         hasUppercase,
-        isLongEnough,
-      },
+        isLongEnough
+      }
     } = this.state
 
     return (
@@ -120,7 +120,7 @@ export default class PasswordField extends React.Component<IProps, IState> {
             isDanger={!!errorMessage}
             onChange={this.onChange}
             required
-            type={visible ? "text" : "password"}
+            type={visible ? 'text' : 'password'}
           />
 
           <Icon hasTextGrey isLeft>

@@ -1,30 +1,29 @@
-import { max as d3Max } from "d3-array"
-import { scaleLinear as d3ScaleLinear } from "d3-scale"
-import { select as d3Select } from "d3-selection"
-import * as solidIcon from "fa-svg-icon/solid"
-import * as React from "react"
-import { useEffect, useState, useRef } from "react"
-import * as ReactDOM from "react-dom"
-import { FormattedMessage } from "react-intl"
-import { Redirect } from "react-router-dom"
+import { max as d3Max } from 'd3-array'
+import { scaleLinear as d3ScaleLinear } from 'd3-scale'
+import { select as d3Select } from 'd3-selection'
+import * as solidIcon from 'fa-svg-icon/solid'
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+import { FormattedMessage } from 'react-intl'
+import { Redirect } from 'react-router-dom'
 import {
   Card,
   Control,
   Field,
   Icon,
   Tag,
-  Tags,
-} from "trunx"
+  Tags
+} from 'trunx'
 
-import UrlPage from "../pages/UrlPage"
+import UrlPage from '../pages/UrlPage'
 
 import {
   IUrlDailyHits,
-  IUrlMonthlyHits,
-} from "../reducers/analytics"
+  IUrlMonthlyHits
+} from '../reducers/analytics'
 import {
   IUrl
-} from "../reducers/urlCollections"
+} from '../reducers/urlCollections'
 
 interface IChartProps {
   barColor?: string
@@ -51,49 +50,51 @@ interface IState {
   redirect?: string
 }
 
+declare type ScaleFunction = (value: number) => number
+
 const numDays = 7
 
-function Chart({
+function Chart ({
   barGap = 5,
-  barColor = "skyblue",
+  barColor = 'skyblue',
   urlDailyHits,
   height = 50,
-  windowWidth,
+  windowWidth
 }: IChartProps) {
   const numBars = urlDailyHits.length
 
-  const containerRef = useRef<HTMLDivElement>(null)
-  const barsRef = useRef<SVGGElement>(null)
+  const containerRef = React.useRef<HTMLDivElement>(null)
+  const barsRef = React.useRef<SVGGElement>(null)
 
-  const [width, setWidth] = useState(0)
+  const [width, setWidth] = React.useState(0)
 
-  useEffect(() => {
+  React.useEffect(() => {
     const { width } = (ReactDOM.findDOMNode(containerRef.current) as HTMLDivElement).getBoundingClientRect()
 
     setWidth(width)
   }, [containerRef.current, windowWidth])
 
-  useEffect(() => {
-    const barWidth = numBars > 0 ? ((width - barGap * (numBars - 1))/ numBars) : 0
+  React.useEffect(() => {
+    const barWidth = numBars > 0 ? ((width - barGap * (numBars - 1)) / numBars) : 0
     const zeroDataHeight = 1
 
     const selectY = ({ num }) => num
 
     const bars = d3Select(ReactDOM.findDOMNode(barsRef.current))
 
-    const y = d3ScaleLinear().domain([0, d3Max(urlDailyHits, selectY)]).range([0, height])
+    const y: ScaleFunction = d3ScaleLinear().domain([0, d3Max(urlDailyHits, selectY)]).range([0, height])
 
-    bars.selectAll("rect").remove()
+    bars.selectAll('rect').remove()
 
-    bars.selectAll("rect")
+    bars.selectAll('rect')
       .data(urlDailyHits)
       .enter()
-      .append("rect")
-      .attr("x", (_d, i) => i * (barWidth + barGap))
-      .attr("y", (d) => selectY(d) === 0 ? height - zeroDataHeight : height - zeroDataHeight - y(selectY(d)))
-      .attr("width", barWidth)
-      .attr("height", (d) => selectY(d) === 0 ? zeroDataHeight : zeroDataHeight + y(selectY(d)))
-      .attr("fill", barColor)
+      .append('rect')
+      .attr('x', (_d, i) => i * (barWidth + barGap))
+      .attr('y', (d) => selectY(d) === 0 ? height - zeroDataHeight : height - zeroDataHeight - y(selectY(d)))
+      .attr('width', barWidth)
+      .attr('height', (d) => selectY(d) === 0 ? zeroDataHeight : zeroDataHeight + y(selectY(d)))
+      .attr('fill', barColor)
   }, [barColor, height, urlDailyHits, width])
 
   return (
@@ -113,14 +114,14 @@ function Chart({
 
 export default class UrlCard extends React.Component<IUrlCardProps, IState> {
   state: IState = {
-    highlighted: false,
+    highlighted: false
   }
 
-  componentDidMount() {
+  componentDidMount () {
     const {
       fetchUrlDailyHits,
       fetchUrlMonthlyHits,
-      url: { id },
+      url: { id }
     } = this.props
 
     let time = new Date()
@@ -148,7 +149,7 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
   onClickEdit = () => {
     const {
       url,
-      urlCollectionId,
+      urlCollectionId
     } = this.props
 
     this.setState({
@@ -158,7 +159,7 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
 
   onClickCard = () => {
     this.setState({
-      highlighted: true,
+      highlighted: true
     })
   }
 
@@ -174,18 +175,18 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
     })
   }
 
-  render() {
+  render () {
     const {
       removingUrl,
       url,
       urlDailyHits,
       urlMonthlyHits,
-      windowWidth,
+      windowWidth
     } = this.props
 
     const {
       highlighted,
-      redirect,
+      redirect
     } = this.state
 
     if (redirect) {
@@ -209,19 +210,19 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
 
               {highlighted && (
 
-              <Tag
-                href={url.href}
-                isLink={!removingUrl && highlighted}
-                isWarning={removingUrl}
-                onClick={(event) => { event.stopPropagation() }}
-                target="_blank"
-              >
-                <Icon>
-                  <Icon.Svg
-                    icon={solidIcon.externalLinkSquareAlt}
-                  />
-                </Icon>
-              </Tag>
+                <Tag
+                  href={url.href}
+                  isLink={!removingUrl && highlighted}
+                  isWarning={removingUrl}
+                  onClick={(event) => { event.stopPropagation() }}
+                  target="_blank"
+                >
+                  <Icon>
+                    <Icon.Svg
+                      icon={solidIcon.externalLinkSquareAlt}
+                    />
+                  </Icon>
+                </Tag>
               )}
             </Tags>
           </Card.Header.Title>

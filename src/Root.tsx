@@ -1,30 +1,30 @@
-import * as React from "react"
-import { IntlProvider } from "react-intl"
-import { Provider } from "react-redux"
+import * as React from 'react'
+import { IntlProvider } from 'react-intl'
+import { Provider } from 'react-redux'
 import {
   BrowserRouter,
   Redirect,
   Route,
-  Switch,
-} from "react-router-dom"
-import { Store } from "redux"
+  Switch
+} from 'react-router-dom'
+import { Store } from 'redux'
 
-import i18nConfig from "./i18nConfig"
+import i18nConfig from './i18nConfig'
 
-import CreateAccountPage from "./pages/CreateAccountPage"
-import CreateUrlPage from "./pages/CreateUrlPage"
-import EnterPage from "./pages/EnterPage"
-import HomePage from "./pages/HomePage"
-import MyUrlsPage from "./pages/MyUrlsPage"
-import PasswordResetPage from "./pages/PasswordResetPage"
-import PrivacyPolicyPage from "./pages/PrivacyPolicyPage"
-import SettingsPage from "./pages/SettingsPage"
-import TermsOfServicePage from "./pages/TermsOfServicePage"
-import UrlPage from "./pages/UrlPage"
+import CreateAccountPage from './pages/CreateAccountPage'
+import CreateUrlPage from './pages/CreateUrlPage'
+import EnterPage from './pages/EnterPage'
+import HomePage from './pages/HomePage'
+import MyUrlsPage from './pages/MyUrlsPage'
+import PasswordResetPage from './pages/PasswordResetPage'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
+import SettingsPage from './pages/SettingsPage'
+import TermsOfServicePage from './pages/TermsOfServicePage'
+import UrlPage from './pages/UrlPage'
 
 import {
-  CHECK_AUTHENTICATION,
-} from "./reducers/account"
+  CHECK_AUTHENTICATION
+} from './reducers/account'
 
 const i18n = i18nConfig()
 
@@ -33,13 +33,13 @@ interface IProps {
 }
 
 export default class Root extends React.Component<IProps> {
-  componentDidMount() {
+  componentDidMount () {
     this.props.store.dispatch({ type: CHECK_AUTHENTICATION })
   }
 
-  render() {
+  render () {
     const {
-      store,
+      store
     } = this.props
 
     return (

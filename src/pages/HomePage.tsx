@@ -1,31 +1,31 @@
-import * as React from "react"
-import { connect } from "react-redux"
-import { RouteComponentProps } from "react-router-dom"
+import * as React from 'react'
+import { connect } from 'react-redux'
+import { RouteComponentProps } from 'react-router-dom'
 import {
-  Hero,
-} from "trunx"
+  Hero
+} from 'trunx'
 
-import Features from "../components/Features"
-import Footer from "../components/Footer"
-import Navbar from "../components/Navbar"
-import Pricing from "../components/Pricing"
+import Features from '../components/Features'
+import Footer from '../components/Footer'
+import Navbar from '../components/Navbar'
+import Pricing from '../components/Pricing'
 
 import {
   exitAccount,
-  IAccountState,
-} from "../reducers/account"
+  IAccountState
+} from '../reducers/account'
 
 interface IProps extends RouteComponentProps {
   authenticationIsValid: boolean
-  email: IAccountState["email"]
+  email: IAccountState['email']
   exitAccount: () => void
   hasNoEmail: boolean
 }
 
 class HomePage extends React.Component<IProps> {
-  static path = "/"
+  static path = '/'
 
-  render() {
+  render () {
     const {
       authenticationIsValid,
       exitAccount,
@@ -63,15 +63,15 @@ class HomePage extends React.Component<IProps> {
 const mapStateToProps = ({
   account: {
     authentication,
-    email,
+    email
   }
 }) => ({
   authenticationIsValid: authentication === null ? false : authentication.isValid,
-  hasNoEmail: email === "",
+  hasNoEmail: email === ''
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  exitAccount: () => dispatch(exitAccount()),
+  exitAccount: () => dispatch(exitAccount())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage)

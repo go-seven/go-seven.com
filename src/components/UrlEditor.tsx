@@ -1,9 +1,8 @@
-import * as solidIcon from "fa-svg-icon/solid"
-import * as pdsp from "pdsp"
-import * as React from "react"
-import { useEffect, useState } from "react"
-import { FormattedMessage } from "react-intl"
-import InjectIntl from "react-intl-inject"
+import * as solidIcon from 'fa-svg-icon/solid'
+import * as pdsp from 'pdsp'
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
+import InjectIntl from 'react-intl-inject'
 import {
   Box,
   Button,
@@ -13,15 +12,15 @@ import {
   Input,
   Label,
   Tag,
-  Tags,
-} from "trunx"
+  Tags
+} from 'trunx'
 
-import ReadOnlyTextField from "./ReadOnlyTextField"
-import TargetUrlHrefField from "./TargetUrlHrefField"
+import ReadOnlyTextField from './ReadOnlyTextField'
+import TargetUrlHrefField from './TargetUrlHrefField'
 
 import {
-  IUrl,
-} from "../reducers/urlCollections"
+  IUrl
+} from '../reducers/urlCollections'
 
 export interface IUrlEditorProps {
   currentUrl: IUrl | null
@@ -42,14 +41,13 @@ export default function UrlEditor ({
   updateUrl,
   updatingUrl,
   url,
-  wantedUrlHrefIsValid,
+  wantedUrlHrefIsValid
 }: IUrlEditorProps) {
-  const [wantedTitle, setWantedTitle] = useState(url.title)
+  const [wantedTitle, setWantedTitle] = React.useState(url.title)
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchUrlMetadata(url)
   }, [])
-
 
   const onChangeTitle = (event) => {
     pdsp(event)
@@ -101,7 +99,7 @@ export default function UrlEditor ({
             <TargetUrlHrefField
               initialUrlHref={url.href}
               isLoading={fetchingUrlMetadata}
-              label={intl.formatMessage({ id: "UrlEditor.target-url.label" })}
+              label={intl.formatMessage({ id: 'UrlEditor.target-url.label' })}
               readOnly={updatingUrl}
               resetTargetUrlHref={0}
               setTargetUrlHref={(href) => setWantedUrl({ href })}
@@ -118,8 +116,8 @@ export default function UrlEditor ({
         <InjectIntl>
           {({ intl }) => (
             <ReadOnlyTextField
-              label={intl.formatMessage({ id: "UrlEditor.target-url-title.label" })}
-              text={(currentUrl !== null && currentUrl.metadata && typeof currentUrl.metadata.title === "string") ? currentUrl.metadata.title : ""}
+              label={intl.formatMessage({ id: 'UrlEditor.target-url-title.label' })}
+              text={(currentUrl !== null && currentUrl.metadata && typeof currentUrl.metadata.title === 'string') ? currentUrl.metadata.title : ''}
             />
           )}
         </InjectIntl>
@@ -144,7 +142,7 @@ export default function UrlEditor ({
           </Label>
           <Control>
             <div className="url-editor__text-field--readonly">
-              {(currentUrl !== null && currentUrl.metadata) ? currentUrl.metadata.title : ""}
+              {(currentUrl !== null && currentUrl.metadata) ? currentUrl.metadata.title : ''}
             </div>
           </Control>
         </Field>
@@ -158,7 +156,7 @@ export default function UrlEditor ({
                   isLoading={updatingUrl}
                   isSuccess={!saveButtonDisabled}
                   type="submit"
-                  value={intl.formatMessage({ id: "UrlEditor.submit" })}
+                  value={intl.formatMessage({ id: 'UrlEditor.submit' })}
                 />
               )}
             </InjectIntl>

@@ -41,7 +41,7 @@ Add related files to [public/index.html], for instance
     <script src="/libs/react-dom.js"></script>
 ```
 
-Remember to add them to packages excluded by browserify, add something like this fo package config
+Remember to add them to packages excluded by browserify, add something like this to package config
 
 ```json
   "config": {

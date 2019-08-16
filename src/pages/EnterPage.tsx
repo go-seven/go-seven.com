@@ -1,9 +1,9 @@
-import * as pdsp from "pdsp"
-import * as React from "react"
-import { FormattedMessage } from "react-intl"
-import InjectIntl from "react-intl-inject"
-import { connect } from "react-redux"
-import { Redirect } from "react-router-dom"
+import * as pdsp from 'pdsp'
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
+import InjectIntl from 'react-intl-inject'
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import {
   A,
   Box,
@@ -16,25 +16,25 @@ import {
   Message,
   Modal,
   P,
-  Title,
-} from "trunx"
+  Title
+} from 'trunx'
 
-import * as apiError from "../apiErrors"
+import * as apiError from '../apiErrors'
 
-import EmailField from "../components/EmailField"
-import LogoButton from "../components/LogoButton"
-import PasswordField from "../components/PasswordField"
-import PleaseLookForVerificationEmail from "../components/PleaseLookForVerificationEmail"
+import EmailField from '../components/EmailField'
+import LogoButton from '../components/LogoButton'
+import PasswordField from '../components/PasswordField'
+import PleaseLookForVerificationEmail from '../components/PleaseLookForVerificationEmail'
 
 import {
   cleanupAuthenticationError,
   enterAccount,
   sendVerification,
-  ICredentials,
-} from "../reducers/account"
+  ICredentials
+} from '../reducers/account'
 
-import CreateAccountPage from "./CreateAccountPage"
-import MyUrlsPage from "./MyUrlsPage"
+import CreateAccountPage from './CreateAccountPage'
+import MyUrlsPage from './MyUrlsPage'
 
 interface IProps {
   authenticationIsValid: boolean
@@ -52,14 +52,15 @@ interface IState {
 }
 
 class EnterPage extends React.Component<IProps, IState> {
-  static path = "/enter"
+  static path = '/enter'
 
   state: IState = {}
 
   private emailRef = React.createRef<HTMLInputElement>()
+
   private passwordRef = React.createRef<HTMLInputElement>()
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.cleanupAuthenticationError()
   }
 
@@ -78,7 +79,7 @@ class EnterPage extends React.Component<IProps, IState> {
 
     const email = this.emailRef.current!.value
 
-    if (typeof email === "string") {
+    if (typeof email === 'string') {
       sendVerification(email)
     }
   }
@@ -92,13 +93,13 @@ class EnterPage extends React.Component<IProps, IState> {
     this.props.enterAccount({ email, password })
   }
 
-  render() {
+  render () {
     const {
       authenticationIsValid,
       emailVericationSent,
       errorCode,
       isEntering,
-      isSendingVerification,
+      isSendingVerification
     } = this.props
 
     const {
@@ -137,7 +138,7 @@ class EnterPage extends React.Component<IProps, IState> {
                   <Media.Content>
                     <Content hasTextCentered>
                       <Title is4 hasTextGrey>
-                        <FormattedMessage id={"EnterPage.title"} />
+                        <FormattedMessage id={'EnterPage.title'} />
                       </Title>
                     </Content>
                   </Media.Content>
@@ -150,7 +151,7 @@ class EnterPage extends React.Component<IProps, IState> {
                   <InjectIntl>
                     {({ intl }) => (
                       <EmailField
-                        errorMessage={emailNotFoundError && intl.formatMessage({ id: "EnterPage.email.emailNotFoundError" })}
+                        errorMessage={emailNotFoundError && intl.formatMessage({ id: 'EnterPage.email.emailNotFoundError' })}
                         inputRef={this.emailRef}
                       />
                     )}
@@ -160,9 +161,9 @@ class EnterPage extends React.Component<IProps, IState> {
                     {({ intl }) => (
                       <PasswordField
                         autoComplete="current-password"
-                        errorMessage={invalidPasswordError ? (intl.formatMessage({ id: "EnterPage.password.invalidPasswordError" }) as string) : undefined}
+                        errorMessage={invalidPasswordError ? (intl.formatMessage({ id: 'EnterPage.password.invalidPasswordError' }) as string) : undefined}
                         inputRef={this.passwordRef}
-                        label={(intl.formatMessage({ id: "EnterPage.password.label" }) as string)}
+                        label={(intl.formatMessage({ id: 'EnterPage.password.label' }) as string)}
                         showForgotPassword
                       />
                     )}
@@ -176,7 +177,7 @@ class EnterPage extends React.Component<IProps, IState> {
                             isLoading={isEntering}
                             isSuccess
                             type="submit"
-                            value={intl.formatMessage({ id: "EnterPage.submit" })}
+                            value={intl.formatMessage({ id: 'EnterPage.submit' })}
                           />
                         </Control>
                       </Field>
@@ -259,21 +260,21 @@ const mapStateToProps = ({
     emailVericationSent,
     error,
     isEntering,
-    isSendingVerification,
+    isSendingVerification
   }
 }) => ({
   authenticationIsValid: authentication === null ? false : authentication.isValid,
   emailVericationSent,
   errorCode: error && error.code,
-  hasNoEmail: email === "",
+  hasNoEmail: email === '',
   isEntering,
-  isSendingVerification,
+  isSendingVerification
 })
 
 const mapDispatchToProps = (dispatch) => ({
   cleanupAuthenticationError: () => dispatch(cleanupAuthenticationError()),
   enterAccount: (credentials) => dispatch(enterAccount(credentials)),
-  sendVerification: (email) => dispatch(sendVerification(email)),
+  sendVerification: (email) => dispatch(sendVerification(email))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EnterPage)

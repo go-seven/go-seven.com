@@ -1,13 +1,13 @@
-import * as pdsp from "pdsp"
-import * as React from "react"
-import InjectIntl from "react-intl-inject"
+import * as pdsp from 'pdsp'
+import * as React from 'react'
+import InjectIntl from 'react-intl-inject'
 import {
   Button,
   Control,
-  Field,
-} from "trunx"
+  Field
+} from 'trunx'
 
-import PasswordField from "./PasswordField"
+import PasswordField from './PasswordField'
 
 export interface IChangePasswordFormProps {
   changePassword: (password: string) => void
@@ -36,12 +36,12 @@ export default class ChangePasswordForm extends React.Component<IChangePasswordF
 
     const password = this.passwordRef.current!.value
 
-    if (typeof password === "string") {
+    if (typeof password === 'string') {
       this.props.changePassword(password)
     }
   }
 
-  render() {
+  render () {
     const {
       isChangingPassword
     } = this.props
@@ -60,7 +60,7 @@ export default class ChangePasswordForm extends React.Component<IChangePasswordF
             <PasswordField
               autoComplete="off"
               inputRef={this.passwordRef}
-              label={intl.formatMessage({ id: "ChangePasswordForm.new-password.label" })}
+              label={intl.formatMessage({ id: 'ChangePasswordForm.new-password.label' })}
               setPasswordIsValid={this.setPasswordIsValid}
               showPasswordPolicy
               visible
@@ -77,7 +77,7 @@ export default class ChangePasswordForm extends React.Component<IChangePasswordF
                   isLoading={isChangingPassword}
                   isSuccess
                   type="submit"
-                  value={intl.formatMessage({ id: "ChangePasswordForm.submit" })}
+                  value={intl.formatMessage({ id: 'ChangePasswordForm.submit' })}
                 />
               )}
             </InjectIntl>

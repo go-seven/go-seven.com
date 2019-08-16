@@ -1,9 +1,9 @@
-import * as pdsp from "pdsp"
-import * as React from "react"
-import { FormattedMessage } from "react-intl"
-import InjectIntl from "react-intl-inject"
-import { connect } from "react-redux"
-import { Redirect } from "react-router-dom"
+import * as pdsp from 'pdsp'
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
+import InjectIntl from 'react-intl-inject'
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import {
   Box,
   Button,
@@ -14,19 +14,19 @@ import {
   Media,
   Message,
   Modal,
-  Title,
-} from "trunx"
+  Title
+} from 'trunx'
 
-import * as apiError from "../apiErrors"
+import * as apiError from '../apiErrors'
 
-import EmailField from "../components/EmailField"
-import LogoButton from "../components/LogoButton"
+import EmailField from '../components/EmailField'
+import LogoButton from '../components/LogoButton'
 
-import MyUrlsPage from "./MyUrlsPage"
+import MyUrlsPage from './MyUrlsPage'
 
 import {
-  sendPasswordReset,
-} from "../reducers/account"
+  sendPasswordReset
+} from '../reducers/account'
 
 interface IProps {
   authenticationIsValid: boolean
@@ -41,7 +41,7 @@ interface IState {
 }
 
 class PasswordResetPage extends React.Component<IProps, IState> {
-  static path = "/password-reset"
+  static path = '/password-reset'
 
   private emailRef = React.createRef<HTMLInputElement>()
 
@@ -50,17 +50,17 @@ class PasswordResetPage extends React.Component<IProps, IState> {
 
     const email = this.emailRef.current!.value
 
-    if (typeof email === "string") {
+    if (typeof email === 'string') {
       this.props.sendPasswordReset(email)
     }
   }
 
-  render() {
+  render () {
     const {
       authenticationIsValid,
       isSendingPasswordReset,
       errorCode,
-      passwordResetEmailSent,
+      passwordResetEmailSent
     } = this.props
 
     if (authenticationIsValid === false) {
@@ -86,7 +86,7 @@ class PasswordResetPage extends React.Component<IProps, IState> {
                 <Media.Content>
                   <Content hasTextCentered>
                     <Title is4 hasTextGrey>
-                      <FormattedMessage id={"PasswordResetPage.title"} />
+                      <FormattedMessage id={'PasswordResetPage.title'} />
                     </Title>
                   </Content>
                 </Media.Content>
@@ -126,7 +126,7 @@ class PasswordResetPage extends React.Component<IProps, IState> {
                             isLoading={isSendingPasswordReset}
                             isSuccess
                             type="submit"
-                            value={intl.formatMessage({ id: "PasswordResetPage.send" })}
+                            value={intl.formatMessage({ id: 'PasswordResetPage.send' })}
                           />
                         )}
                       </InjectIntl>
@@ -147,17 +147,17 @@ const mapStateToProps = ({
     authentication,
     error,
     isSendingPasswordReset,
-    passwordResetEmailSent,
+    passwordResetEmailSent
   }
 }) => ({
   authenticationIsValid: authentication === null ? false : authentication.isValid,
   errorCode: error && error.code,
   isSendingPasswordReset,
-  passwordResetEmailSent,
+  passwordResetEmailSent
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  sendPasswordReset: (email) => dispatch(sendPasswordReset(email)),
+  sendPasswordReset: (email) => dispatch(sendPasswordReset(email))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PasswordResetPage)

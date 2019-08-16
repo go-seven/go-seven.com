@@ -1,27 +1,26 @@
-import * as pdsp from "pdsp"
-import * as React from "react"
-import { useEffect, useState } from "react"
-import { FormattedMessage } from "react-intl"
+import * as pdsp from 'pdsp'
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
 import {
   Control,
   Field,
   Label,
   Help,
-  Input,
-} from "trunx"
+  Input
+} from 'trunx'
 
 interface IShortUrlIdFieldProps {
   domain: string
   label: string
   isLoading: boolean
   readOnly: boolean
-  resetUrlId: number,
+  resetUrlId: number
   setWantedUrlId: (id: string) => void
   wantedUrlId: string
   wantedUrlIdExists: boolean
 }
 
-export default function ShortUrlIdField({
+export default function ShortUrlIdField ({
   domain,
   isLoading,
   label,
@@ -29,21 +28,21 @@ export default function ShortUrlIdField({
   resetUrlId,
   setWantedUrlId,
   wantedUrlId,
-  wantedUrlIdExists,
+  wantedUrlIdExists
 }: IShortUrlIdFieldProps) {
   const delay = 2000
   const urlPrefix = `https://${domain}/`
 
-  const [componentDidMount, setComponentDidMount] = useState(false)
-  const [debouncedUrlId, setDebouncedUrlId] = useState(wantedUrlId)
+  const [componentDidMount, setComponentDidMount] = React.useState(false)
+  const [debouncedUrlId, setDebouncedUrlId] = React.useState(wantedUrlId)
 
   const getUrlId = (value) => {
     if (value === null) {
-      return ""
+      return ''
     }
 
     if (value.length <= urlPrefix.length) {
-      return ""
+      return ''
     }
 
     // TODO filter non URL characters
@@ -53,20 +52,20 @@ export default function ShortUrlIdField({
     // https://www.regextester.com/106421
     //
     // (\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])
-    return value.trim().replace(urlPrefix, "")
+    return value.trim().replace(urlPrefix, '')
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     setComponentDidMount(true)
   }, [])
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (componentDidMount) {
-      setWantedUrlId("")
+      setWantedUrlId('')
     }
   }, [resetUrlId])
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedUrlId(wantedUrlId)
     }, delay)
@@ -74,7 +73,7 @@ export default function ShortUrlIdField({
     return () => { clearTimeout(handler) }
   }, [wantedUrlId])
 
-  useEffect(() => {
+  React.useEffect(() => {
     setWantedUrlId(debouncedUrlId)
   }, [debouncedUrlId])
 
@@ -97,8 +96,8 @@ export default function ShortUrlIdField({
       >
         <Input
           inputRef={this.urlIdRef}
-          isDanger={wantedUrlId !== "" && wantedUrlIdExists === true}
-          isSuccess={wantedUrlId !== "" && wantedUrlIdExists === false}
+          isDanger={wantedUrlId !== '' && wantedUrlIdExists === true}
+          isSuccess={wantedUrlId !== '' && wantedUrlIdExists === false}
           onChange={onChange}
           placeholder={urlPrefix}
           readOnly={readOnly}

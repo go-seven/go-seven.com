@@ -1,22 +1,22 @@
-import * as React from "react"
-import { FormattedMessage } from "react-intl"
-import { RouteComponentProps } from "react-router-dom"
+import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
+import { RouteComponentProps } from 'react-router-dom'
 import {
   Container,
   Content,
   Section,
-  Title,
-} from "trunx"
+  Title
+} from 'trunx'
 
-import Footer from "../components/Footer"
-import Navbar from "../components/Navbar"
+import Footer from '../components/Footer'
+import Navbar from '../components/Navbar'
 
 interface IProps extends RouteComponentProps {}
 
 export default class PrivacyPolicyPage extends React.Component<IProps> {
-  static path = "/privacy-policy"
+  static path = '/privacy-policy'
 
-  render() {
+  render () {
     return (
       <>
         <Navbar
@@ -27,21 +27,21 @@ export default class PrivacyPolicyPage extends React.Component<IProps> {
         <Section>
           <Container>
             <Content>
-            <Title>
-              <FormattedMessage id={"PrivacyPolicyPage.title"} />
-            </Title>
+              <Title>
+                <FormattedMessage id={'PrivacyPolicyPage.title'} />
+              </Title>
 
-            <p>
-              <FormattedMessage id={"PrivacyPolicyPage.intro"} />
-            </p>
+              <p>
+                <FormattedMessage id={'PrivacyPolicyPage.intro'} />
+              </p>
 
-            <Title is4>
-              <FormattedMessage id={"PrivacyPolicyPage.changes.title"} />
-            </Title>
+              <Title is4>
+                <FormattedMessage id={'PrivacyPolicyPage.changes.title'} />
+              </Title>
 
-            <p>
-              <FormattedMessage id={"PrivacyPolicyPage.changes.paragraph"} />
-            </p>
+              <p>
+                <FormattedMessage id={'PrivacyPolicyPage.changes.paragraph'} />
+              </p>
             </Content>
           </Container>
         </Section>
