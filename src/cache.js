@@ -37,6 +37,7 @@ const REQUIRED_FILES = [
   '/media/logo-256x256.png',
   '/media/logo-512x512.png',
   '/media/logo.svg',
+  '/media/logotype-711x207.png',
   `/css/app.v${version}.css`
 ]
 
