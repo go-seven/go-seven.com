@@ -3,6 +3,7 @@
   "version": "0.4.2",
   "private": true,
   "description": "URL shortener",
+  "main": "src/index.tsx",
   "config": {
     "versions": {
       "react": "16.8.6",
@@ -22,7 +23,7 @@
     "aws_s3_sync:public/js": "aws s3 sync public/js/ s3://go-seven.com/js/ --profile GoSeven --exclude '.gitignore' --expires 'Sun, 01 Jan 2040 01:01:01 GMT'",
     "aws_s3_sync:public/libs": "aws s3 sync public/libs/ s3://go-seven.com/libs/ --profile GoSeven --exclude '.gitignore' --expires 'Sun, 01 Jan 2040 01:01:01 GMT'",
     "browserify": "run-s browserify:*",
-    "browserify:bundle": "browserify src/index.tsx -p tsify $npm_package_config_browserify_exclude -o public/js/bundle.v${npm_package_version}.js",
+    "browserify:bundle": "browserify ${npm_package_main} --extension .ts --extension .tsx -t [ babelify --extensions .ts,.tsx ] $npm_package_config_browserify_exclude -o public/js/bundle.v${npm_package_version}.js",
     "browserify:cache": "browserify src/cache.js > public/cache.v${npm_package_version}.js",
     "browserify:shim": "run-s browserify:shim:*",
     "browserify:shim:react": "browserify -r ./src/libs/react.js:react -o public/libs/react.js",
@@ -30,7 +31,7 @@
     "browserify:shim:react-router-dom": "browserify -r ./src/libs/react-router-dom.js:react-router-dom -o public/libs/react-router-dom.js",
     "browserify:shim:redux": "browserify -r ./src/libs/redux.js:redux -o public/libs/redux.js",
     "build": "npm run browserify; npm run sass",
-    "budo": "budo src/index.tsx --live --pushstate --dir public --serve js/bundle.v${npm_package_version}.js --open -- -p tsify $npm_package_config_browserify_exclude",
+    "budo": "budo ${npm_package_main} --live --pushstate --dir public --serve js/bundle.v${npm_package_version}.js --open -- --extension .ts --extension .tsx -t [ babelify --extensions .ts,.tsx ] $npm_package_config_browserify_exclude",
     "deploy": "npm run aws_s3_sync",
     "get_js_libs": "run-s get_js_libs:*",
     "get_js_libs:react": "wget https://unpkg.com/react@${npm_package_config_versions_react}/umd/react.production.min.js -O public/libs/react.v${npm_package_config_versions_react}.min.js",
@@ -87,11 +88,19 @@
     "trunx": "^0.25.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.3.3",
     "@types/react": "^16.8.22",
     "@types/react-dom": "^16.8.2",
     "@types/react-router-dom": "^4.3.4",
     "@typescript-eslint/eslint-plugin": "^1.10.1",
+    "babelify": "^10.0.0",
     "budo": "^11.6.0",
+    "core-js": "^3.2.1",
     "dot-editorconfig": "^1.1.1",
     "eslint": "^6.1.0",
     "eslint-plugin-import": "^2.18.2",
@@ -102,7 +111,6 @@
     "npm-run-all": "^4.1.5",
     "pre-commit": "^1.2.2",
     "rimraf": "^2.6.3",
-    "tsify": "^4.0.1",
     "typescript": "^3.5.2"
   }
 }
