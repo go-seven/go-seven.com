@@ -1,14 +1,14 @@
 {
   "name": "go-seven.com",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "private": true,
   "description": "URL shortener",
   "main": "src/index.tsx",
   "config": {
     "versions": {
-      "react": "16.8.6",
-      "react_dom": "16.8.6",
-      "react_router_dom": "5.0.1",
+      "react": "16.10.2",
+      "react_dom": "16.10.2",
+      "react_router_dom": "5.1.2",
       "redux": "4.0.1"
     },
     "browserify": {
