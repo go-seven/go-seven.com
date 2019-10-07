@@ -16,6 +16,7 @@
     "removeComments": true,
     "resolveJsonModule": true,
     "sourceMap": false,
+    "skipLibCheck": true,
     "strictNullChecks": true,
     "target": "es5"
   },

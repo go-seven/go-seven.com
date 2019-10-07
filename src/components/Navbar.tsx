@@ -1,7 +1,7 @@
 import * as chartBar from 'fa-svg-icon/solid/chart-bar'
 import * as plusCircle from 'fa-svg-icon/solid/plus-circle'
 import * as userCog from 'fa-svg-icon/solid/user-cog'
-import * as pdsp from 'pdsp'
+import pdsp from 'pdsp'
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useSpring, animated } from 'react-spring'

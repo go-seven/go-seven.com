@@ -43,7 +43,7 @@ export default class Root extends React.Component<IProps> {
     } = this.props
 
     return (
-      <IntlProvider locale={i18n.locale} messages={i18n.messages}>
+      <IntlProvider {...i18n}>
         <Provider store={store}>
           <BrowserRouter>
             <Switch>

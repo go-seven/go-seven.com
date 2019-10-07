@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Redirect, FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
-import { RouteComponentProps } from 'react-router-dom'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import {
   Box,
   Button,

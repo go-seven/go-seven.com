@@ -1,5 +1,5 @@
 import { ticTacToe } from 'i-am-not-a-robot'
-import * as pdsp from 'pdsp'
+import pdsp from 'pdsp'
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import InjectIntl from 'react-intl-inject'

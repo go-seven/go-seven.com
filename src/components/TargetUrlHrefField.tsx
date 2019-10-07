@@ -1,4 +1,4 @@
-import * as pdsp from 'pdsp'
+import pdsp from 'pdsp'
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import {
