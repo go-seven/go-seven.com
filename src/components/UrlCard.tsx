@@ -1,4 +1,5 @@
 import { max as d3Max } from 'd3-array'
+import { transition as d3Transition } from 'd3-transition'
 import { scaleLinear as d3ScaleLinear } from 'd3-scale'
 import { select as d3Select } from 'd3-selection'
 import * as solidIcon from 'fa-svg-icon/solid'
@@ -91,10 +92,13 @@ function Chart ({
       .enter()
       .append('rect')
       .attr('x', (_d, i) => i * (barWidth + barGap))
-      .attr('y', (d) => selectY(d) === 0 ? height - zeroDataHeight : height - zeroDataHeight - y(selectY(d)))
       .attr('width', barWidth)
-      .attr('height', (d) => selectY(d) === 0 ? zeroDataHeight : zeroDataHeight + y(selectY(d)))
       .attr('fill', barColor)
+      .attr('height', () => 0)
+      .attr('y', () => height - zeroDataHeight)
+      .transition(d3Transition().duration(500))
+      .attr('height', (d) => selectY(d) === 0 ? zeroDataHeight : zeroDataHeight + y(selectY(d)))
+      .attr('y', (d) => selectY(d) === 0 ? height - zeroDataHeight : height - zeroDataHeight - y(selectY(d)))
   }, [barColor, height, urlDailyHits, width])
 
   return (
