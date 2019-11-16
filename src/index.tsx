@@ -16,7 +16,10 @@ const initialState = {
 window.addEventListener('load', () => {
   // Register service worker, it is better to put it in the root public directory, i.e. under the max scope.
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register(`cache.v${version}.js`, { scope: '/' })
+    navigator.serviceWorker.register(`cache.v${version}.js`, { scope: '/' }).then(
+      () => { console.log(`Registered serviceWorker, Go Seven v${version}`) },
+      (error) => { console.error(error) }
+    )
   }
 
   setTimeout(() => {

@@ -11,7 +11,7 @@ import {
 export default function localStorageMiddleware () {
   return (next) => (action) => {
     switch (action.type) {
-      case CHECK_AUTHENTICATION:
+      case CHECK_AUTHENTICATION: {
         const accountId = localStorage.getItem('accountId') || ''
         const email = localStorage.getItem('email') || ''
 
@@ -87,6 +87,7 @@ export default function localStorageMiddleware () {
             }
           })
         }
+      }
 
       case CREATE_ACCOUNT.SUCCESS:
         localStorage.setItem('accountId', action.data.accountId)

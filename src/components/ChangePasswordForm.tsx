@@ -14,82 +14,55 @@ export interface IChangePasswordFormProps {
   isChangingPassword: boolean
 }
 
-interface IState {
-  passwordIsValid: boolean
-}
+export default function ChangePasswordForm ({
+  changePassword,
+  isChangingPassword
+}: IChangePasswordFormProps) {
+  const passwordRef = React.useRef<HTMLInputElement>()
 
-export default class ChangePasswordForm extends React.Component<IChangePasswordFormProps> {
-  state: IState = {
-    passwordIsValid: false
-  }
+  const [passwordIsValid, setPasswordIsValid] = React.useState(false)
 
-  private passwordRef = React.createRef<HTMLInputElement>()
+  return (
+    <form
+      autoComplete="off"
+      onSubmit={(event) => {
+        pdsp(event)
 
-  enableSubmit = (canSave) => {
-    this.setState({
-      passwordIsValid: !canSave
-    })
-  }
+        const password = passwordRef.current!.value
 
-  onSubmit = (event) => {
-    pdsp(event)
+        if (typeof password === 'string') {
+          changePassword(password)
+        }
+      }}
+    >
+      <InjectIntl>
+        {({ intl }) => (
+          <PasswordField
+            autoComplete="off"
+            inputRef={this.passwordRef}
+            label={intl.formatMessage({ id: 'ChangePasswordForm.new-password.label' })}
+            setPasswordIsValid={setPasswordIsValid}
+            showPasswordPolicy
+            visible
+          />
+        )}
+      </InjectIntl>
 
-    const password = this.passwordRef.current!.value
-
-    if (typeof password === 'string') {
-      this.props.changePassword(password)
-    }
-  }
-
-  render () {
-    const {
-      isChangingPassword
-    } = this.props
-
-    const {
-      passwordIsValid
-    } = this.state
-
-    return (
-      <form
-        autoComplete="off"
-        onSubmit={this.onSubmit}
-      >
-        <InjectIntl>
-          {({ intl }) => (
-            <PasswordField
-              autoComplete="off"
-              inputRef={this.passwordRef}
-              label={intl.formatMessage({ id: 'ChangePasswordForm.new-password.label' })}
-              setPasswordIsValid={this.setPasswordIsValid}
-              showPasswordPolicy
-              visible
-            />
-          )}
-        </InjectIntl>
-
-        <Field>
-          <Control>
-            <InjectIntl>
-              {({ intl }) => (
-                <Button
-                  disabled={!passwordIsValid}
-                  isLoading={isChangingPassword}
-                  isSuccess
-                  type="submit"
-                  value={intl.formatMessage({ id: 'ChangePasswordForm.submit' })}
-                />
-              )}
-            </InjectIntl>
-          </Control>
-        </Field>
-      </form>
-    )
-  }
-
-  setPasswordIsValid = (passwordIsValid) => {
-    this.setState({
-      passwordIsValid
-    })
-  }
+      <Field>
+        <Control>
+          <InjectIntl>
+            {({ intl }) => (
+              <Button
+                disabled={!passwordIsValid}
+                isLoading={isChangingPassword}
+                isSuccess
+                type="submit"
+                value={intl.formatMessage({ id: 'ChangePasswordForm.submit' })}
+              />
+            )}
+          </InjectIntl>
+        </Control>
+      </Field>
+    </form>
+  )
 }

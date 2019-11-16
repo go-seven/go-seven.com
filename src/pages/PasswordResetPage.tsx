@@ -43,7 +43,7 @@ interface IState {
 class PasswordResetPage extends React.Component<IProps, IState> {
   static path = '/password-reset'
 
-  private emailRef = React.createRef<HTMLInputElement>()
+  private readonly emailRef = React.createRef<HTMLInputElement>()
 
   onSubmit = (event) => {
     pdsp(event)

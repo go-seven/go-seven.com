@@ -102,7 +102,7 @@ export default class PasswordField extends React.Component<IProps, IState> {
         <Label>
           {label}
 
-          {showForgotPassword && (
+          {showForgotPassword === true && (
             <A
               href={PasswordResetPage.path}
               isPulledRight

@@ -65,11 +65,11 @@ class CreateAccountPage extends React.Component<IProps, IState> {
     passwordIsValid: false
   }
 
-  private antiSpamRef = React.createRef<HTMLInputElement>()
+  private readonly antiSpamRef = React.createRef<HTMLInputElement>()
 
-  private emailRef = React.createRef<HTMLInputElement>()
+  private readonly emailRef = React.createRef<HTMLInputElement>()
 
-  private passwordRef = React.createRef<HTMLInputElement>()
+  private readonly passwordRef = React.createRef<HTMLInputElement>()
 
   componentDidMount () {
     this.props.cleanupAuthenticationError()

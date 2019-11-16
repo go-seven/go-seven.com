@@ -56,9 +56,9 @@ class EnterPage extends React.Component<IProps, IState> {
 
   state: IState = {}
 
-  private emailRef = React.createRef<HTMLInputElement>()
+  private readonly emailRef = React.createRef<HTMLInputElement>()
 
-  private passwordRef = React.createRef<HTMLInputElement>()
+  private readonly passwordRef = React.createRef<HTMLInputElement>()
 
   componentDidMount () {
     this.props.cleanupAuthenticationError()

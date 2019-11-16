@@ -19,7 +19,7 @@ export default function configureStore (state): Store {
         thunkMiddleware,
         webStorageMiddleware
       ),
-      /* tslint:disable-next-line:no-string-literal */
+      /* eslint-disable-next-line */ /* tslint:disable-next-line:no-string-literal */
       window['__REDUX_DEVTOOLS_EXTENSION__'] ? window['__REDUX_DEVTOOLS_EXTENSION__']() : (storeCreator) => storeCreator
     )
   )
