@@ -1,7 +1,7 @@
 // User can organize its URLs into collections.
 // Every collection has an identifier and a name.
 // If no URL collection is selected there is always a "default" collection.
-import * as urlRegex from 'regex-weburl'
+import urlRegex from 'regex-weburl'
 
 import asyncActions from '../asyncActions'
 import * as client from '../client'

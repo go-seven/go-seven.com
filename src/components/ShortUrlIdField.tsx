@@ -33,6 +33,8 @@ export default function ShortUrlIdField ({
   const delay = 2000
   const urlPrefix = `https://${domain}/`
 
+  const wantedUrlRef = React.useRef(null)
+
   const [componentDidMount, setComponentDidMount] = React.useState(false)
   const [debouncedUrlId, setDebouncedUrlId] = React.useState(wantedUrlId)
 
@@ -47,7 +49,6 @@ export default function ShortUrlIdField ({
 
     // TODO filter non URL characters
     // TODO allow emojis
-    //
     //
     // https://www.regextester.com/106421
     //
@@ -95,7 +96,7 @@ export default function ShortUrlIdField ({
         isLoading={isLoading}
       >
         <Input
-          inputRef={this.urlIdRef}
+          inputRef={wantedUrlRef}
           isDanger={wantedUrlId !== '' && wantedUrlIdExists === true}
           isSuccess={wantedUrlId !== '' && wantedUrlIdExists === false}
           onChange={onChange}

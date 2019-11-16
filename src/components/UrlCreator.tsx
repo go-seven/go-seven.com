@@ -1,3 +1,4 @@
+import no from 'not-defined'
 import pdsp from 'pdsp'
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
@@ -56,42 +57,33 @@ export default function UrlCreator ({
   const [wantedTitle, setWantedTitle] = React.useState('')
 
   React.useEffect(() => {
-    if (wantedTitle === '' && wantedUrl !== null && typeof wantedUrl.title === 'string') {
-      setWantedTitle(wantedUrl.title)
+    if (
+      no(wantedTitle) && (
+        wantedUrl !== null && (
+          typeof wantedUrl.metadata === 'object' && typeof wantedUrl.metadata.title === 'string'
+        )
+      )
+    ) {
+      setWantedTitle(wantedUrl.metadata.title)
     }
-  }, [wantedUrl])
-
-  const onChangeTitle = (event) => {
-    pdsp(event)
-
-    setWantedTitle(event.target)
-  }
-
-  const onSubmit = (event) => {
-    pdsp(event)
-
-    if (wantedUrl !== null) {
-      const { href } = wantedUrl
-      const title = wantedTitle.trim()
-
-      createUrl({
-        href,
-        id: wantedUrlId,
-        title
-      })
-    }
-  }
-
-  const saveButtonDisabled = (
-    (wantedUrlIdExists === true) ||
-    (wantedUrlHrefIsValid !== true) ||
-    fetchingUrlMetadata ||
-    checkingIfUrlIdExists
-  )
+  }, [setWantedTitle, wantedUrl])
 
   return (
     <form
-      onSubmit={onSubmit}
+      onSubmit={(event) => {
+        pdsp(event)
+
+        if (wantedUrl !== null) {
+          const { href } = wantedUrl
+          const title = wantedTitle.trim()
+
+          createUrl({
+            href,
+            id: wantedUrlId,
+            title
+          })
+        }
+      }}
     >
       <Box>
         <InjectIntl>
@@ -124,7 +116,11 @@ export default function UrlCreator ({
 
           <Control>
             <Input
-              onChange={onChangeTitle}
+              onChange={(event) => {
+                pdsp(event)
+
+                setWantedTitle(event.target.value)
+              }}
               type="text"
               value={wantedTitle}
             />
@@ -155,7 +151,12 @@ export default function UrlCreator ({
             <InjectIntl>
               {({ intl }) => (
                 <Button
-                  disabled={saveButtonDisabled}
+                  disabled={(
+                    (wantedUrlIdExists === true) ||
+                    (wantedUrlHrefIsValid !== true) ||
+                    fetchingUrlMetadata ||
+                    checkingIfUrlIdExists
+                  )}
                   isLoading={creatingUrl}
                   isSuccess={wantedUrlHrefIsValid === true}
                   type="submit"
