@@ -38,7 +38,7 @@
     "get_js_libs:react-dom": "wget https://unpkg.com/react-dom@${npm_package_config_versions_react_dom}/umd/react-dom.production.min.js -O public/libs/react-dom.v${npm_package_config_versions_react_dom}.min.js",
     "get_js_libs:react-router-dom": "wget https://unpkg.com/react-router-dom@${npm_package_config_versions_react_router_dom}/umd/react-router-dom.min.js -O public/libs/react-router-dom.v${npm_package_config_versions_react_router_dom}.min.js",
     "get_js_libs:redux": "wget https://unpkg.com/redux@${npm_package_config_versions_redux}/dist/redux.min.js -O public/libs/redux.v${npm_package_config_versions_redux}.min.js",
-    "linter": " eslint --ext .js,.ts,.tsx .",
+    "linter": " eslint --fix --ext .js,.ts,.tsx .",
     "postbuild": "npm test",
     "postget_js_libs:react": "npm run browserify:shim:react",
     "postget_js_libs:react-dom": "npm run browserify:shim:react-dom",
