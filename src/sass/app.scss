@@ -3,14 +3,6 @@
 
 /* Import components */
 @import "components/logo-button";
-@import "components/logotype";
 @import "components/navbar";
 @import "components/readonly-text-field";
 @import "components/url-card-histogram";
-
-/* Overrides */
-
-.hero {
-  background-image: linear-gradient(#49bcea, #f0ffff);
-}
-

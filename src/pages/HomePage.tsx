@@ -1,9 +1,6 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { RouteComponentProps } from 'react-router-dom'
-import {
-  Hero
-} from 'trunx'
 
 import Features from '../components/Features'
 import Footer from '../components/Footer'
@@ -40,15 +37,6 @@ class HomePage extends React.Component<IProps> {
           locationPath={this.props.location.pathname}
           showCreateAccountButton={hasNoEmail}
         />
-
-        <Hero>
-          <Hero.Body>
-            <img
-              className="logotype"
-              src="/media/logotype-711x207.png"
-            />
-          </Hero.Body>
-        </Hero>
 
         <Features />
 
