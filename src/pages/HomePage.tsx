@@ -1,61 +1,62 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { RouteComponentProps } from 'react-router-dom'
+import { Redirect /*, RouteComponentProps */ } from 'react-router-dom'
 
-import Features from '../components/Features'
-import Footer from '../components/Footer'
-import Navbar from '../components/Navbar'
-import Pricing from '../components/Pricing'
+import { HomepageHero } from '../components/HomepageHero'
 
 import {
   exitAccount,
-  IAccountState
 } from '../reducers/account'
 
-interface IProps extends RouteComponentProps {
-  authenticationIsValid: boolean
-  email: IAccountState['email']
-  exitAccount: () => void
-  hasNoEmail: boolean
-}
+import routes from '../routes'
 
-class HomePage extends React.Component<IProps> {
-  static path = '/'
+const { useState } = React
 
-  render () {
-    const {
-      authenticationIsValid,
-      exitAccount,
-      hasNoEmail
-    } = this.props
+/* interface IProps extends RouteComponentProps { */
+/*   authenticationIsValid: boolean */
+/*   exitAccount: () => void */
+/*   hasNoEmail: boolean */
+/* } */
 
+function HomePage (/* {
+  authenticationIsValid,
+  exitAccount,
+  hasNoEmail,
+  }: IProps */) {
+  const [redirect, setRedirect] = useState()
+
+  const onClickEnter = () => setRedirect(routes.enter)
+
+  const onClickRegister = () => setRedirect(routes.createAccount)
+
+  if (redirect) {
     return (
-      <>
-        <Navbar
-          authenticationIsValid={authenticationIsValid}
-          exit={exitAccount}
-          locationPath={this.props.location.pathname}
-          showCreateAccountButton={hasNoEmail}
-        />
-
-        <Features />
-
-        <Pricing />
-
-        <Footer />
-      </>
+      <Redirect push to={redirect} />
     )
   }
+
+  return (
+    <>
+      <HomepageHero
+        borderRadius={10}
+        color="#fff"
+        logoImage="images/logotype.png"
+        isMobile={false}
+        onClickEnter={onClickEnter}
+        onClickRegister={onClickRegister}
+      />
+    </>
+  )
 }
 
 const mapStateToProps = ({
   account: {
-    authentication,
-    email
+    /* authentication, */
+    email,
   }
 }) => ({
-  authenticationIsValid: authentication === null ? false : authentication.isValid,
-  hasNoEmail: email === ''
+  /* authenticationIsValid: authentication === null ? false : authentication.isValid, */
+  hasNoEmail: email === '',
 })
 
 const mapDispatchToProps = (dispatch) => ({

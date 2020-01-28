@@ -26,6 +26,8 @@ import {
   CHECK_AUTHENTICATION
 } from './reducers/account'
 
+import routes from './routes'
+
 const i18n = i18nConfig()
 
 interface IProps {
@@ -53,7 +55,7 @@ export default class Root extends React.Component<IProps> {
 
               <Route component={EnterPage} exact path={EnterPage.path} />
 
-              <Route component={HomePage} exact path={HomePage.path} />
+              <Route component={HomePage} exact path={routes.home} />
 
               <Route component={MyUrlsPage} exact path={MyUrlsPage.path} />
 

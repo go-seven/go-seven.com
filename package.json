@@ -31,8 +31,11 @@
     "browserify:shim:redux": "browserify -r ./src/libs/redux.js:redux -o public/libs/redux.js",
     "build": "run-p browserify generate_cache_js sass",
     "budo": "budo ${npm_package_main} --live --pushstate --dir public --serve js/bundle.v${npm_package_version}.js --open -- --extension .ts --extension .tsx -t [ babelify --extensions .ts,.tsx ] $npm_package_config_browserify_exclude",
-    "copy_fonts": "cpy node_modules/go-seven-assets/fonts/* public/fonts/",
-    "copy_images": "cpy node_modules/go-seven-assets/images/* public/images/",
+    "copy": "run-p copy:*",
+    "copy:components": "cpy node_modules/go-seven-design.framerfx/code/components/* src/components/",
+    "copy:fonts": "cpy node_modules/go-seven-assets/fonts/* public/fonts/",
+    "copy:images": "cpy node_modules/go-seven-assets/images/* public/images/",
+    "copy:translations": "cpy node_modules/go-seven-i18n/dist/*.json public/i18n/",
     "deploy": "npm run aws_s3_sync",
     "generate_cache_js": "node src/npm-scripts/generate_cache.js | terser > public/cache.v${npm_package_version}.js",
     "get_js_libs": "run-s get_js_libs:*",
@@ -40,14 +43,13 @@
     "get_js_libs:react-dom": "wget https://unpkg.com/react-dom@${npm_package_config_versions_react_dom}/umd/react-dom.production.min.js -O public/libs/react-dom.v${npm_package_config_versions_react_dom}.min.js",
     "get_js_libs:react-router-dom": "wget -q https://unpkg.com/react-router-dom@${npm_package_config_versions_react_router_dom}/umd/react-router-dom.min.js -O - | grep -v sourceMappingURL > public/libs/react-router-dom.v${npm_package_config_versions_react_router_dom}.min.js",
     "get_js_libs:redux": "wget https://unpkg.com/redux@${npm_package_config_versions_redux}/dist/redux.min.js -O public/libs/redux.v${npm_package_config_versions_redux}.min.js",
-    "linter": " eslint --ext .js,.ts,.tsx .",
+    "eslint": " eslint --ext .js,.ts,.tsx .",
     "postbuild": "npm test",
     "postget_js_libs:react": "npm run browserify:shim:react",
     "postget_js_libs:react-dom": "npm run browserify:shim:react-dom",
     "postget_js_libs:react-router-dom": "npm run browserify:shim:react-router-dom",
     "postget_js_libs:redux": "npm run browserify:shim:redux",
     "postinstall": "run-p copy_images get_js_libs",
-    "postsass:fonts": "run-p copy_fonts",
     "prebudo": "rimraf public/js/bundle.v${npm_package_version}.js",
     "predeploy": "npm run build",
     "sass": "run-s sass:*",
@@ -58,7 +60,7 @@
     "tsc--noemit": "tsc --declaration --project . --noemit"
   },
   "pre-commit": [
-    "linter",
+    "eslint",
     "test",
     "tsc--noemit"
   ],
@@ -81,7 +83,9 @@
     "d3-selection": "^1.4.0",
     "d3-transition": "^1.2.0",
     "fa-svg-icon": "^0.3.0",
+    "framer": "^1.1.7",
     "go-seven-assets": "github:go-seven/assets",
+    "go-seven-design.framerfx": "github:go-seven/design.framerfx",
     "go-seven-i18n": "github:go-seven/i18n",
     "i-am-not-a-robot": "^0.7.1",
     "not-defined": "^2.1.0",
@@ -92,8 +96,7 @@
     "react-spring": "^8.0.27",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "regex-weburl": "^1.0.0",
-    "trunx": "^0.25.2"
+    "regex-weburl": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

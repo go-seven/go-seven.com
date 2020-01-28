@@ -31,7 +31,7 @@ export default function LogoButton ({
         alt=""
         height="34"
         onClick={disabledClick === true ? undefined : onClickLogo}
-        src="/media/logo.svg"
+        src="/images/logo.svg"
         width="34"
       />
     </div>
