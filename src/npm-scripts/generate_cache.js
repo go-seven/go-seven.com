@@ -1,10 +1,4 @@
-/* global self, caches, fetch */
-const pkg = require('../package.json')
-
-const {
-  config,
-  version
-} = pkg
+const { config, version } = require('../../package.json')
 
 const CACHE_NAME = `go-seven-cache-v${version}`
 
@@ -40,6 +34,10 @@ const REQUIRED_FILES = [
   '/images/logotype.png',
   `/css/app.v${version}.css`
 ]
+
+const cacheCode = `
+const CACHE_NAME = '${CACHE_NAME}'
+const REQUIRED_FILES = [${REQUIRED_FILES.map(filepath => `'${filepath}'`).join()}]
 
 self.addEventListener('install', event => {
   event.waitUntil(async function () {
@@ -94,3 +92,6 @@ self.addEventListener('activate', event => {
     )
   }())
 })
+`
+
+console.log(cacheCode)
