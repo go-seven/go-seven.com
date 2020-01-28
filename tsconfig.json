@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowJs": false,
     "charset": "utf8",
-    "importHelpers": true,
+    "importHelpers": false,
     "jsx": "react",
     "lib": [
       "dom",

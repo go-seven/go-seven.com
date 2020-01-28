@@ -1,31 +1,5 @@
-/* Import custom variables first. */
-@import "custom-variables";
-
-/* Import bulma modules. */
-@import "bulma/sass/utilities/_all";
-@import "bulma/sass/base/_all";
-
-@import "bulma/sass/components/card";
-@import "bulma/sass/components/media";
-@import "bulma/sass/components/message";
-@import "bulma/sass/components/modal";
-@import "bulma/sass/components/navbar";
-@import "bulma/sass/elements/box";
-@import "bulma/sass/elements/button";
-@import "bulma/sass/elements/container";
-@import "bulma/sass/elements/content";
-@import "bulma/sass/elements/icon";
-@import "bulma/sass/elements/notification";
-@import "bulma/sass/elements/other";
-@import "bulma/sass/elements/progress";
-@import "bulma/sass/elements/tag";
-@import "bulma/sass/elements/title";
-@import "bulma/sass/form/_all";
-@import "bulma/sass/grid/columns";
-@import "bulma/sass/grid/tiles";
-@import "bulma/sass/layout/footer";
-@import "bulma/sass/layout/hero";
-@import "bulma/sass/layout/section";
+/* Import custom bulma build */
+@import "go-seven-assets/sass/bulma.scss";
 
 /* Import components */
 @import "components/logo-button";
