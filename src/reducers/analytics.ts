@@ -1,5 +1,12 @@
+import no from 'not-defined'
+
+import {
+  IUrlDailyHits,
+  IUrlMonthlyHits,
+} from '../model'
+
+import api from '../api'
 import asyncActions from '../asyncActions'
-import * as client from '../client'
 
 const FETCH_URL_DAILY_HITS = asyncActions('FETCH_URL_DAILY_HITS')
 const FETCH_URL_MONTHLY_HITS = asyncActions('FETCH_URL_MONTHLY_HITS')
@@ -14,27 +21,15 @@ interface IAnalyticsState {
   urlsMonthlyHits: IUrlMonthlyHits[]
 }
 
-export interface IUrlDailyHits {
-  id: string
-  day: string
-  num: number
-}
-
-export interface IUrlMonthlyHits {
-  id: string
-  month: string
-  num: number
-}
-
 function fetchUrlDailyHits (token, id, day) {
   const { FAILURE, SUCCESS, REQUEST } = FETCH_URL_DAILY_HITS
 
   return (dispatch) => {
     dispatch({ type: REQUEST })
 
-    client.get(`/url-daily-hits/${id}/${day}`, token).then(
+    api(token).urlDailyHits({ param: { id, day } }).then(
       (data) => dispatch({ data, type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
+      (error) => dispatch({ error, type: FAILURE })
     )
   }
 }
@@ -45,9 +40,9 @@ function fetchUrlMonthlyHits (token, id, month) {
   return (dispatch) => {
     dispatch({ type: REQUEST })
 
-    client.get(`/url-monthly-hits/${id}/${month}`, token).then(
+    api(token).urlMonthlyHits({ param: { id, month } }).then(
       (data) => dispatch({ data, type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
+      (error) => dispatch({ error, type: FAILURE })
     )
   }
 }
@@ -86,7 +81,9 @@ function shouldFetchUrlMonthlyHits (urlsMonthlyHits, urlId, wantedMonth) {
   return !urlsMonthlyHits.find(({ id, month }) => `${id}${month}` === `${urlId}${wantedMonth}`)
 }
 
-export default function (state = initialState, action) {
+export default function (state, action) {
+  if (no(state)) return initialState
+
   switch (action.type) {
     case FETCH_URL_DAILY_HITS.FAILURE:
       return {
@@ -101,7 +98,9 @@ export default function (state = initialState, action) {
     case FETCH_URL_DAILY_HITS.SUCCESS:
       return {
         ...state,
-        urlsDailyHits: state.urlsDailyHits.filter(({ id, day }) => `${id}${day}` !== `${action.data.id}${action.data.day}`).concat(action.data)
+        urlsDailyHits: state.urlsDailyHits.filter(
+          ({ id, day }) => id === action.data.id ? day !== action.data.day : true
+        ).concat(action.data)
       }
 
     case FETCH_URL_MONTHLY_HITS.FAILURE:

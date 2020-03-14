@@ -97,8 +97,8 @@ export default function ShortUrlIdField ({
       >
         <Input
           inputRef={wantedUrlRef}
-          isDanger={wantedUrlId !== '' && wantedUrlIdExists === true}
-          isSuccess={wantedUrlId !== '' && wantedUrlIdExists === false}
+          isDanger={wantedUrlId !== '' && wantedUrlIdExists}
+          isSuccess={wantedUrlId !== '' && !wantedUrlIdExists}
           onChange={onChange}
           placeholder={urlPrefix}
           readOnly={readOnly}
@@ -107,8 +107,8 @@ export default function ShortUrlIdField ({
         />
       </Control>
 
-      <Help isDanger={wantedUrlIdExists === true}>
-        {wantedUrlIdExists === true && (
+      <Help isDanger={wantedUrlIdExists}>
+        {wantedUrlIdExists && (
           <FormattedMessage id="ShortUrlHrefField.help.not-available" />
         )}
       </Help>

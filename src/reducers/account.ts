@@ -1,5 +1,11 @@
+import no from 'not-defined'
+
+import {
+  TEmail
+} from '../model'
+
+import api from '../api'
 import asyncActions from '../asyncActions'
-import * as client from '../client'
 
 export const CHANGE_PASSWORD = asyncActions('CHANGE_PASSWORD')
 export const CHECK_AUTHENTICATION = 'CHECK_AUTHENTICATION'
@@ -10,11 +16,6 @@ export const ENTER_ACCOUNT = asyncActions('ENTER_ACCOUNT')
 export const EXIT_ACCOUNT = 'EXIT_ACCOUNT'
 export const SEND_PASSWORD_RESET = asyncActions('SEND_PASSWORD_RESET')
 export const SEND_VERIFICATION = asyncActions('SEND_VERIFICATION')
-
-export interface ICredentials {
-  email: string
-  password: string
-}
 
 interface IError {
   code: string
@@ -30,7 +31,7 @@ export interface IAuthentication {
 export interface IAccountState {
   authentication: IAuthentication | null
   domain: string
-  email?: string | null
+  email?: TEmail | null
   emailVerificationSent: boolean
   error?: IError
   id?: string
@@ -56,7 +57,7 @@ export const initialState: IAccountState = {
   isSendingVerification: false
 }
 
-export function changePassword (password) {
+export function changePassword (payload) {
   const { FAILURE, SUCCESS, REQUEST } = CHANGE_PASSWORD
 
   return (dispatch, getState) => {
@@ -64,24 +65,24 @@ export function changePassword (password) {
 
     const { account: { authentication: { token } } } = getState()
 
-    client.post('/change-password', { password }, token).then(
+    api(token).changePassword({ payload }).then(
       () => dispatch({ type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
+      (error) => dispatch({ error, type: FAILURE })
     )
   }
 }
 
 export function cleanupAuthenticationError () { return { type: CLEANUP_AUTHENTICATION_ERROR } }
 
-export function createAccount (credentials: ICredentials) {
+export function createAccount (credentials) {
   const { FAILURE, SUCCESS, REQUEST } = CREATE_ACCOUNT
 
   return (dispatch) => {
     dispatch({ type: REQUEST })
 
-    client.post('/account', credentials).then(
+    api().createAccount({ payload: credentials }).then(
       () => dispatch({ data: { email: credentials.email }, type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
+      (error) => dispatch({ error, type: FAILURE })
     )
   }
 }
@@ -94,20 +95,20 @@ export function deleteAccount () {
 
     dispatch({ type: REQUEST })
 
-    client.del('/account', token).then(
+    api(token).deleteAccount().then(
       () => dispatch({ type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
+      (error) => dispatch({ error, type: FAILURE })
     )
   }
 }
 
-export function enterAccount (credentials: ICredentials) {
+export function enterAccount (credentials) {
   const { FAILURE, SUCCESS, REQUEST } = ENTER_ACCOUNT
 
   return (dispatch) => {
     dispatch({ type: REQUEST })
 
-    client.post('/enter', credentials).then(
+    api().enterAccount({ payload: credentials }).then(
       ({ accountId, token, expiresAt }) => {
         const { email } = credentials
 
@@ -120,40 +121,42 @@ export function enterAccount (credentials: ICredentials) {
           type: SUCCESS
         })
       },
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
+      (error) => dispatch({ error, type: FAILURE })
     )
   }
 }
 
 export function exitAccount () { return { type: EXIT_ACCOUNT } }
 
-export function sendPasswordReset (email) {
+export function sendPasswordReset ({ email }) {
   const { FAILURE, SUCCESS, REQUEST } = SEND_PASSWORD_RESET
 
   return (dispatch) => {
     dispatch({ type: REQUEST })
 
-    client.post('/reset-password', { email }).then(
+    api().resetPassword({ payload: { email } }).then(
       () => dispatch({ data: { email }, type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
+      (error) => dispatch({ error, type: FAILURE })
     )
   }
 }
 
-export function sendVerification (email) {
+export function sendVerification ({ email }) {
   const { FAILURE, SUCCESS, REQUEST } = SEND_VERIFICATION
 
   return (dispatch) => {
     dispatch({ type: REQUEST })
 
-    client.post('/send-verification', { email }).then(
+    api().emailVerification({ payload: { email } }).then(
       (data) => dispatch({ data, type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
+      (error) => dispatch({ error, type: FAILURE })
     )
   }
 }
 
-export default function (state = initialState, action) {
+export default function (state, action) {
+  if (no(state)) return initialState
+
   switch (action.type) {
     case CHANGE_PASSWORD.FAILURE:
       return {

@@ -1,3 +1,6 @@
+declare type TEndpoint = string
+declare type TToken = string
+
 const basePath = 'https://api.go-seven.com/v1'
 
 const headersForJson = {
@@ -5,7 +8,7 @@ const headersForJson = {
   'Content-Type': 'application/json'
 }
 
-const headersWithAuthentication = (token) => ({
+const headersWithAuthentication = (token: TToken) => ({
   ...headersForJson,
   Authorization: `BEARER ${token}`
 })
@@ -15,18 +18,12 @@ const checkResponse = (response) => {
     return response.json()
   } else {
     return response.json().then(({ error }) => {
-      // Pass error data as string in Error message. See parseError function below.
-      throw new Error(JSON.stringify(error))
+      throw new Error(error)
     })
   }
 }
 
-// Strip initial "Error :" in stringified error and return result parsed as JSON.
-export const parseError = (error: Error) => (
-  JSON.parse(error.toString().substring('Error :'.length))
-)
-
-const client = (method, endpoint, token?) => {
+const client = (method, endpoint: TEndpoint, token?) => {
   const headers = token ? headersWithAuthentication(token) : headersForJson
 
   return fetch(`${basePath}${endpoint}`, { headers, method }).then(checkResponse)

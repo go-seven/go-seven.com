@@ -15,21 +15,19 @@ import {
   Tags
 } from 'trunx'
 
+import { IUrlItem } from '../model'
+
 import ReadOnlyTextField from './ReadOnlyTextField'
 import TargetUrlHrefField from './TargetUrlHrefField'
 
-import {
-  IUrl
-} from '../reducers/urlCollections'
-
 export interface IUrlEditorProps {
-  currentUrl: IUrl | null
+  currentUrl: IUrlItem | null
   fetchingUrlMetadata: boolean
-  fetchUrlMetadata: (IUrl) => void
+  fetchUrlMetadata: (IUrlItem) => void
   setWantedUrl: (IUrl) => void
-  updateUrl: (url: IUrl) => void
+  updateUrl: (IUrlItem) => void
   updatingUrl: boolean
-  url: IUrl
+  url: IUrlItem
   wantedUrlHrefIsValid: boolean
 }
 
@@ -117,7 +115,7 @@ export default function UrlEditor ({
           {({ intl }) => (
             <ReadOnlyTextField
               label={intl.formatMessage({ id: 'UrlEditor.target-url-title.label' })}
-              text={(currentUrl !== null && currentUrl.metadata && typeof currentUrl.metadata.title === 'string') ? currentUrl.metadata.title : ''}
+              text={(currentUrl?.metadata && typeof currentUrl.metadata.title === 'string') ? currentUrl.metadata.title : ''}
             />
           )}
         </InjectIntl>
@@ -142,7 +140,7 @@ export default function UrlEditor ({
           </Label>
           <Control>
             <div className="url-editor__text-field--readonly">
-              {(currentUrl !== null && currentUrl.metadata) ? currentUrl.metadata.title : ''}
+              {(currentUrl?.metadata) ? currentUrl.metadata.title : ''}
             </div>
           </Control>
         </Field>

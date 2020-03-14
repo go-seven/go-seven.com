@@ -1,7 +1,9 @@
 import * as React from 'react'
+import { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
+import { bindActionCreators } from 'redux'
 import {
   Box,
   Container,
@@ -9,10 +11,8 @@ import {
   Title
 } from 'trunx'
 
-import HomePage from './HomePage'
-
 import Navbar from '../components/Navbar'
-import UrlCreator, { IUrlCreatorProps } from '../components/UrlCreator'
+import UrlCreator from '../components/UrlCreator'
 
 import {
   exitAccount
@@ -20,88 +20,75 @@ import {
 import {
   createUrl,
   setWantedUrl,
-  IUrl
 } from '../reducers/urlCollections'
 
-interface IProps extends RouteComponentProps {
-  authenticationIsValid: boolean
-  checkingIfUrlIdExists: boolean
-  creatingUrl: boolean
-  createUrl: IUrlCreatorProps['createUrl']
-  domain: string
-  exitAccount: () => void
-  justCreatedUrls: IUrl[]
-  fetchingUrlMetadata: boolean
-  setWantedUrl: (IUrl) => void
-  wantedUrl: IUrl | null
-  wantedUrlHrefIsValid: boolean
-  wantedUrlIdExists: boolean
-}
+import pagePath from './paths'
 
-class MyUrlsPage extends React.Component<IProps> {
-  static path = '/create-url'
+function MyUrlsPage ({
+  authenticationIsValid,
+  checkingIfUrlIdExists,
+  createUrl,
+  creatingUrl,
+  domain,
+  fetchingUrlMetadata,
+  justCreatedUrls,
+  setWantedUrl,
+  wantedUrl,
+  wantedUrlHrefIsValid,
+  wantedUrlIdExists
+}) {
+  const [redirect, setRedirect] = useState('')
 
-  render () {
-    const {
-      authenticationIsValid,
-      checkingIfUrlIdExists,
-      createUrl,
-      creatingUrl,
-      domain,
-      fetchingUrlMetadata,
-      justCreatedUrls,
-      setWantedUrl,
-      wantedUrl,
-      wantedUrlHrefIsValid,
-      wantedUrlIdExists
-    } = this.props
-
-    if (authenticationIsValid === false) {
-      return (
-        <Redirect push to={HomePage.path}/>
-      )
+  useEffect(() => {
+    if (!authenticationIsValid) {
+      setRedirect(pagePath.home())
     }
+  }, [authenticationIsValid, setRedirect])
 
+  if (redirect) {
     return (
-      <>
-        <Navbar
-          authenticationIsValid={authenticationIsValid}
-          locationPath={this.props.location.pathname}
-          exit={exitAccount}
-        />
-
-        <Section>
-          <Container>
-            <Title>
-              <FormattedMessage id="CreateUrlPage.title" />
-            </Title>
-
-            <UrlCreator
-              createUrl={createUrl}
-              checkingIfUrlIdExists={checkingIfUrlIdExists}
-              creatingUrl={creatingUrl}
-              domain={domain}
-              fetchingUrlMetadata={fetchingUrlMetadata}
-              justCreatedUrls={justCreatedUrls}
-              setWantedUrl={setWantedUrl}
-              wantedUrl={wantedUrl}
-              wantedUrlIdExists={wantedUrlIdExists}
-              wantedUrlHrefIsValid={wantedUrlHrefIsValid}
-            />
-          </Container>
-        </Section>
-
-        <Section>
-          {/* TODO show URL preview */}
-          {justCreatedUrls.map((url, i) => (
-            <Box key={i}>
-              <div>{url.href}</div>
-            </Box>
-          ))}
-        </Section>
-      </>
+      <Redirect push to={redirect}/>
     )
   }
+
+  return (
+    <>
+      <Navbar
+        authenticationIsValid={authenticationIsValid}
+        exit={exitAccount}
+      />
+
+      <Section>
+        <Container>
+          <Title>
+            <FormattedMessage id="CreateUrlPage.title" />
+          </Title>
+
+          <UrlCreator
+            createUrl={createUrl}
+            checkingIfUrlIdExists={checkingIfUrlIdExists}
+            creatingUrl={creatingUrl}
+            domain={domain}
+            fetchingUrlMetadata={fetchingUrlMetadata}
+            justCreatedUrls={justCreatedUrls}
+            setWantedUrl={setWantedUrl}
+            wantedUrl={wantedUrl}
+            wantedUrlIdExists={wantedUrlIdExists}
+            wantedUrlHrefIsValid={wantedUrlHrefIsValid}
+          />
+        </Container>
+      </Section>
+
+      <Section>
+        {/* TODO show URL preview */}
+        {justCreatedUrls.map((url, i) => (
+          <Box key={i}>
+            <div>{url.href}</div>
+          </Box>
+        ))}
+      </Section>
+    </>
+  )
 }
 
 const mapStateToProps = ({
@@ -130,10 +117,10 @@ const mapStateToProps = ({
   wantedUrlIdExists
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  createUrl: (url) => dispatch(createUrl(url)),
-  exitAccount: () => dispatch(exitAccount()),
-  setWantedUrl: (url) => dispatch(setWantedUrl(url))
-})
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  createUrl,
+  exitAccount,
+  setWantedUrl,
+}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyUrlsPage)

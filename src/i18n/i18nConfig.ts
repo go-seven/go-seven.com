@@ -1,5 +1,5 @@
-import * as en from '../public/i18n/en.json'
-import * as it from '../public/i18n/it.json'
+import * as en from '../../public/i18n/en.json'
+import * as it from '../../public/i18n/it.json'
 
 const config = {
   en,

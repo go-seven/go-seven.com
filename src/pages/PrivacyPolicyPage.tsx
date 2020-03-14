@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { RouteComponentProps } from 'react-router-dom'
 import {
   Container,
   Content,
@@ -11,43 +10,36 @@ import {
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 
-interface IProps extends RouteComponentProps {}
+export default function PrivacyPolicyPage () {
+  return (
+    <>
+      <Navbar
+        noMenu
+      />
 
-export default class PrivacyPolicyPage extends React.Component<IProps> {
-  static path = '/privacy-policy'
+      <Section>
+        <Container>
+          <Content>
+            <Title>
+              <FormattedMessage id={'PrivacyPolicyPage.title'} />
+            </Title>
 
-  render () {
-    return (
-      <>
-        <Navbar
-          locationPath={this.props.location.pathname}
-          noMenu
-        />
+            <p>
+              <FormattedMessage id={'PrivacyPolicyPage.intro'} />
+            </p>
 
-        <Section>
-          <Container>
-            <Content>
-              <Title>
-                <FormattedMessage id={'PrivacyPolicyPage.title'} />
-              </Title>
+            <Title is4>
+              <FormattedMessage id={'PrivacyPolicyPage.changes.title'} />
+            </Title>
 
-              <p>
-                <FormattedMessage id={'PrivacyPolicyPage.intro'} />
-              </p>
+            <p>
+              <FormattedMessage id={'PrivacyPolicyPage.changes.paragraph'} />
+            </p>
+          </Content>
+        </Container>
+      </Section>
 
-              <Title is4>
-                <FormattedMessage id={'PrivacyPolicyPage.changes.title'} />
-              </Title>
-
-              <p>
-                <FormattedMessage id={'PrivacyPolicyPage.changes.paragraph'} />
-              </p>
-            </Content>
-          </Container>
-        </Section>
-
-        <Footer />
-      </>
-    )
-  }
+      <Footer />
+    </>
+  )
 }

@@ -1,6 +1,8 @@
 import * as React from 'react'
+import { useState } from 'react'
 import { connect } from 'react-redux'
 import { Redirect /*, RouteComponentProps */ } from 'react-router-dom'
+import { bindActionCreators } from 'redux'
 
 import { HomepageHero } from '../components/HomepageHero'
 
@@ -8,26 +10,10 @@ import {
   exitAccount,
 } from '../reducers/account'
 
-import routes from '../routes'
+import pagePath from './paths'
 
-const { useState } = React
-
-/* interface IProps extends RouteComponentProps { */
-/*   authenticationIsValid: boolean */
-/*   exitAccount: () => void */
-/*   hasNoEmail: boolean */
-/* } */
-
-function HomePage (/* {
-  authenticationIsValid,
-  exitAccount,
-  hasNoEmail,
-  }: IProps */) {
-  const [redirect, setRedirect] = useState()
-
-  const onClickEnter = () => setRedirect(routes.enter)
-
-  const onClickRegister = () => setRedirect(routes.createAccount)
+function HomePage () {
+  const [redirect, setRedirect] = useState('')
 
   if (redirect) {
     return (
@@ -42,8 +28,8 @@ function HomePage (/* {
         color="#fff"
         logoImage="images/logotype.png"
         isMobile={false}
-        onClickEnter={onClickEnter}
-        onClickRegister={onClickRegister}
+        onClickEnter={() => setRedirect(pagePath.enter())}
+        onClickRegister={() => setRedirect(pagePath.createAccount())}
       />
     </>
   )
@@ -51,16 +37,14 @@ function HomePage (/* {
 
 const mapStateToProps = ({
   account: {
-    /* authentication, */
     email,
   }
 }) => ({
-  /* authenticationIsValid: authentication === null ? false : authentication.isValid, */
   hasNoEmail: email === '',
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  exitAccount: () => dispatch(exitAccount())
-})
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  exitAccount,
+}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage)

@@ -7,17 +7,19 @@ import {
   Field
 } from 'trunx'
 
+import { IChangePasswordPayload } from '../api'
+
 import PasswordField from './PasswordField'
 
-export interface IChangePasswordFormProps {
-  changePassword: (password: string) => void
+interface IProps {
+  changePassword: ({ password }: IChangePasswordPayload) => void
   isChangingPassword: boolean
 }
 
 export default function ChangePasswordForm ({
   changePassword,
   isChangingPassword
-}: IChangePasswordFormProps) {
+}: IProps) {
   const passwordRef = React.useRef<HTMLInputElement>()
 
   const [passwordIsValid, setPasswordIsValid] = React.useState(false)
@@ -31,7 +33,7 @@ export default function ChangePasswordForm ({
         const password = passwordRef.current!.value
 
         if (typeof password === 'string') {
-          changePassword(password)
+          changePassword({ password })
         }
       }}
     >

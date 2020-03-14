@@ -1,9 +1,11 @@
 import pdsp from 'pdsp'
 import * as React from 'react'
+import { useRef } from 'react'
 import { FormattedMessage } from 'react-intl'
 import InjectIntl from 'react-intl-inject'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
+import { bindActionCreators } from 'redux'
 import {
   Box,
   Button,
@@ -17,7 +19,7 @@ import {
   Title
 } from 'trunx'
 
-import * as apiError from '../apiErrors'
+import * as api from '../api'
 
 import EmailField from '../components/EmailField'
 import LogoButton from '../components/LogoButton'
@@ -28,118 +30,99 @@ import {
   sendPasswordReset
 } from '../reducers/account'
 
-interface IProps {
-  authenticationIsValid: boolean
-  isSendingPasswordReset: boolean
-  errorCode?: string
-  passwordResetEmailSent: boolean
-  sendPasswordReset: (email: string) => void
-}
+function PasswordResetPage ({
+  authenticationIsValid,
+  isSendingPasswordReset,
+  errorCode,
+  passwordResetEmailSent,
+  sendPasswordReset,
+}) {
+  const emailRef = useRef<HTMLInputElement>()
 
-interface IState {
-  redirect?: string
-}
-
-class PasswordResetPage extends React.Component<IProps, IState> {
-  static path = '/password-reset'
-
-  private readonly emailRef = React.createRef<HTMLInputElement>()
-
-  onSubmit = (event) => {
-    pdsp(event)
-
-    const email = this.emailRef.current!.value
-
-    if (typeof email === 'string') {
-      this.props.sendPasswordReset(email)
-    }
-  }
-
-  render () {
-    const {
-      authenticationIsValid,
-      isSendingPasswordReset,
-      errorCode,
-      passwordResetEmailSent
-    } = this.props
-
-    if (authenticationIsValid === false) {
-      return (
-        <Redirect push to={MyUrlsPage.path} />
-      )
-    }
-
-    const emailFieldError = errorCode === apiError.EmailNotFoundError
-
+  if (!authenticationIsValid) {
     return (
-      <Modal isActive>
-        <Modal.Background />
-
-        <Modal.Content>
-          <Column>
-            <Box>
-              <Media>
-                <Media.Left>
-                  <LogoButton />
-                </Media.Left>
-
-                <Media.Content>
-                  <Content hasTextCentered>
-                    <Title is4 hasTextGrey>
-                      <FormattedMessage id={'PasswordResetPage.title'} />
-                    </Title>
-                  </Content>
-                </Media.Content>
-              </Media>
-
-              {passwordResetEmailSent ? (
-                <Message isSuccess>
-                  <Message.Header>
-                    Email sent
-                  </Message.Header>
-
-                  <Message.Body>
-                    <p>
-                      Password reset email was sent successfully.
-                      Please check your email inbox and also your <em>spam</em> folder.
-                    </p>
-
-                  </Message.Body>
-                </Message>
-              ) : (
-                <form
-                  onSubmit={this.onSubmit}
-                >
-                  <InjectIntl>
-                    {({ intl }) => (
-                      <EmailField
-                        errorMessage={emailFieldError && intl.formatMessage({ id: `PasswordResetPage.email.${errorCode}` })}
-                        inputRef={this.emailRef}
-                      />
-                    )}
-                  </InjectIntl>
-                  <Field>
-                    <Control>
-                      <InjectIntl>
-                        {({ intl }) => (
-                          <Button
-                            isLoading={isSendingPasswordReset}
-                            isSuccess
-                            type="submit"
-                            value={intl.formatMessage({ id: 'PasswordResetPage.send' })}
-                          />
-                        )}
-                      </InjectIntl>
-                    </Control>
-                  </Field>
-                </form>
-              )}
-            </Box>
-          </Column>
-        </Modal.Content>
-      </Modal>
+      <Redirect push to={MyUrlsPage.path} />
     )
   }
+
+  const emailFieldError = errorCode === api.error.EmailNotFoundError
+
+  return (
+    <Modal isActive>
+      <Modal.Background />
+
+      <Modal.Content>
+        <Column>
+          <Box>
+            <Media>
+              <Media.Left>
+                <LogoButton />
+              </Media.Left>
+
+              <Media.Content>
+                <Content hasTextCentered>
+                  <Title is4 hasTextGrey>
+                    <FormattedMessage id={'PasswordResetPage.title'} />
+                  </Title>
+                </Content>
+              </Media.Content>
+            </Media>
+
+            {passwordResetEmailSent ? (
+              <Message isSuccess>
+                <Message.Header>
+                  Email sent
+                </Message.Header>
+
+                <Message.Body>
+                  <p>
+                    Password reset email was sent successfully.
+                    Please check your email inbox and also your <em>spam</em> folder.
+                  </p>
+
+                </Message.Body>
+              </Message>
+            ) : (
+              <form
+                onSubmit={(event) => {
+                  pdsp(event)
+
+                  const email = emailRef.current!.value
+
+                  if (typeof email === 'string') {
+                    sendPasswordReset(email)
+                  }
+                }}
+              >
+                <InjectIntl>
+                  {({ intl }) => (
+                    <EmailField
+                      errorMessage={emailFieldError && intl.formatMessage({ id: `PasswordResetPage.email.${errorCode}` })}
+                      inputRef={this.emailRef}
+                    />
+                  )}
+                </InjectIntl>
+                <Field>
+                  <Control>
+                    <InjectIntl>
+                      {({ intl }) => (
+                        <Button
+                          isLoading={isSendingPasswordReset}
+                          isSuccess
+                          type="submit"
+                          value={intl.formatMessage({ id: 'PasswordResetPage.send' })}
+                        />
+                      )}
+                    </InjectIntl>
+                  </Control>
+                </Field>
+              </form>
+            )}
+          </Box>
+        </Column>
+      </Modal.Content>
+    </Modal>
+  )
 }
 
 const mapStateToProps = ({
@@ -151,13 +134,13 @@ const mapStateToProps = ({
   }
 }) => ({
   authenticationIsValid: authentication === null ? false : authentication.isValid,
-  errorCode: error && error.code,
+  errorCode: error?.code,
   isSendingPasswordReset,
   passwordResetEmailSent
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  sendPasswordReset: (email) => dispatch(sendPasswordReset(email))
-})
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  sendPasswordReset
+}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(PasswordResetPage)

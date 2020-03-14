@@ -12,8 +12,8 @@ export default function localStorageMiddleware () {
   return (next) => (action) => {
     switch (action.type) {
       case CHECK_AUTHENTICATION: {
-        const accountId = localStorage.getItem('accountId') || ''
-        const email = localStorage.getItem('email') || ''
+        const accountId = localStorage.getItem('accountId') ?? ''
+        const email = localStorage.getItem('email') ?? ''
 
         try {
           const storedAuthentication = localStorage.getItem('authentication')

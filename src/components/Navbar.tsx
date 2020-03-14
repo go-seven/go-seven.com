@@ -5,7 +5,7 @@ import pdsp from 'pdsp'
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useSpring, animated } from 'react-spring'
-import { Redirect } from 'react-router-dom'
+import { Redirect, useLocation } from 'react-router-dom'
 import {
   Button,
   Buttons,
@@ -13,19 +13,13 @@ import {
   Navbar
 } from 'trunx'
 
-import LogoButton from './LogoButton'
-
-import CreateAccountPage from '../pages/CreateAccountPage'
-import CreateUrlPage from '../pages/CreateUrlPage'
-import EnterPage from '../pages/EnterPage'
-import HomePage from '../pages/HomePage'
-import MyUrlsPage from '../pages/MyUrlsPage'
 import SettingsPage from '../pages/SettingsPage'
+
+import LogoButton from './LogoButton'
 
 interface IProps {
   authenticationIsValid?: boolean
   exit?: () => void
-  locationPath: string
   noMenu?: boolean
   showCreateAccountButton?: boolean
 }
@@ -91,19 +85,19 @@ export default class Nav extends React.Component<IProps, IState> {
 
   onClickCreateAccount = () => {
     this.setState({
-      redirect: CreateAccountPage.path
+      redirect: route.createAccount
     })
   }
 
   onClickCreateUrl = () => {
     this.setState({
-      redirect: CreateUrlPage.path
+      redirect: route.createUrl
     })
   }
 
   onClickEnter = () => {
     this.setState({
-      redirect: EnterPage.path
+      redirect: route.enter
     })
   }
 
@@ -112,45 +106,43 @@ export default class Nav extends React.Component<IProps, IState> {
 
     const {
       exit,
-      locationPath
     } = this.props
 
     if (typeof exit === 'function') {
       const expanded = false
 
-      if (locationPath === HomePage.path) {
+      if (location.pathname === route.home) {
         this.setState({
           expanded
         }, exit)
       } else {
         this.setState({
           expanded,
-          redirect: HomePage.path
+          redirect: route.home
         }, exit)
       }
     }
   }
 
   onClickMyUrls = () => {
-    if (this.props.locationPath === MyUrlsPage.path) {
+    if (location.pathname === route.myUrls) {
       this.setState({ expanded: false })
     } else {
-      this.setState({ redirect: MyUrlsPage.path })
+      this.setState({ redirect: route.myUrls })
     }
   }
 
   onClickSettings = () => {
-    if (this.props.locationPath === SettingsPage.path) {
+    if (location.pathname === route.settings) {
       this.setState({ expanded: false })
     } else {
-      this.setState({ redirect: SettingsPage.path })
+      this.setState({ redirect: route.settings })
     }
   }
 
   render () {
     const {
       authenticationIsValid,
-      locationPath,
       noMenu,
       showCreateAccountButton
     } = this.props
@@ -179,11 +171,11 @@ export default class Nav extends React.Component<IProps, IState> {
         <Navbar.Brand>
           <Navbar.Item>
             <LogoButton
-              disabledClick={locationPath === HomePage.path}
+              disabledClick={location.pathname === route.home}
             />
           </Navbar.Item>
 
-          {noMenu || (
+          {noMenu ?? (
             <Navbar.Burger
               isActive={expanded}
               onClick={this.onClickBurger}
@@ -191,12 +183,12 @@ export default class Nav extends React.Component<IProps, IState> {
           )}
         </Navbar.Brand>
 
-        {noMenu || (
+        {noMenu ?? (
           <Navbar.Menu isActive={expanded}>
             {authenticationIsValid && (
               <Navbar.Start>
                 <Navbar.Item
-                  isActive={locationPath === MyUrlsPage.path}
+                  isActive={location.pathname === route.myUrls}
                   onClick={this.onClickMyUrls}
                 >
                   <ItemIcon animate={isFirstRendering} icon={chartBar} />
@@ -205,7 +197,7 @@ export default class Nav extends React.Component<IProps, IState> {
                 </Navbar.Item>
 
                 <Navbar.Item
-                  isActive={locationPath === CreateUrlPage.path}
+                  isActive={location.pathname === route.createUrl}
                   onClick={this.onClickCreateUrl}
                 >
                   <ItemIcon animate={isFirstRendering} icon={plusCircle} />
@@ -214,7 +206,7 @@ export default class Nav extends React.Component<IProps, IState> {
                 </Navbar.Item>
 
                 <Navbar.Item
-                  isActive={locationPath === SettingsPage.path}
+                  isActive={location.pathname === route.settings}
                   onClick={this.onClickSettings}
                 >
                   <ItemIcon animate={isFirstRendering} icon={userCog} />

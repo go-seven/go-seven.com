@@ -1,0 +1,19 @@
+{
+  "rules": {
+    "at-rule-no-vendor-prefix": true,
+    "block-no-empty": true,
+    "comment-no-empty": true,
+    "declaration-no-important": true,
+    "max-empty-lines": 2,
+    "media-feature-name-no-vendor-prefix": true,
+    "no-duplicate-at-import-rules": true,
+    "no-duplicate-selectors": true,
+    "no-empty-first-line": true,
+    "no-empty-source": true,
+    "no-extra-semicolons": true,
+    "property-no-vendor-prefix": true,
+    "selector-no-vendor-prefix": true,
+    "string-quotes": "single",
+    "value-no-vendor-prefix": true
+  }
+}

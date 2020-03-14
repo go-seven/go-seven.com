@@ -32,7 +32,7 @@ export default function TargetUrlField ({
 }: ITargetUrlFieldProps) {
   const delay = 2000
 
-  const [wantedUrlHref, setWantedUrlHref] = React.useState(initialUrlHref || '')
+  const [wantedUrlHref, setWantedUrlHref] = React.useState(initialUrlHref ?? '')
   const [debouncedUrlHref, setDebouncedUrlHref] = React.useState(wantedUrlHref)
 
   const [componentDidMount, setComponentDidMount] = React.useState(false)
@@ -105,8 +105,8 @@ export default function TargetUrlField ({
         isLoading={isLoading}
       >
         <Input
-          isDanger={wantedUrlHref !== '' && wantedUrlHrefIsValid === false}
-          isSuccess={wantedUrlHref !== '' && wantedUrlHrefIsValid === true}
+          isDanger={wantedUrlHref !== '' && !wantedUrlHrefIsValid}
+          isSuccess={wantedUrlHref !== '' && wantedUrlHrefIsValid}
           onChange={onChange}
           placeholder={placeholder}
           readOnly={readOnly}
@@ -116,9 +116,9 @@ export default function TargetUrlField ({
       </Control>
 
       <Help
-        isDanger={wantedUrlHrefIsValid === false}
+        isDanger={!wantedUrlHrefIsValid}
       >
-        {wantedUrlHrefIsValid === false && (
+        {!wantedUrlHrefIsValid && (
           <FormattedMessage id="TargetUrlHrefField.help.invalid-url" />
         )}
       </Help>

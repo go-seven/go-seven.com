@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { RouteComponentProps } from 'react-router-dom'
 import {
   Container,
   Section,
@@ -10,38 +9,30 @@ import {
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 
-interface IProps extends RouteComponentProps {
-}
+export default function TermsOfServicePage () {
+  return (
+    <>
+      <Navbar
+        noMenu
+      />
 
-export default class TermsOfServicePage extends React.Component<IProps> {
-  static path = '/terms-of-service'
+      <Section>
+        <Container>
+          <Title>
+            <FormattedMessage id={'TermsOfServicePage.title'} />
+          </Title>
 
-  render () {
-    return (
-      <>
-        <Navbar
-          locationPath={this.props.location.pathname}
-          noMenu
-        />
+          <Title is4>
+            <FormattedMessage id={'TermsOfServicePage.downgrades.title'} />
+          </Title>
 
-        <Section>
-          <Container>
-            <Title>
-              <FormattedMessage id={'TermsOfServicePage.title'} />
-            </Title>
+          <p>
+            <FormattedMessage id={'TermsOfServicePage.downgrades.paragraph'} />
+          </p>
+        </Container>
+      </Section>
 
-            <Title is4>
-              <FormattedMessage id={'TermsOfServicePage.downgrades.title'} />
-            </Title>
-
-            <p>
-              <FormattedMessage id={'TermsOfServicePage.downgrades.paragraph'} />
-            </p>
-          </Container>
-        </Section>
-
-        <Footer />
-      </>
-    )
-  }
+      <Footer />
+    </>
+  )
 }

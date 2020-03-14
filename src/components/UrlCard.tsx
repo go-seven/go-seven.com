@@ -11,15 +11,7 @@ import {
   Tags
 } from 'trunx'
 
-import UrlPage from '../pages/UrlPage'
-
-import {
-  IUrlDailyHits,
-  IUrlMonthlyHits
-} from '../reducers/analytics'
-import {
-  IUrl
-} from '../reducers/urlCollections'
+import pagePath from '../pages/paths'
 
 import UrlCardHistogram from './UrlCardHistogram'
 
@@ -83,7 +75,7 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
     } = this.props
 
     this.setState({
-      redirect: UrlPage.buildPath({ urlCollectionId, urlId: url.id })
+      redirect: pagePath.url({ urlCollectionId, urlId: url.id })
     })
   }
 
@@ -179,7 +171,7 @@ export default class UrlCard extends React.Component<IUrlCardProps, IState> {
                 </Tag>
 
                 <Tag>
-                  {urlMonthlyHits && urlMonthlyHits.num}
+                  {urlMonthlyHits?.num}
                 </Tag>
               </Tags>
             </Control>

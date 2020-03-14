@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom'
 import { Store } from 'redux'
 
-import i18nConfig from './i18nConfig'
+import i18nConfig from './i18n/i18nConfig'
 
 import CreateAccountPage from './pages/CreateAccountPage'
 import CreateUrlPage from './pages/CreateUrlPage'
@@ -26,7 +26,7 @@ import {
   CHECK_AUTHENTICATION
 } from './reducers/account'
 
-import routes from './routes'
+import route from './routes'
 
 const i18n = i18nConfig()
 
@@ -49,27 +49,28 @@ export default class Root extends React.Component<IProps> {
         <Provider store={store}>
           <BrowserRouter>
             <Switch>
-              <Route component={CreateAccountPage} exact path={CreateAccountPage.path} />
+              {[
+                { component: CreateAccountPage, path: route.createAccount },
+                { component: CreateUrlPage, path: route.createUrl },
+                { component: CreateUrlPage, path: route.createUrl },
+                { component: EnterPage, path: route.enter },
+                { component: HomePage, path: route.home },
+                { component: MyUrlsPage, path: route.myUrls },
+                { component: PasswordResetPage, path: route.passwordReset },
+                { component: PrivacyPolicyPage, path: route.privacyPolicy },
+                { component: SettingsPage, path: route.settings },
+                { component: TermsOfServicePage, path: route.termsOfService },
+                { component: UrlPage, path: route.url },
+              ].map(({ component, path }, i) => (
+                <Route
+                  component={component}
+                  exact
+                  key={i}
+                  path={path}
+                />
+              ))}
 
-              <Route component={CreateUrlPage} exact path={CreateUrlPage.path} />
-
-              <Route component={EnterPage} exact path={EnterPage.path} />
-
-              <Route component={HomePage} exact path={routes.home} />
-
-              <Route component={MyUrlsPage} exact path={MyUrlsPage.path} />
-
-              <Route component={PasswordResetPage} exact path={PasswordResetPage.path} />
-
-              <Route component={PrivacyPolicyPage} exact path={PrivacyPolicyPage.path} />
-
-              <Route component={SettingsPage} exact path={SettingsPage.path} />
-
-              <Route component={TermsOfServicePage} exact path={TermsOfServicePage.path} />
-
-              <Route component={UrlPage} exact path={UrlPage.path} />
-
-              <Redirect from="*" to={HomePage.path} />
+              <Redirect from="*" to={route.home} />
             </Switch>
           </BrowserRouter>
         </Provider>

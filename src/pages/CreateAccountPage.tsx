@@ -1,10 +1,12 @@
 import { ticTacToe } from 'i-am-not-a-robot'
 import pdsp from 'pdsp'
 import * as React from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { FormattedMessage } from 'react-intl'
 import InjectIntl from 'react-intl-inject'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
+import { bindActionCreators } from 'redux'
 import {
   Box,
   Button,
@@ -21,7 +23,7 @@ import {
   Title
 } from 'trunx'
 
-import * as apiError from '../apiErrors'
+import * as api from '../api'
 
 import EmailField from '../components/EmailField'
 import LogoButton from '../components/LogoButton'
@@ -31,239 +33,184 @@ import PleaseLookForVerificationEmail from '../components/PleaseLookForVerificat
 import {
   cleanupAuthenticationError,
   createAccount,
-  ICredentials
 } from '../reducers/account'
 
-import MyUrlsPage from './MyUrlsPage'
-import PrivacyPolicyPage from './PrivacyPolicyPage'
-import TermsOfServicePage from './TermsOfServicePage'
+import pagePath from './paths'
 
-interface IProps {
-  authenticationIsValid: boolean
-  cleanupAuthenticationError: () => void
-  createAccount: (ICredentials) => void
-  errorCode?: string
-  isCreating: boolean
-  justCreated: boolean
-}
+function CreateAccountPage ({
+  authenticationIsValid,
+  cleanupAuthenticationError,
+  createAccount,
+  errorCode,
+  isCreating,
+  justCreated,
+}) {
+  const [antiSpamLoaded, setAntiSpamLoaded] = useState(false)
+  const [clientAgrees, setClientAgrees] = useState(false)
+  const [clientIsRobot, setClientIsRobot] = useState(true)
+  const [passwordIsValid, setPasswordIsValid] = useState(false)
+  const [redirect, setRedirect] = useState('')
 
-interface IState {
-  antiSpamLoaded: boolean
-  clientAgrees: boolean
-  clientIsRobot: boolean
-  passwordIsValid: boolean
-  redirect?: string
-}
+  const antiSpamRef = useRef<HTMLInputElement>()
+  const emailRef = useRef<HTMLInputElement>()
+  const passwordRef = useRef<HTMLInputElement>()
 
-class CreateAccountPage extends React.Component<IProps, IState> {
-  static path = '/create-account'
+  useEffect(() => {
+    cleanupAuthenticationError()
+  }, [cleanupAuthenticationError])
 
-  state: IState = {
-    antiSpamLoaded: false,
-    clientAgrees: false,
-    clientIsRobot: true,
-    passwordIsValid: false
+
+  if (authenticationIsValid) {
+    setRedirect(pagePath.myUrls())
   }
 
-  private readonly antiSpamRef = React.createRef<HTMLInputElement>()
-
-  private readonly emailRef = React.createRef<HTMLInputElement>()
-
-  private readonly passwordRef = React.createRef<HTMLInputElement>()
-
-  componentDidMount () {
-    this.props.cleanupAuthenticationError()
+  if (redirect) {
+    return (
+      <Redirect push to={redirect} />
+    )
   }
 
-  loadAntiSpam () {
-    const {
-      antiSpamLoaded,
-      clientIsRobot
-    } = this.state
+  const emailExistsError = errorCode === api.error.EmailExistsError
+  const invalidPasswordError = errorCode === api.error.InvalidPasswordError
 
-    if (clientIsRobot && !antiSpamLoaded) {
-      this.setState({ antiSpamLoaded: true }, () => {
-        ticTacToe(this.antiSpamRef.current, () => {
-          this.setState({ clientIsRobot: false })
-        })
-      })
-    }
-  }
-
-  onChangeCheckbox = (event) => {
-    this.setState({
-      clientAgrees: event.target.checked
-    }, () => {
-      this.loadAntiSpam()
-    })
-  }
-
-  onSubmit = (event) => {
-    pdsp(event)
-
-    const email = this.emailRef.current!.value
-    const password = this.passwordRef.current!.value
-
-    this.props.createAccount({ email, password })
-  }
-
-  render () {
-    const {
-      authenticationIsValid,
-      errorCode,
-      isCreating,
-      justCreated
-    } = this.props
-
-    const {
-      clientAgrees,
-      clientIsRobot,
-      passwordIsValid,
-      redirect
-    } = this.state
-
-    if (authenticationIsValid) {
-      return (
-        <Redirect push to={MyUrlsPage.path} />
-      )
-    }
-
-    if (redirect) {
-      return (
-        <Redirect push to={redirect} />
-      )
-    }
-
-    const emailExistsError = errorCode === apiError.EmailExistsError
-    const invalidPasswordError = errorCode === apiError.InvalidPasswordError
-
-    if (justCreated) {
-      return (
-        <Modal isActive>
-          <Modal.Background />
-
-          <Modal.Content>
-            <Message isSuccess>
-              <Message.Header>
-                <FormattedMessage id="CreateAccountPage.account-created" />
-              </Message.Header>
-
-              <Message.Body>
-                <PleaseLookForVerificationEmail />
-              </Message.Body>
-            </Message>
-          </Modal.Content>
-        </Modal>
-      )
-    }
-
+  if (justCreated) {
     return (
       <Modal isActive>
         <Modal.Background />
 
         <Modal.Content>
-          <Column>
-            <Box>
-              <Media>
-                <Media.Left>
-                  <LogoButton />
-                </Media.Left>
+          <Message isSuccess>
+            <Message.Header>
+              <FormattedMessage id="CreateAccountPage.account-created" />
+            </Message.Header>
 
-                <Media.Content>
-                  <Content hasTextCentered>
-                    <Title is4 hasTextGrey>
-                      <FormattedMessage id="CreateAccountPage.title" />
-                    </Title>
-                  </Content>
-                </Media.Content>
-              </Media>
-
-              <Section
-                isSrOnly={clientIsRobot && clientAgrees}
-              >
-                <form
-                  autoComplete="off"
-                  onSubmit={this.onSubmit}
-                >
-                  <InjectIntl>
-                    {({ intl }) => (
-                      <EmailField
-                        errorMessage={emailExistsError && intl.formatMessage({ id: 'CreateAccountPage.email.emailExistsError' })}
-                        inputRef={this.emailRef}
-                      />
-                    )}
-                  </InjectIntl>
-
-                  <InjectIntl>
-                    {({ intl }) => (
-                      <PasswordField
-                        autoComplete="new-password"
-                        errorMessage={invalidPasswordError && intl.formatMessage({ id: 'CreateAccountPage.password.InvalidPasswordError' })}
-                        inputRef={this.passwordRef}
-                        label={intl.formatMessage({ id: 'CreateAccountPage.password.label' })}
-                        setPasswordIsValid={this.setPasswordIsValid}
-                        showPasswordPolicy
-                      />
-                    )}
-                  </InjectIntl>
-                  <Field>
-                    <Control>
-                      <Checkbox
-                        onChange={this.onChangeCheckbox}
-                      >
-                        I agree to the <a href={PrivacyPolicyPage.path} target="_blank">Privacy Policy</a> and to the <a href={TermsOfServicePage.path} target="_blank">Terms of Service</a>.
-                      </Checkbox>
-                    </Control>
-                  </Field>
-
-                  <Field>
-                    <Control>
-                      <Button
-                        disabled={!clientAgrees || !passwordIsValid}
-                        isLoading={isCreating}
-                        isSuccess
-                        isSrOnly={clientIsRobot}
-                        type="submit"
-                        value="Create an account"
-                      />
-                    </Control>
-                  </Field>
-                </form>
-              </Section>
-
-              {clientIsRobot && (
-                <Section
-                  isSrOnly={!clientAgrees}
-                >
-                  <Message isMedium>
-                    <Message.Header>
-                      <P>
-                        Are you a <strong>robot</strong>?
-                      </P>
-                    </Message.Header>
-
-                    <Message.Body>
-                      <P hasTextCentered>
-                        Play <em>tic tac toe</em> !
-                      </P>
-
-                      <div ref={this.antiSpamRef} />
-                    </Message.Body>
-                  </Message>
-                </Section>
-              )}
-            </Box>
-          </Column>
+            <Message.Body>
+              <PleaseLookForVerificationEmail />
+            </Message.Body>
+          </Message>
         </Modal.Content>
       </Modal>
     )
   }
 
-  setPasswordIsValid = (passwordIsValid) => {
-    this.setState({
-      passwordIsValid
-    })
-  }
+  return (
+    <Modal isActive>
+      <Modal.Background />
+
+      <Modal.Content>
+        <Column>
+          <Box>
+            <Media>
+              <Media.Left>
+                <LogoButton />
+              </Media.Left>
+
+              <Media.Content>
+                <Content hasTextCentered>
+                  <Title is4 hasTextGrey>
+                    <FormattedMessage id="CreateAccountPage.title" />
+                  </Title>
+                </Content>
+              </Media.Content>
+            </Media>
+
+            <Section
+              isSrOnly={clientIsRobot && clientAgrees}
+            >
+              <form
+                autoComplete="off"
+                onSubmit={(event) => {
+                  pdsp(event)
+
+                  const email = emailRef.current!.value
+                  const password = passwordRef.current!.value
+
+                  createAccount({ email, password })
+                }}
+              >
+                <InjectIntl>
+                  {({ intl }) => (
+                    <EmailField
+                      errorMessage={emailExistsError && intl.formatMessage({ id: 'CreateAccountPage.email.emailExistsError' })}
+                      inputRef={this.emailRef}
+                    />
+                  )}
+                </InjectIntl>
+
+                <InjectIntl>
+                  {({ intl }) => (
+                    <PasswordField
+                      autoComplete="new-password"
+                      errorMessage={invalidPasswordError && intl.formatMessage({ id: 'CreateAccountPage.password.InvalidPasswordError' })}
+                      inputRef={this.passwordRef}
+                      label={intl.formatMessage({ id: 'CreateAccountPage.password.label' })}
+                      setPasswordIsValid={setPasswordIsValid}
+                      showPasswordPolicy
+                    />
+                  )}
+                </InjectIntl>
+                <Field>
+                  <Control>
+                    <Checkbox
+                      onChange={(event) => {
+                        setClientAgrees(event.target.checked)
+
+                        if (clientIsRobot && !antiSpamLoaded) {
+                          setAntiSpamLoaded(true)
+
+                          ticTacToe(
+                            antiSpamRef.current,
+                            () => setClientIsRobot(false)
+                          )
+                        }
+                      }}
+                    >
+                      I agree to the <a href={pagePath.privacyPolicy()} target="_blank">Privacy Policy</a> and to the <a href={pagePath.termsOfService()} target="_blank">Terms of Service</a>.
+                    </Checkbox>
+                  </Control>
+                </Field>
+
+                <Field>
+                  <Control>
+                    <Button
+                      disabled={!clientAgrees || !passwordIsValid}
+                      isLoading={isCreating}
+                      isSuccess
+                      isSrOnly={clientIsRobot}
+                      type="submit"
+                      value="Create an account"
+                    />
+                  </Control>
+                </Field>
+              </form>
+            </Section>
+
+            {clientIsRobot && (
+              <Section
+                isSrOnly={!clientAgrees}
+              >
+                <Message isMedium>
+                  <Message.Header>
+                    <P>
+                      Are you a <strong>robot</strong>?
+                    </P>
+                  </Message.Header>
+
+                  <Message.Body>
+                    <P hasTextCentered>
+                      Play <em>tic tac toe</em> !
+                    </P>
+
+                    <div ref={this.antiSpamRef} />
+                  </Message.Body>
+                </Message>
+              </Section>
+            )}
+          </Box>
+        </Column>
+      </Modal.Content>
+    </Modal>
+  )
 }
 
 const mapStateToProps = ({
@@ -275,14 +222,14 @@ const mapStateToProps = ({
   }
 }) => ({
   authenticationIsValid: authentication === null ? false : authentication.isValid,
-  errorCode: error && error.code,
+  errorCode: error?.code,
   isCreating,
   justCreated
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  cleanupAuthenticationError: () => dispatch(cleanupAuthenticationError),
-  createAccount: (credentials) => dispatch(createAccount(credentials))
-})
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  cleanupAuthenticationError,
+  createAccount,
+}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountPage)

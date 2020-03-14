@@ -9,25 +9,22 @@ import {
   Section
 } from 'trunx'
 
-import UrlCard from './UrlCard'
+import {
+  IUrlCollection,
+  TUrlId,
+} from '../model'
 
 import CreateUrlPage from '../pages/CreateUrlPage'
 
-import {
-  IUrlDailyHits,
-  IUrlMonthlyHits
-} from '../reducers/analytics'
-import {
-  IUrlCollection
-} from '../reducers/urlCollections'
+import UrlCard from './UrlCard'
 
-export interface IUrlCollectionProps {
+interface IUrlCollectionProps {
   fetchUrlCollection: () => void
   fetchUrlDailyHits: (urlId: string, day: string) => void
   fetchUrlMonthlyHits: (urlId: string, month: string) => void
-  removeUrl: (urlId: string) => () => void
-  removingUrlId: string
-  urlCollection: IUrlCollection | null
+  removeUrl: (urlId: TUrlId) => () => void
+  removingUrlId: TUrlId
+  urlCollection: IUrlCollection
   urlsDailyHits: IUrlDailyHits[]
   urlsMonthlyHits: IUrlMonthlyHits[]
 }
@@ -42,7 +39,7 @@ export default function UrlCollection ({
   urlsDailyHits,
   urlsMonthlyHits
 }: IUrlCollectionProps) {
-  const [redirect, setRedirect] = React.useState()
+  const [redirect, setRedirect] = React.useState('')
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth)
 
   React.useEffect(() => {
@@ -58,14 +55,6 @@ export default function UrlCollection ({
       window.removeEventListener('resize', resizeHandler)
     }
   }, [])
-
-  const onClickCreateUrl = () => {
-    setRedirect(CreateUrlPage.path)
-  }
-
-  if (urlCollection === null) {
-    return null
-  }
 
   if (redirect) {
     return (
@@ -88,7 +77,7 @@ export default function UrlCollection ({
 
             <Button
               isPrimary
-              onClick={onClickCreateUrl}
+              onClick={() => setRedirect(CreateUrlPage.path)}
             >
               <FormattedMessage id="UrlCollection.is-empty.action" />
             </Button>

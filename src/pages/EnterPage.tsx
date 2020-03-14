@@ -1,9 +1,11 @@
 import pdsp from 'pdsp'
 import * as React from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { FormattedMessage } from 'react-intl'
 import InjectIntl from 'react-intl-inject'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
+import { bindActionCreators } from 'redux'
 import {
   A,
   Box,
@@ -19,7 +21,8 @@ import {
   Title
 } from 'trunx'
 
-import * as apiError from '../apiErrors'
+import * as api from '../api'
+import { ISendVerificationPayload } from '../api'
 
 import EmailField from '../components/EmailField'
 import LogoButton from '../components/LogoButton'
@@ -30,11 +33,9 @@ import {
   cleanupAuthenticationError,
   enterAccount,
   sendVerification,
-  ICredentials
 } from '../reducers/account'
 
-import CreateAccountPage from './CreateAccountPage'
-import MyUrlsPage from './MyUrlsPage'
+import pagePath from './paths'
 
 interface IProps {
   authenticationIsValid: boolean
@@ -44,213 +45,188 @@ interface IProps {
   errorCode?: string
   isEntering: boolean
   isSendingVerification: boolean
-  sendVerification: (email: string) => void
+  sendVerification: (ISendVerificationPayload) => void
 }
 
-interface IState {
-  redirect?: string
-}
+function EnterPage ({
+  authenticationIsValid,
+  enterAccount,
+  emailVericationSent,
+  errorCode,
+  isEntering,
+  isSendingVerification,
+  sendVerification,
+}: IProps) {
+  const emailRef = useRef<HTMLInputElement>()
+  const passwordRef = useRef<HTMLInputElement>()
 
-class EnterPage extends React.Component<IProps, IState> {
-  static path = '/enter'
+  const [redirect, setRedirect] = useState('')
 
-  state: IState = {}
+  useEffect(() => {
+    cleanupAuthenticationError()
+  }, [cleanupAuthenticationError])
 
-  private readonly emailRef = React.createRef<HTMLInputElement>()
-
-  private readonly passwordRef = React.createRef<HTMLInputElement>()
-
-  componentDidMount () {
-    this.props.cleanupAuthenticationError()
-  }
-
-  onClickCreateAccount = () => {
-    this.setState({
-      redirect: CreateAccountPage.path
-    })
-  }
-
-  onClickSendVerificationEmail = (event) => {
-    pdsp(event)
-
-    const {
-      sendVerification
-    } = this.props
-
-    const email = this.emailRef.current!.value
-
-    if (typeof email === 'string') {
-      sendVerification(email)
-    }
-  }
-
-  onSubmit = (event) => {
-    pdsp(event)
-
-    const email = this.emailRef.current!.value
-    const password = this.passwordRef.current!.value
-
-    this.props.enterAccount({ email, password })
-  }
-
-  render () {
-    const {
-      authenticationIsValid,
-      emailVericationSent,
-      errorCode,
-      isEntering,
-      isSendingVerification
-    } = this.props
-
-    const {
-      redirect
-    } = this.state
-
+  useEffect(() => {
     if (authenticationIsValid) {
-      return (
-        <Redirect push to={MyUrlsPage.path} />
-      )
+      setRedirect(pagePath.myUrls())
     }
+  }, [authenticationIsValid, setRedirect])
 
-    if (redirect) {
-      return (
-        <Redirect push to={redirect} />
-      )
-    }
-
-    const emailNotFoundError = errorCode === apiError.EmailNotFoundError
-    const invalidPasswordError = errorCode === apiError.InvalidPasswordError
-    const emailNotVerifiedError = errorCode === apiError.EmailNotVerifiedError
-
+  if (redirect) {
     return (
-      <Modal isActive>
-        <Modal.Background />
+      <Redirect push to={redirect} />
+    )
+  }
 
-        <Modal.Content>
-          <Column>
-            {emailNotVerifiedError ? null : (
-              <Box>
-                <Media>
-                  <Media.Left>
-                    <LogoButton />
-                  </Media.Left>
+  const emailNotFoundError = errorCode === api.error.EmailNotFoundError
+  const invalidPasswordError = errorCode === api.error.InvalidPasswordError
+  const emailNotVerifiedError = errorCode === api.error.EmailNotVerifiedError
 
-                  <Media.Content>
-                    <Content hasTextCentered>
-                      <Title is4 hasTextGrey>
-                        <FormattedMessage id={'EnterPage.title'} />
-                      </Title>
-                    </Content>
-                  </Media.Content>
-                </Media>
+  return (
+    <Modal isActive>
+      <Modal.Background />
 
-                <form
-                  autoComplete="on"
-                  onSubmit={this.onSubmit}
-                >
-                  <InjectIntl>
-                    {({ intl }) => (
-                      <EmailField
-                        errorMessage={emailNotFoundError && intl.formatMessage({ id: 'EnterPage.email.emailNotFoundError' })}
-                        inputRef={this.emailRef}
-                      />
-                    )}
-                  </InjectIntl>
+      <Modal.Content>
+        <Column>
+          {emailNotVerifiedError ? null : (
+            <Box>
+              <Media>
+                <Media.Left>
+                  <LogoButton />
+                </Media.Left>
 
-                  <InjectIntl>
-                    {({ intl }) => (
-                      <PasswordField
-                        autoComplete="current-password"
-                        errorMessage={invalidPasswordError ? (intl.formatMessage({ id: 'EnterPage.password.invalidPasswordError' }) as string) : undefined}
-                        inputRef={this.passwordRef}
-                        label={(intl.formatMessage({ id: 'EnterPage.password.label' }) as string)}
-                        showForgotPassword
-                      />
-                    )}
-                  </InjectIntl>
+                <Media.Content>
+                  <Content hasTextCentered>
+                    <Title is4 hasTextGrey>
+                      <FormattedMessage id={'EnterPage.title'} />
+                    </Title>
+                  </Content>
+                </Media.Content>
+              </Media>
 
-                  <InjectIntl>
-                    {({ intl }) => (
-                      <Field>
-                        <Control>
-                          <Button
-                            isLoading={isEntering}
-                            isSuccess
-                            type="submit"
-                            value={intl.formatMessage({ id: 'EnterPage.submit' })}
-                          />
-                        </Control>
-                      </Field>
-                    )}
-                  </InjectIntl>
-                </form>
-              </Box>
-            )}_
+              <form
+                autoComplete="on"
+                onSubmit={(event) => {
+                  pdsp(event)
 
-            {emailNotVerifiedError && (
-              <>
-                {emailVericationSent ? (
-                  <Message isSuccess>
+                  const email = emailRef.current!.value
+                  const password = passwordRef.current!.value
+
+                  enterAccount({ email, password })
+                }}
+              >
+                <InjectIntl>
+                  {({ intl }) => (
+                    <EmailField
+                      errorMessage={emailNotFoundError && intl.formatMessage({ id: 'EnterPage.email.emailNotFoundError' })}
+                      inputRef={emailRef}
+                    />
+                  )}
+                </InjectIntl>
+
+                <InjectIntl>
+                  {({ intl }) => (
+                    <PasswordField
+                      autoComplete="current-password"
+                      errorMessage={invalidPasswordError ? (intl.formatMessage({ id: 'EnterPage.password.invalidPasswordError' }) as string) : undefined}
+                      inputRef={this.passwordRef}
+                      label={(intl.formatMessage({ id: 'EnterPage.password.label' }) as string)}
+                      showForgotPassword
+                    />
+                  )}
+                </InjectIntl>
+
+                <InjectIntl>
+                  {({ intl }) => (
+                    <Field>
+                      <Control>
+                        <Button
+                          isLoading={isEntering}
+                          isSuccess
+                          type="submit"
+                          value={intl.formatMessage({ id: 'EnterPage.submit' })}
+                        />
+                      </Control>
+                    </Field>
+                  )}
+                </InjectIntl>
+              </form>
+            </Box>
+          )}_
+
+          {emailNotVerifiedError && (
+            <>
+              {emailVericationSent ? (
+                <Message isSuccess>
+                  <Message.Header>
+                    Email sent
+                  </Message.Header>
+
+                  <Message.Body>
+                    <P>
+                      <b>Verification email</b> was sent successfully.
+                      Please check your email inbox and also your <em>spam</em> folder.
+                    </P>
+
+                  </Message.Body>
+                </Message>
+              ) : (
+                <>
+                  <Message isWarning>
                     <Message.Header>
-                      Email sent
+                      <FormattedMessage id="EnterPage.account-not-verified.title" />
                     </Message.Header>
 
                     <Message.Body>
                       <P>
-                        <b>Verification email</b> was sent successfully.
-                        Please check your email inbox and also your <em>spam</em> folder.
+                        <PleaseLookForVerificationEmail />
                       </P>
 
                     </Message.Body>
                   </Message>
-                ) : (
-                  <>
-                    <Message isWarning>
-                      <Message.Header>
-                        <FormattedMessage id="EnterPage.account-not-verified.title" />
-                      </Message.Header>
 
-                      <Message.Body>
-                        <P>
-                          <PleaseLookForVerificationEmail />
-                        </P>
+                  <Field>
+                    <Control>
+                      <Button
+                        isLoading={isSendingVerification}
+                        isOutlined
+                        isWarning
+                        onClick={(event) => {
+                          pdsp(event)
 
-                      </Message.Body>
-                    </Message>
+                          const email = emailRef.current!.value
 
-                    <Field>
-                      <Control>
-                        <Button
-                          isLoading={isSendingVerification}
-                          isOutlined
-                          isWarning
-                          onClick={this.onClickSendVerificationEmail}
-                        >
-                          <FormattedMessage id="EnterPage.account-not-verified.resend-email" />
-                        </Button>
-                      </Control>
-                    </Field>
-                  </>
-                )}
-              </>
-            )}
+                          if (typeof email === 'string') {
+                            sendVerification({ email })
+                          }
+                        }}
+                      >
+                        <FormattedMessage id="EnterPage.account-not-verified.resend-email" />
+                      </Button>
+                    </Control>
+                  </Field>
+                </>
+              )}
+            </>
+          )}
 
-            {emailNotVerifiedError ? null : (
-              <Box>
-                <P hasTextCentered>
-                  <FormattedMessage id="EnterPage.new-user.message" /> &nbsp;
+          {emailNotVerifiedError ? null : (
+            <Box>
+              <P hasTextCentered>
+                <FormattedMessage id="EnterPage.new-user.message" /> &nbsp;
 
-                  <A onClick={this.onClickCreateAccount}>
-                    <FormattedMessage id="EnterPage.new-user.action" />
-                  </A>
-                </P>
-              </Box>
-            )}
-          </Column>
-        </Modal.Content>
-      </Modal>
-    )
-  }
+                <A
+                  onClick={() => setRedirect(pagePath.createAccount())}
+                >
+                  <FormattedMessage id="EnterPage.new-user.action" />
+                </A>
+              </P>
+            </Box>
+          )}
+        </Column>
+      </Modal.Content>
+    </Modal>
+  )
 }
 
 const mapStateToProps = ({
@@ -265,16 +241,16 @@ const mapStateToProps = ({
 }) => ({
   authenticationIsValid: authentication === null ? false : authentication.isValid,
   emailVericationSent,
-  errorCode: error && error.code,
+  errorCode: error?.code,
   hasNoEmail: email === '',
   isEntering,
   isSendingVerification
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  cleanupAuthenticationError: () => dispatch(cleanupAuthenticationError()),
-  enterAccount: (credentials) => dispatch(enterAccount(credentials)),
-  sendVerification: (email) => dispatch(sendVerification(email))
-})
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  cleanupAuthenticationError,
+  enterAccount,
+  sendVerification,
+}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(EnterPage)

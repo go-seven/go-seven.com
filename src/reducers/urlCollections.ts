@@ -1,10 +1,17 @@
 // User can organize its URLs into collections.
 // Every collection has an identifier and a name.
 // If no URL collection is selected there is always a "default" collection.
+import no from 'not-defined'
 import urlRegex from 'regex-weburl'
 
+import api from '../api'
 import asyncActions from '../asyncActions'
-import * as client from '../client'
+import {
+  IUrl,
+  IUrlItem,
+  IUrlCollection,
+  TUrlId,
+} from '../model'
 
 const CREATE_URL = asyncActions('CREATE_URL')
 const REMOVE_URL_FROM_COLLECTION = asyncActions('REMOVE_URL_FROM_COLLECTION')
@@ -15,24 +22,6 @@ const SET_WANTED_URL = 'SET_WANTED_URL'
 const UPDATE_URL = asyncActions('UPDATE_URL')
 const URL_ID_EXISTS = asyncActions('URL_ID_EXISTS')
 
-export interface IUrlMetadata {
-  statusCode?: number
-  title?: string
-}
-
-export interface IUrl {
-  href: string
-  id: string
-  metadata?: IUrlMetadata
-  title?: string
-}
-
-export interface IUrlCollection {
-  id: string
-  name: string
-  urls: IUrl[]
-}
-
 interface IUrlCollectionsState {
   checkingIfUrlIdExists: boolean
   creatingUrl: boolean
@@ -41,7 +30,7 @@ interface IUrlCollectionsState {
   fetchingUrlMetadata: boolean
   justCreatedUrls: IUrl[]
   isFetchingUrlCollection: boolean
-  removingUrlId: string | null
+  removingUrlId: TUrlId | null
   selectedUrlCollectionId: string | null
   updatingUrl: boolean
   wantedUrl: IUrl | null
@@ -81,9 +70,9 @@ export function createUrl (url: IUrl) {
 
     const urlCollectionId = fallbackToDefaultUrlCollectionId(selectedUrlCollectionId, accountId)
 
-    client.post('/url', { urlCollectionId, url }, token).then(
+    api(token).createUrlCollectionItem({ payload: { urlCollectionId, url } }).then(
       (data) => dispatch({ data, type: SUCCESS, url }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
+      (error) => dispatch({ error, type: FAILURE })
     )
   }
 }
@@ -102,9 +91,9 @@ function fetchUrlCollection (token, id) {
   return (dispatch) => {
     dispatch({ type: REQUEST })
 
-    client.get(`/url-collection/${id}`, token).then(
+    api(token).urlCollection({ param: { id } }).then(
       (data) => dispatch({ data, type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
+      (error) => dispatch({ error, type: FAILURE })
     )
   }
 }
@@ -140,24 +129,22 @@ function fetchUrlMetadata (url) {
 
     dispatch({ type: REQUEST })
 
-    const encodedHref = encodeURIComponent(url.href)
-
-    client.get(`/url-metadata?href=${encodedHref}`, token).then(
+    api(token).urlMetadata({ query: { href: url.href } }).then(
       (data) => dispatch({ data: { ...url, metadata: data }, type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
+      (error) => dispatch({ error, type: FAILURE })
     )
   }
 }
 
-export function fetchUrlMetadataIfNeeded (url) {
+export function fetchUrlMetadataIfNeeded ({ href }) {
   return (dispatch) => {
     if (shouldFetchUrlMetadata()) {
-      return dispatch(fetchUrlMetadata(url))
+      return dispatch(fetchUrlMetadata({ href }))
     }
   }
 }
 
-export function removeUrlFromCollection (urlCollectionId: string, urlId: string) {
+export function removeUrlFromCollection ({ urlCollectionId, urlId }) {
   const { FAILURE, SUCCESS, REQUEST } = REMOVE_URL_FROM_COLLECTION
 
   return (dispatch, getState) => {
@@ -165,14 +152,14 @@ export function removeUrlFromCollection (urlCollectionId: string, urlId: string)
 
     dispatch({ data: { removingUrlId: urlId }, type: REQUEST })
 
-    client.del(`/url-collection/${urlCollectionId}/${urlId}`, token).then(
+    api(token).deleteUrlCollectionItem({ param: { urlCollectionId, urlId } }).then(
       () => dispatch({ type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
+      (error) => dispatch({ error, type: FAILURE })
     )
   }
 }
 
-export function setWantedUrl (url: IUrl) {
+export function setWantedUrl (url: IUrlItem) {
   return (dispatch, getState) => {
     const {
       account: { authentication: { token } },
@@ -194,11 +181,9 @@ export function setWantedUrl (url: IUrl) {
         if (wantedUrlHrefIsValid) {
           dispatch({ type: FETCH_WANTED_URL_METADATA.REQUEST })
 
-          const encodedHref = encodeURIComponent(url.href)
-
-          client.get(`/url-metadata?href=${encodedHref}`, token).then(
+          api(token).urlMetadata({ query: { href: url.href } }).then(
             (data) => dispatch({ data: { href: url.href, metadata: data }, type: FETCH_WANTED_URL_METADATA.SUCCESS }),
-            (error) => dispatch({ error: client.parseError(error), type: FETCH_WANTED_URL_METADATA.FAILURE })
+            (error) => dispatch({ error, type: FETCH_WANTED_URL_METADATA.FAILURE })
           )
         } else {
           dispatch({ data: { url, wantedUrlHrefIsValid: false }, type: SET_WANTED_URL })
@@ -212,17 +197,18 @@ export function setWantedUrl (url: IUrl) {
       } else {
         dispatch({ type: URL_ID_EXISTS.REQUEST })
 
-        client.get(`/url-exists/${url.id}`, token).then(
+        api(token).urlExists({ param: { id: url.id } }).then(
           (data) => dispatch({ data, type: URL_ID_EXISTS.SUCCESS }),
-          (error) => {
-            const { code } = client.parseError(error)
+          // TODO parse error
+          // (error) => {
+          //   const { code } = client.parseError(error)
 
-            if (code === 'UrlDoesNotExistError') {
-              dispatch({ data: { exists: false }, type: URL_ID_EXISTS.SUCCESS })
-            } else {
-              dispatch({ error: { code }, type: URL_ID_EXISTS.FAILURE })
-            }
-          }
+          //   if (code === 'UrlDoesNotExistError') {
+          //     dispatch({ data: { exists: false }, type: URL_ID_EXISTS.SUCCESS })
+          //   } else {
+          //     dispatch({ error: { code }, type: URL_ID_EXISTS.FAILURE })
+          //   }
+          // }
         )
       }
     }
@@ -241,7 +227,7 @@ function shouldFetchUrlMetadata () {
   return true
 }
 
-export function updateUrl (urlCollectionId: string, { id: urlId, title }: IUrl) {
+export function updateUrl (urlCollectionId: string, { id: urlId, title }) {
   const { FAILURE, SUCCESS, REQUEST } = UPDATE_URL
 
   return (dispatch, getState) => {
@@ -249,14 +235,16 @@ export function updateUrl (urlCollectionId: string, { id: urlId, title }: IUrl) 
 
     dispatch({ type: REQUEST })
 
-    client.put(`/url-collection/${urlCollectionId}/${urlId}`, { title }, token).then(
+    api(token).updateUrlCollectionItem({ param: { urlCollectionId, urlId }, payload: { title } }).then(
       (data) => dispatch({ data, type: SUCCESS }),
-      (error) => dispatch({ error: client.parseError(error), type: FAILURE })
+      (error) => dispatch({ error, type: FAILURE })
     )
   }
 }
 
-export default function (state = initialState, action) {
+export default function (state, action) {
+  if (no(state)) return initialState
+
   switch (action.type) {
     case CREATE_URL.FAILURE:
       return {

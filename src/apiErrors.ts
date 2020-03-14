@@ -1,7 +1,0 @@
-export const CollectionNotFoundError = 'CollectionNotFoundError'
-export const EmailExistsError = 'EmailExistsError'
-export const EmailNotFoundError = 'EmailNotFoundError'
-export const EmailNotVerifiedError = 'EmailNotVerifiedError'
-export const InvalidPasswordError = 'InvalidPasswordError'
-export const UrlIdIsAlreadyTakenError = 'UrlIdIsAlreadyTakenError'
-export const UrlDoesNotExistError = 'UrlDoesNotExistError'

@@ -20,7 +20,7 @@ import TargetUrlHrefField from './TargetUrlHrefField'
 
 import {
   IUrl
-} from '../reducers/urlCollections'
+} from '../model'
 
 export interface IUrlCreatorProps {
   createUrl: (IUrl) => void
@@ -104,7 +104,7 @@ export default function UrlCreator ({
           {({ intl }) => (
             <ReadOnlyTextField
               label={intl.formatMessage({ id: 'UrlCreator.target-url-title.label' })}
-              text={(wantedUrl && wantedUrl.title) ? wantedUrl.title : ''}
+              text={(wantedUrl?.title) ? wantedUrl.title : ''}
             />
           )}
         </InjectIntl>
@@ -152,13 +152,13 @@ export default function UrlCreator ({
               {({ intl }) => (
                 <Button
                   disabled={(
-                    (wantedUrlIdExists === true) ||
-                    (wantedUrlHrefIsValid !== true) ||
+                    (wantedUrlIdExists) ||
+                    (!wantedUrlHrefIsValid) ||
                     fetchingUrlMetadata ||
                     checkingIfUrlIdExists
                   )}
                   isLoading={creatingUrl}
-                  isSuccess={wantedUrlHrefIsValid === true}
+                  isSuccess={wantedUrlHrefIsValid}
                   type="submit"
                   value={intl.formatMessage({ id: 'UrlCreator.submit' })}
                 />
