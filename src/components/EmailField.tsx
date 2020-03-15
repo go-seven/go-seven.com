@@ -10,41 +10,32 @@ import {
   Span
 } from 'trunx'
 
-interface IProps {
-  errorMessage?: string
-  inputRef?: React.RefObject<HTMLInputElement>
-}
+export default function EmailField ({
+  errorMessage = '',
+  inputRef
+}) {
+  return (
+    <Field>
+      <Label>Email</Label>
 
-export default class EmailField extends React.Component<IProps> {
-  render () {
-    const {
-      errorMessage,
-      inputRef
-    } = this.props
+      <Control hasIconsLeft>
+        <Input
+          inputRef={inputRef}
+          isDanger={Boolean(errorMessage)}
+          required
+          type="email"
+        />
 
-    return (
-      <Field>
-        <Label>Email</Label>
+        <Icon hasTextGrey isLeft>
+          <Icon.Svg icon={envelope} />
+        </Icon>
 
-        <Control hasIconsLeft>
-          <Input
-            inputRef={inputRef}
-            isDanger={!!errorMessage}
-            required
-            type="email"
-          />
-
-          <Icon hasTextGrey isLeft>
-            <Icon.Svg icon={envelope} />
-          </Icon>
-
-          {errorMessage && (
-            <Help>
-              <Span hasTextDanger>{errorMessage}</Span>
-            </Help>
-          )}
-        </Control>
-      </Field>
-    )
-  }
+        {errorMessage && (
+          <Help>
+            <Span hasTextDanger>{errorMessage}</Span>
+          </Help>
+        )}
+      </Control>
+    </Field>
+  )
 }

@@ -3,8 +3,8 @@ import * as plusCircle from 'fa-svg-icon/solid/plus-circle'
 import * as userCog from 'fa-svg-icon/solid/user-cog'
 import pdsp from 'pdsp'
 import * as React from 'react'
+import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { useSpring, animated } from 'react-spring'
 import { Redirect, useLocation } from 'react-router-dom'
 import {
   Button,
@@ -13,39 +13,17 @@ import {
   Navbar
 } from 'trunx'
 
-import SettingsPage from '../pages/SettingsPage'
+import route from '../routes'
 
 import LogoButton from './LogoButton'
 
-interface IProps {
-  authenticationIsValid?: boolean
-  exit?: () => void
-  noMenu?: boolean
-  showCreateAccountButton?: boolean
-}
-
-interface IState {
-  expanded: boolean
-  redirect?: string
-  session: string
-  storedSession: string | null
-}
-
-function ItemIcon ({ animate, icon }) {
+function ItemIcon ({ icon }) {
   return (
     <>
       <Icon>
-        <animated.div
-          className="navbar__item-icon"
-          style={useSpring({
-            opacity: 1,
-            config: { duration: 1000 },
-            from: { opacity: animate ? 0 : 1 },
-            delay: 500
-          })}
-        >
+        <div className="navbar__item-icon">
           <Icon.Svg icon={icon} />
-        </animated.div>
+        </div>
       </Icon>
 
       &nbsp;
@@ -53,201 +31,133 @@ function ItemIcon ({ animate, icon }) {
   )
 }
 
-const session = new Date().getTime().toString()
+export default function Nav (
+  authenticationIsValid,
+  exit,
+  noMenu,
+  showCreateAccountButton
+) {
+  const { pathname } = useLocation()
 
-export default class Nav extends React.Component<IProps, IState> {
-  state: IState = {
-    expanded: false,
-    session,
-    storedSession: sessionStorage.getItem('session')
-  }
+  const [expanded, setExpanded] = useState(false)
+  const [redirect, setRedirect] = useState('')
 
-  componentDidMount () {
-    const {
-      authenticationIsValid
-    } = this.props
-
-    const {
-      storedSession,
-      session
-    } = this.state
-
-    if (authenticationIsValid && storedSession === null) {
-      sessionStorage.setItem('session', session)
-    }
-  }
-
-  onClickBurger = () => {
-    this.setState({
-      expanded: !this.state.expanded
-    })
-  }
-
-  onClickCreateAccount = () => {
-    this.setState({
-      redirect: route.createAccount
-    })
-  }
-
-  onClickCreateUrl = () => {
-    this.setState({
-      redirect: route.createUrl
-    })
-  }
-
-  onClickEnter = () => {
-    this.setState({
-      redirect: route.enter
-    })
-  }
-
-  onClickExit = (event) => {
-    pdsp(event)
-
-    const {
-      exit,
-    } = this.props
-
-    if (typeof exit === 'function') {
-      const expanded = false
-
-      if (location.pathname === route.home) {
-        this.setState({
-          expanded
-        }, exit)
-      } else {
-        this.setState({
-          expanded,
-          redirect: route.home
-        }, exit)
-      }
-    }
-  }
-
-  onClickMyUrls = () => {
-    if (location.pathname === route.myUrls) {
-      this.setState({ expanded: false })
-    } else {
-      this.setState({ redirect: route.myUrls })
-    }
-  }
-
-  onClickSettings = () => {
-    if (location.pathname === route.settings) {
-      this.setState({ expanded: false })
-    } else {
-      this.setState({ redirect: route.settings })
-    }
-  }
-
-  render () {
-    const {
-      authenticationIsValid,
-      noMenu,
-      showCreateAccountButton
-    } = this.props
-
-    const {
-      expanded,
-      redirect,
-      storedSession
-    } = this.state
-
-    if (redirect) {
-      return (
-        <Redirect push to={redirect} />
-      )
-    }
-
-    const isFirstRendering = storedSession === null
-
+  if (redirect) {
     return (
-      <Navbar
-        aria-label="main navigation"
-        isFixedTop
-        isPrimary
-        role="navigation"
-      >
-        <Navbar.Brand>
-          <Navbar.Item>
-            <LogoButton
-              disabledClick={location.pathname === route.home}
-            />
-          </Navbar.Item>
-
-          {noMenu ?? (
-            <Navbar.Burger
-              isActive={expanded}
-              onClick={this.onClickBurger}
-            />
-          )}
-        </Navbar.Brand>
-
-        {noMenu ?? (
-          <Navbar.Menu isActive={expanded}>
-            {authenticationIsValid && (
-              <Navbar.Start>
-                <Navbar.Item
-                  isActive={location.pathname === route.myUrls}
-                  onClick={this.onClickMyUrls}
-                >
-                  <ItemIcon animate={isFirstRendering} icon={chartBar} />
-
-                  <FormattedMessage id="MyUrlsPage.title" />
-                </Navbar.Item>
-
-                <Navbar.Item
-                  isActive={location.pathname === route.createUrl}
-                  onClick={this.onClickCreateUrl}
-                >
-                  <ItemIcon animate={isFirstRendering} icon={plusCircle} />
-
-                  <FormattedMessage id="CreateUrlPage.title" />
-                </Navbar.Item>
-
-                <Navbar.Item
-                  isActive={location.pathname === route.settings}
-                  onClick={this.onClickSettings}
-                >
-                  <ItemIcon animate={isFirstRendering} icon={userCog} />
-
-                  <FormattedMessage id="SettingsPage.title" />
-                </Navbar.Item>
-              </Navbar.Start>
-            )}
-
-            <Navbar.End>
-              <Navbar.Item>
-                {authenticationIsValid ? (
-                  <Buttons>
-                    <Button
-                      onClick={this.onClickExit}
-                    >
-                      <FormattedMessage id="Navbar.exit" />
-                    </Button>
-                  </Buttons>
-                ) : (
-                  <Buttons>
-                    <Button
-                      onClick={this.onClickEnter}
-                    >
-                      <FormattedMessage id="Navbar.enter" />
-                    </Button>
-
-                    {showCreateAccountButton && (
-                      <Button
-                        onClick={this.onClickCreateAccount}
-                      >
-                        <FormattedMessage id="Navbar.create-account" />
-                      </Button>
-                    )}
-                  </Buttons>
-                )}
-              </Navbar.Item>
-            </Navbar.End>
-          </Navbar.Menu>
-        )}
-      </Navbar>
+      <Redirect push to={redirect} />
     )
   }
+
+  return (
+    <Navbar
+      aria-label="main navigation"
+      isFixedTop
+      isPrimary
+      role="navigation"
+    >
+      <Navbar.Brand>
+        <Navbar.Item>
+          <LogoButton
+            disabledClick={pathname === route.home}
+          />
+        </Navbar.Item>
+
+        {noMenu ?? (
+          <Navbar.Burger
+            isActive={expanded}
+            onClick={() => setExpanded(!expanded)}
+          />
+        )}
+      </Navbar.Brand>
+
+      {noMenu ?? (
+        <Navbar.Menu isActive={expanded}>
+          {authenticationIsValid && (
+            <Navbar.Start>
+              <Navbar.Item
+                isActive={pathname === route.myUrls}
+                onClick={() => {
+                  if (pathname === route.myUrls) {
+                    setExpanded(false)
+                  } else {
+                    setRedirect(route.myUrls)
+                  }
+                }}
+              >
+                <ItemIcon icon={chartBar} />
+
+                <FormattedMessage id="MyUrlsPage.title" />
+              </Navbar.Item>
+
+              <Navbar.Item
+                isActive={pathname === route.createUrl}
+                onClick={() => setRedirect(route.createUrl)}
+              >
+                <ItemIcon icon={plusCircle} />
+
+                <FormattedMessage id="CreateUrlPage.title" />
+              </Navbar.Item>
+
+              <Navbar.Item
+                isActive={pathname === route.settings}
+                onClick={() => {
+                  if (pathname === route.settings) {
+                    setExpanded(false)
+                  } else {
+                    setRedirect(route.settings)
+                  }
+                }}
+              >
+                <ItemIcon icon={userCog} />
+
+                <FormattedMessage id="SettingsPage.title" />
+              </Navbar.Item>
+            </Navbar.Start>
+          )}
+
+          <Navbar.End>
+            <Navbar.Item>
+              {authenticationIsValid ? (
+                <Buttons>
+                  <Button
+                    onClick={(event) => {
+                      pdsp(event)
+
+                      setExpanded(false)
+
+                      if (typeof exit === 'function') {
+                        exit()
+                      }
+
+                      if (pathname !== route.home) {
+                        setRedirect(route.home)
+                      }
+                    }}
+                  >
+                    <FormattedMessage id="Navbar.exit" />
+                  </Button>
+                </Buttons>
+              ) : (
+                <Buttons>
+                  <Button
+                    onClick={() => setRedirect(route.enter)}
+                  >
+                    <FormattedMessage id="Navbar.enter" />
+                  </Button>
+
+                  {showCreateAccountButton && (
+                    <Button
+                      onClick={() => setRedirect(route.createAccount)}
+                    >
+                      <FormattedMessage id="Navbar.create-account" />
+                    </Button>
+                  )}
+                </Buttons>
+              )}
+            </Navbar.Item>
+          </Navbar.End>
+        </Navbar.Menu>
+      )}
+    </Navbar>
+  )
 }

@@ -74,11 +74,11 @@ export function fetchUrlMonthlyHitsIfNeeded (id, month) {
 }
 
 function shouldFetchUrlDailyHits (urlsDailyHits, urlId, wantedDay) {
-  return !urlsDailyHits.find(({ id, day }) => `${id}${day}` === `${urlId}${wantedDay}`)
+  return !urlsDailyHits.find(({ id, day }) => id === urlId && day === wantedDay)
 }
 
 function shouldFetchUrlMonthlyHits (urlsMonthlyHits, urlId, wantedMonth) {
-  return !urlsMonthlyHits.find(({ id, month }) => `${id}${month}` === `${urlId}${wantedMonth}`)
+  return !urlsMonthlyHits.find(({ id, month }) => id === urlId && month === wantedMonth)
 }
 
 export default function (state, action) {

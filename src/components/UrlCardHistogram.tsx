@@ -5,27 +5,15 @@ import { select as d3Select } from 'd3-selection'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
-import {
-  IUrlDailyHits
-} from '../reducers/analytics'
-
 declare type ScaleFunction = (value: number) => number
-
-interface IChartProps {
-  barColor?: string
-  barGap?: number
-  urlDailyHits: IUrlDailyHits[]
-  height?: number
-  windowWidth: number // used as trigger for resize
-}
 
 export default function UrlCardHistogram ({
   barGap = 5,
   barColor = 'skyblue',
   urlDailyHits,
   height = 50,
-  windowWidth
-}: IChartProps) {
+  windowWidth // used as trigger for resize
+}) {
   const numBars = urlDailyHits.length
 
   const containerRef = React.useRef<HTMLDivElement>(null)

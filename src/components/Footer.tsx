@@ -9,8 +9,7 @@ import {
   Tags
 } from 'trunx'
 
-import PrivacyPolicyPage from '../pages/PrivacyPolicyPage'
-import TermsOfServicePage from '../pages/TermsOfServicePage'
+import pagePath from '../pages/paths'
 
 export default function () {
   return (
@@ -33,7 +32,7 @@ export default function () {
             <Tags>
               <Tag
                 isDark
-                href={PrivacyPolicyPage.path}
+                href={pagePath.privacyPolicy()}
                 target="_blank"
               >
                 <FormattedMessage id="PrivacyPolicyPage.title" />
@@ -41,7 +40,7 @@ export default function () {
 
               <Tag
                 isDark
-                href={TermsOfServicePage.path}
+                href={pagePath.termsOfService()}
                 target="_blank"
               >
                 <FormattedMessage id="TermsOfServicePage.title" />

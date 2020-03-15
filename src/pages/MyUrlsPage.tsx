@@ -25,7 +25,7 @@ import {
 } from '../reducers/analytics'
 import {
   fetchUrlCollectionIfNeeded,
-  removeUrlFromCollection,
+  // removeUrlFromCollection,
 } from '../reducers/urlCollections'
 
 function MyUrlsPage ({
@@ -35,9 +35,9 @@ function MyUrlsPage ({
   fetchUrlDailyHits,
   fetchUrlMonthlyHits,
   isFetchingUrlCollection,
-  removeUrlFromCollection,
+  // removeUrlFromCollection,
   removingUrlId,
-  selectedUrlCollectionId,
+  // selectedUrlCollectionId,
   urlCollection,
   urlsDailyHits,
   urlsMonthlyHits
@@ -83,7 +83,6 @@ function MyUrlsPage ({
               fetchUrlDailyHits={fetchUrlDailyHits}
               fetchUrlMonthlyHits={fetchUrlMonthlyHits}
               key={urlCollection.id}
-              removeUrl={(urlId) => () => removeUrlFromCollection({ urlCollectionId: selectedUrlCollectionId, urlId })}
               removingUrlId={removingUrlId}
               urlCollection={urlCollection}
               urlsDailyHits={urlsDailyHits}
@@ -110,7 +109,7 @@ const mapStateToProps = ({
     fetchingUrlMetadata,
     isFetchingUrlCollection,
     removingUrlId,
-    selectedUrlCollectionId,
+    // selectedUrlCollectionId,
     wantedUrl,
     wantedUrlHrefIsValid,
     wantedUrlIdExists
@@ -121,7 +120,7 @@ const mapStateToProps = ({
   fetchingUrlMetadata,
   isFetchingUrlCollection,
   removingUrlId,
-  selectedUrlCollectionId,
+  // selectedUrlCollectionId,
   urlCollection: currentUrlCollection,
   urlsDailyHits,
   urlsMonthlyHits,
@@ -135,7 +134,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchUrlCollectionIfNeeded,
   fetchUrlDailyHitsIfNeeded,
   fetchUrlMonthlyHitsIfNeeded,
-  removeUrlFromCollection,
+  // removeUrlFromCollection,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyUrlsPage)

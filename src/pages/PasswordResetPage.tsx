@@ -24,6 +24,8 @@ import * as api from '../api'
 import EmailField from '../components/EmailField'
 import LogoButton from '../components/LogoButton'
 
+import translationKey from '../i18n/translationKeys'
+
 import MyUrlsPage from './MyUrlsPage'
 
 import {
@@ -97,7 +99,7 @@ function PasswordResetPage ({
                 <InjectIntl>
                   {({ intl }) => (
                     <EmailField
-                      errorMessage={emailFieldError && intl.formatMessage({ id: `PasswordResetPage.email.${errorCode}` })}
+                      errorMessage={emailFieldError && intl.formatMessage({ id: translationKey.page.PasswordReset.email.errorMessageByCode(errorCode) })}
                       inputRef={this.emailRef}
                     />
                   )}

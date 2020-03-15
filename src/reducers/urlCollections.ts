@@ -199,16 +199,17 @@ export function setWantedUrl (url: IUrlItem) {
 
         api(token).urlExists({ param: { id: url.id } }).then(
           (data) => dispatch({ data, type: URL_ID_EXISTS.SUCCESS }),
-          // TODO parse error
-          // (error) => {
-          //   const { code } = client.parseError(error)
+          (error) => {
+            console.error(error)
+            // TODO parse error
+            // const { code } = client.parseError(error)
 
-          //   if (code === 'UrlDoesNotExistError') {
-          //     dispatch({ data: { exists: false }, type: URL_ID_EXISTS.SUCCESS })
-          //   } else {
-          //     dispatch({ error: { code }, type: URL_ID_EXISTS.FAILURE })
-          //   }
-          // }
+            // if (code === 'UrlDoesNotExistError') {
+            //   dispatch({ data: { exists: false }, type: URL_ID_EXISTS.SUCCESS })
+            // } else {
+            //   dispatch({ error: { code }, type: URL_ID_EXISTS.FAILURE })
+            // }
+          }
         )
       }
     }

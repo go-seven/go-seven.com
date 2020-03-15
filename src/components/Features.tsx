@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { FormattedHTMLMessage, FormattedMessage } from 'react-intl'
-import { useSpring, animated } from 'react-spring'
 import {
   Container,
   Content,
@@ -9,15 +8,8 @@ import {
 } from 'trunx'
 
 export default function () {
-  const [componentDidMount, setComponentDidMount] = React.useState(false)
-  React.useEffect(() => setComponentDidMount(true), [])
-
-  const props = useSpring({ opacity: 1, from: { opacity: componentDidMount ? 1 : 0 }, delay: 1000, config: { duration: 1000 } })
-
   return (
-    <animated.div
-      style={props}
-    >
+    <>
       <Section>
         <Container>
           <Title>
@@ -71,6 +63,6 @@ export default function () {
           </Content>
         </Container>
       </Section>
-    </animated.div>
+    </>
   )
 }

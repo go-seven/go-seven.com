@@ -29,7 +29,7 @@ const client = (method, endpoint: TEndpoint, token?) => {
   return fetch(`${basePath}${endpoint}`, { headers, method }).then(checkResponse)
 }
 
-const clientSend = (method, endpoint, data, token?) => {
+const clientSend = (method, endpoint: TEndpoint, data, token?) => {
   const body = JSON.stringify(data)
   const headers = token ? headersWithAuthentication(token) : headersForJson
 

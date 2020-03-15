@@ -9,36 +9,19 @@ import {
   Section
 } from 'trunx'
 
-import {
-  IUrlCollection,
-  TUrlId,
-} from '../model'
-
 import CreateUrlPage from '../pages/CreateUrlPage'
 
 import UrlCard from './UrlCard'
-
-interface IUrlCollectionProps {
-  fetchUrlCollection: () => void
-  fetchUrlDailyHits: (urlId: string, day: string) => void
-  fetchUrlMonthlyHits: (urlId: string, month: string) => void
-  removeUrl: (urlId: TUrlId) => () => void
-  removingUrlId: TUrlId
-  urlCollection: IUrlCollection
-  urlsDailyHits: IUrlDailyHits[]
-  urlsMonthlyHits: IUrlMonthlyHits[]
-}
 
 export default function UrlCollection ({
   fetchUrlCollection,
   fetchUrlDailyHits,
   fetchUrlMonthlyHits,
-  removeUrl,
   removingUrlId,
   urlCollection,
   urlsDailyHits,
   urlsMonthlyHits
-}: IUrlCollectionProps) {
+}) {
   const [redirect, setRedirect] = React.useState('')
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth)
 
@@ -91,7 +74,6 @@ export default function UrlCollection ({
                 <UrlCard
                   fetchUrlDailyHits={fetchUrlDailyHits}
                   fetchUrlMonthlyHits={fetchUrlMonthlyHits}
-                  removeUrl={removeUrl(url.id)}
                   removingUrl={removingUrlId === url.id}
                   url={url}
                   urlCollectionId={urlCollection.id}

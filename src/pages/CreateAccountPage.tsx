@@ -59,7 +59,6 @@ function CreateAccountPage ({
     cleanupAuthenticationError()
   }, [cleanupAuthenticationError])
 
-
   if (authenticationIsValid) {
     setRedirect(pagePath.myUrls())
   }
