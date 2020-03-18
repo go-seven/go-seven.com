@@ -129,7 +129,7 @@ function EnterPage ({
                     <PasswordField
                       autoComplete="current-password"
                       errorMessage={invalidPasswordError ? (intl.formatMessage({ id: 'EnterPage.password.invalidPasswordError' }) as string) : undefined}
-                      inputRef={this.passwordRef}
+                      inputRef={passwordRef}
                       label={(intl.formatMessage({ id: 'EnterPage.password.label' }) as string)}
                       showForgotPassword
                     />
