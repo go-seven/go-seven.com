@@ -6,7 +6,7 @@ import {
   Title
 } from 'trunx'
 
-import Footer from '../components/Footer'
+import { Footer } from '../components/Footer'
 import Navbar from '../components/Navbar'
 
 export default function TermsOfServicePage () {

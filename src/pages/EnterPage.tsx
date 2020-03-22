@@ -24,7 +24,7 @@ import {
 import * as api from '../api'
 import { ISendVerificationPayload } from '../api'
 
-import EmailField from '../components/EmailField'
+import { EmailField } from '../components/EmailField'
 import LogoButton from '../components/LogoButton'
 import PasswordField from '../components/PasswordField'
 import PleaseLookForVerificationEmail from '../components/PleaseLookForVerificationEmail'

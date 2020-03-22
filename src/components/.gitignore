@@ -1,4 +1,11 @@
+# TODO
+# after all components are migrated to go-seven-design
+# this file will probably contain just the following line
+# *
+breakpoints.ts
+EmailField.tsx
 ErrorBoundaryText.tsx
+Footer.tsx
 Homepage.tsx
 HomepageFeatures.tsx
 HomepageHero.tsx
