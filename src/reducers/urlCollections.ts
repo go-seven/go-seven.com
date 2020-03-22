@@ -1,7 +1,6 @@
 // User can organize its URLs into collections.
 // Every collection has an identifier and a name.
 // If no URL collection is selected there is always a "default" collection.
-import no from 'not-defined'
 import urlRegex from 'regex-weburl'
 
 import api from '../api'
@@ -243,9 +242,7 @@ export function updateUrl (urlCollectionId: string, { id: urlId, title }) {
   }
 }
 
-export default function (state, action) {
-  if (no(state)) return initialState
-
+export default function (state = initialState, action) {
   switch (action.type) {
     case CREATE_URL.FAILURE:
       return {

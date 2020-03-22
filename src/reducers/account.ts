@@ -1,5 +1,3 @@
-import no from 'not-defined'
-
 import {
   TEmail
 } from '../model'
@@ -154,9 +152,7 @@ export function sendVerification ({ email }) {
   }
 }
 
-export default function (state, action) {
-  if (no(state)) return initialState
-
+export default function (state = initialState, action) {
   switch (action.type) {
     case CHANGE_PASSWORD.FAILURE:
       return {

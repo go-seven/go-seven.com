@@ -1,5 +1,3 @@
-import no from 'not-defined'
-
 import {
   IUrlDailyHits,
   IUrlMonthlyHits,
@@ -81,9 +79,7 @@ function shouldFetchUrlMonthlyHits (urlsMonthlyHits, urlId, wantedMonth) {
   return !urlsMonthlyHits.find(({ id, month }) => id === urlId && month === wantedMonth)
 }
 
-export default function (state, action) {
-  if (no(state)) return initialState
-
+export default function (state = initialState, action) {
   switch (action.type) {
     case FETCH_URL_DAILY_HITS.FAILURE:
       return {
