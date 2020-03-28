@@ -90,8 +90,6 @@
     "go-seven-i18n": "github:go-seven/i18n",
     "i-am-not-a-robot": "^0.7.1",
     "not-defined": "^2.1.0",
-    "pdsp": "^0.1.0",
-    "react-intl-inject": "^0.1.2",
     "react-redux": "^7.1.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
