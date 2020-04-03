@@ -1,3 +1,6 @@
+import boole from 'boole'
+import no from 'not-defined'
+
 import {
   IUrlDailyHits,
   IUrlMonthlyHits,
@@ -72,11 +75,15 @@ export function fetchUrlMonthlyHitsIfNeeded (id, month) {
 }
 
 function shouldFetchUrlDailyHits (urlsDailyHits, urlId, wantedDay) {
-  return !urlsDailyHits.find(({ id, day }) => id === urlId && day === wantedDay)
+  return no(
+    urlsDailyHits.find(({ id, day }) => boole(id === urlId).and(day === wantedDay).isTrue())
+  )
 }
 
 function shouldFetchUrlMonthlyHits (urlsMonthlyHits, urlId, wantedMonth) {
-  return !urlsMonthlyHits.find(({ id, month }) => id === urlId && month === wantedMonth)
+  return no(
+    urlsMonthlyHits.find(({ id, month }) => boole(id === urlId).and(month === wantedMonth).isTrue())
+  )
 }
 
 export default function (state = initialState, action) {
